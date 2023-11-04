@@ -1,6 +1,5 @@
 package main;
 
-import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
@@ -14,10 +13,6 @@ public class MouseInput extends MouseMotionAdapter implements MouseListener {
         this.size = size;
     }
 
-    public void draw(Graphics2D g2) {
-        g2.fillRect(x - size / 2, y - size / 2, size, size);
-    }
-
     @Override
     public void mouseMoved(MouseEvent e) {
         x = e.getX();
@@ -26,14 +21,11 @@ public class MouseInput extends MouseMotionAdapter implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-    	
         mouseClicked = true;
-            
     }
 
     @Override
@@ -48,7 +40,7 @@ public class MouseInput extends MouseMotionAdapter implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
     }
-    
+
     @Override
     public void mouseDragged(MouseEvent e) {
         if (mouseClicked) {
@@ -56,5 +48,4 @@ public class MouseInput extends MouseMotionAdapter implements MouseListener {
             y = e.getY();
         }
     }
-
 }
