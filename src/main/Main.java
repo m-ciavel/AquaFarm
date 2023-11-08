@@ -19,9 +19,10 @@ public class Main {
 
         window.pack();
 
+
         window.setLocationRelativeTo(null);
 
-        
+
         BufferedImage cursorImage = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
         Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new java.awt.Point(0, 0), "blank cursor");
         window.setCursor(blankCursor);

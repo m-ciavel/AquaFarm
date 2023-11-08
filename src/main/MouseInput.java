@@ -5,8 +5,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 
 public class MouseInput extends MouseMotionAdapter implements MouseListener {
-    public int x, y;
+    public int x, y ,getmouseX, getmouseY;
     public final int size;
+    public boolean mousePressed;
     public boolean mouseClicked;
 
     public MouseInput(int size) {
@@ -21,15 +22,21 @@ public class MouseInput extends MouseMotionAdapter implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        mouseClicked = true;
+
     }
+
 
     @Override
     public void mousePressed(MouseEvent e) {
-        mouseClicked = true;
+        mousePressed = true;
+        getmouseX = e.getX();
+        getmouseY = e.getY();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        mousePressed = false;
         mouseClicked = false;
     }
 
@@ -43,9 +50,11 @@ public class MouseInput extends MouseMotionAdapter implements MouseListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (mouseClicked) {
+        if (mousePressed) {
             x = e.getX();
             y = e.getY();
         }
     }
+
+
 }

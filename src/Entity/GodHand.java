@@ -3,6 +3,7 @@ package Entity;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 import javax.imageio.ImageIO;
 
 import main.GamePanel;
@@ -10,8 +11,7 @@ import main.MouseInput;
 import main.UtilityTool;
 
 public class GodHand extends Entity {
-    private GamePanel gp;
-    private MouseInput mouseIn;
+    private final MouseInput mouseIn;
 
 
     public GodHand(MouseInput mouseIn, GamePanel gp) {
@@ -23,7 +23,7 @@ public class GodHand extends Entity {
     }
 
     public void setDefaultValues() {
-        clicked = false; 
+        clicked = false;
     }
 
     private void loadGodHandImages() {
@@ -36,7 +36,8 @@ public class GodHand extends Entity {
         BufferedImage HandImage = null;
 
         try {
-            HandImage = ImageIO.read(getClass().getResourceAsStream("/hand/" + imageName + ".png"));
+
+            HandImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/hand/" + imageName + ".png")));
             HandImage = uTool.scaledImage(HandImage, gp.tilesize, gp.tilesize);
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,7 +46,7 @@ public class GodHand extends Entity {
     }
 
     public void update() {
-        clicked = mouseIn.mouseClicked; 
+        clicked = mouseIn.mousePressed;
     }
 
     public void draw(Graphics2D g2) {

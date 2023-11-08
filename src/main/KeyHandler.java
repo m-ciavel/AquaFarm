@@ -5,8 +5,8 @@ import java.awt.event.KeyListener;
 
 
 public class KeyHandler implements KeyListener {
-	
-	public boolean randomnumber;
+
+    public boolean randomnumber;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -18,17 +18,17 @@ public class KeyHandler implements KeyListener {
         int code = e.getKeyCode();
 
         if (code == KeyEvent.VK_SPACE) {
-        	  	randomnumber = true;     	
+            randomnumber = true;
 
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-    	int code = e.getKeyCode();
+        int code = e.getKeyCode();
 
         if (code == KeyEvent.VK_SPACE) {
-        	  	randomnumber = false;     	
+            randomnumber = false;
 
         }
 

@@ -1,24 +1,28 @@
 package Entity;
 
+import main.GamePanel;
+
 import java.util.Random;
 
-public class fish_movement {
-    private Random random = new Random();
+public class Fish_movement extends Entity {
+    private final Random random = new Random();
     private int fishX;
     private int fishY;
     private int destinationX;
     private int destinationY;
-    private int speed;
+    private double speed;
     public int maxX;
     public int maxY;
-    private double changeThreshold = 30.0;
     private String currentDirection;
+    private Food food;  // Reference to the Food entity
 
-    public fish_movement(int maxX, int maxY) {
+    public Fish_movement(int maxX, int maxY, GamePanel gp) {
+        super(gp);
         this.maxX = maxX;
         this.maxY = maxY;
+        this.food = food;
         setRandomDestination();
-        speed = 2; // Default speed
+        speed = 3.5;
     }
 
     public void setRandomDestination() {
@@ -43,6 +47,7 @@ public class fish_movement {
         double distance = Math.sqrt((destinationX - fishX) * (destinationX - fishX) +
                 (destinationY - fishY) * (destinationY - fishY));
 
+        double changeThreshold = 30.0;
         if (distance < changeThreshold) {
             setRandomDestination();
         } else {
@@ -51,19 +56,19 @@ public class fish_movement {
             int deltaY = (int) ((destinationY - fishY) * ratio);
 
             if (fishX + deltaX < 0 || fishX + deltaX > maxX || fishY + deltaY < 0 || fishY + deltaY > maxY) {
-
+                // Handle boundary conditions here, such as wrapping around the screen
+                fishX = (fishX + deltaX) % maxX;
+                fishY = (fishY + deltaY) % maxY;
             } else {
                 int waddleOffsetX = (int) (2 * Math.sin(System.currentTimeMillis() * 0.005));
                 int waddleOffsetY = (int) (2 * Math.cos(System.currentTimeMillis() * 0.005));
                 if (deltaX != 0) {
                     fishX += deltaX + waddleOffsetY;
-
                 } else {
                     fishX += deltaX + waddleOffsetX;
                 }
                 if (deltaY != 0) {
                     fishY += deltaY + waddleOffsetX;
-
                 } else {
                     fishY += deltaY + waddleOffsetY;
                 }
@@ -73,17 +78,22 @@ public class fish_movement {
         }
     }
 
+    public void gotoFood() {
+        destinationX = Food.SummonedFood.foodX;
+        destinationY = Food.SummonedFood.foodY;
+        updateDirection();
+    }
+
     private void updateDirection() {
         if (destinationX < fishX) {
             currentDirection = "left";
         } else if (destinationX > fishX) {
             currentDirection = "right";
         } else if (destinationY < fishY) {
-                currentDirection = "up";
+            currentDirection = "up";
         } else if (destinationY > fishY) {
-                currentDirection = "down";
-            }
-        
+            currentDirection = "down";
+        }
     }
 
     public String getCurrentDirection() {
@@ -97,9 +107,8 @@ public class fish_movement {
     public int getFishY() {
         return fishY;
     }
+
     public void setSpeed(int speed) {
         this.speed = speed;
     }
-
-
 }

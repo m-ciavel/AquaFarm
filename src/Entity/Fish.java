@@ -9,26 +9,27 @@ import main.GamePanel;
 import main.UtilityTool;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Fish extends Entity {
-    private GamePanel gp;
-    private fish_movement fishMovement;
-
-
+    private final Fish_movement fishMovement;
     private int offsetX;
     private int offsetY;
-    private boolean isDragging;
+    public boolean isDragging;
     private boolean isMoving;
     private boolean isSpeedIncreased;
-    private int originalSpeed;
-    private int increasedSpeed;
-    private Timer speedIncreaseTimer;
+    private boolean hunger; // Added hunger boolean
+    private final int originalSpeed;
+    private final int increasedSpeed;
+    private final Timer speedIncreaseTimer;
+    private final Timer hungerTimer; // Timer for toggling hunger
 
     public Fish(int initialX, int initialY, GamePanel gp) {
         super(gp);
-        fishMovement = new fish_movement(1920, 1080);
+
+        fishMovement = new Fish_movement(1920, 1080, null);
         fishMovement.setInitialPosition(initialX, initialY);
         this.gp = gp;
         getFishImages(); // Load fish images
@@ -39,9 +40,10 @@ public class Fish extends Entity {
         isDragging = false;
         isMoving = true;
         isSpeedIncreased = false;
-        originalSpeed = 2; // Set the original speed
+        originalSpeed = 1; // Set the original speed
         increasedSpeed = 15; // Set the increased speed
         speedIncreaseTimer = new Timer();
+        hunger = false; // Initialize hunger to false
 
         // Add a mouse listener to the game panel for dragging
         gp.addMouseListener(new MouseAdapter() {
@@ -93,17 +95,33 @@ public class Fish extends Entity {
                 }
             }
         });
+
+        // Create a timer to toggle hunger every 30 seconds
+        hungerTimer = new Timer();
+        hungerTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                hunger = !hunger; // Toggle hunger
+            }
+        }, 0, 30000); // Toggle every 30 seconds
     }
 
     public void move() {
         if (isMoving) {
             fishMovement.move();
-        }
+
+                if (hunger){
+                    fishMovement.gotoFood();
+                    hunger = false;
+                }
+
+                }
     }
 
+
     private void getFishImages() {
-        fish_left = null ;
-        fish_right = null ;
+        fish_left = null;
+        fish_right = null;
     }
 
     public BufferedImage setup(String imageName) {
@@ -111,7 +129,7 @@ public class Fish extends Entity {
         BufferedImage fishImage = null;
 
         try {
-            fishImage = ImageIO.read(getClass().getResourceAsStream("/fish/" + imageName + ".png"));
+            fishImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/fish/" + imageName + ".png")));
             fishImage = uTool.scaledImage(fishImage, gp.tilesize, gp.tilesize);
         } catch (IOException e) {
             e.printStackTrace();
