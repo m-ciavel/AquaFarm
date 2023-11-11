@@ -1,2 +1,85 @@
-package com.oop.aquafarm.util;public class KeyHandler {
+package com.oop.aquafarm.util;
+
+import com.oop.aquafarm.GamePanel;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.List;
+import java.util.ArrayList;
+
+public class KeyHandler implements KeyListener {
+
+    public static List<Key> keys = new ArrayList<Key>();
+
+    public class Key {
+        public int presses, absorbs;
+        public boolean down, clicked;
+
+        public Key(){
+            keys.add(this);
+        }
+
+        public void toggle(boolean pressed){
+            if(pressed !=down){
+                down = pressed;
+            }
+            if(pressed){
+                presses++;
+            }
+        }
+
+        public void tick(){
+            if(absorbs < presses){
+                absorbs++;
+                clicked = true;
+            } else {
+                clicked = false;
+            }
+        }
+
+    }
+
+
+    public Key enter = new Key();
+    public Key escape = new Key();
+
+    public KeyHandler(GamePanel game){
+        game.addKeyListener(this);
+    }
+
+    public void releaseAll(){
+        for(int i = 0; i < keys.size(); i++){
+            keys.get(i).down = false;
+        }
+    }
+
+    public void tick(){
+        for(int i = 0; i < keys.size(); i++){
+            keys.get(i).tick();
+        }
+    }
+
+    public void toggle(KeyEvent e, boolean pressed){
+        if(e.getKeyCode() == KeyEvent.VK_ENTER){
+            enter.toggle(pressed);
+        }
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+            escape.toggle(pressed);
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        //nothing
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        toggle(e, true);
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        toggle(e, false);
+    }
 }
