@@ -1,5 +1,7 @@
 package com.oop.aquafarm.states;
 
+import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.graphics.CFont;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
 
@@ -12,7 +14,7 @@ public class AccountState extends GameState {
 
     @Override
     public void update() {
-
+        System.out.println("login/signup");
     }
 
     @Override

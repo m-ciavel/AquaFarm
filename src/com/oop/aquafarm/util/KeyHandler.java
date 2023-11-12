@@ -42,20 +42,21 @@ public class KeyHandler implements KeyListener {
 
     public Key enter = new Key();
     public Key escape = new Key();
+    public Key p = new Key();
 
     public KeyHandler(GamePanel game){
         game.addKeyListener(this);
     }
 
     public void releaseAll(){
-        for(int i = 0; i < keys.size(); i++){
-            keys.get(i).down = false;
+        for (Key key : keys) {
+            key.down = false;
         }
     }
 
     public void tick(){
-        for(int i = 0; i < keys.size(); i++){
-            keys.get(i).tick();
+        for (Key key : keys) {
+            key.tick();
         }
     }
 
@@ -65,6 +66,9 @@ public class KeyHandler implements KeyListener {
         }
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
             escape.toggle(pressed);
+        }
+        if(e.getKeyCode() == KeyEvent.VK_P){
+            p.toggle(pressed);
         }
     }
 

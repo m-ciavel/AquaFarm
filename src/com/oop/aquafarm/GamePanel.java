@@ -5,7 +5,10 @@ import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
 
 import javax.swing.JPanel;
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.security.Key;
 
@@ -13,6 +16,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     public static int width;
     public static int height;
+    public static int oldFrameCount;
 
     private Thread thread;
     private boolean running = false;
@@ -27,7 +31,7 @@ public class GamePanel extends JPanel implements Runnable{
     public GamePanel(int width, int height){
         this.width = width;
         this.height = height;
-        setPreferredSize(new Dimension(width, height));
+        setPreferredSize(new Dimension(width,height));
         setFocusable(true);
         requestFocus();
     }
