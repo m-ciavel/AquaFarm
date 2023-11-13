@@ -5,10 +5,7 @@ import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
 
 import javax.swing.JPanel;
-import java.awt.Graphics2D;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.security.Key;
 
@@ -17,6 +14,8 @@ public class GamePanel extends JPanel implements Runnable{
     public static int width;
     public static int height;
     public static int oldFrameCount;
+    public static int oldTickCount;
+    public static int tickCount;
 
     private Thread thread;
     private boolean running = false;
@@ -45,16 +44,22 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
 
+
+    public void initG(){
+        img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        g = (Graphics2D) img.getGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    }
+
     public void init(){
         running = true;
 
-        img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        g = (Graphics2D) img.getGraphics();
+        initG();
 
         mouseIn = new MouseHandler(this);
         keyh = new KeyHandler(this);
 
-        gsm = new GameStateManager();
+        gsm = new GameStateManager(g);
     }
 
     public void run(){
@@ -63,7 +68,7 @@ public class GamePanel extends JPanel implements Runnable{
         final double GAME_HERTZ = 60.0;
         final double TBU = 1000000000 / GAME_HERTZ; //time before update
 
-        final int MUBR = 5; //must update before render
+        final int MUBR = 3; //must update before render
 
         double lastUpdateT = System.nanoTime();
         double lastRenderTime;
@@ -75,16 +80,19 @@ public class GamePanel extends JPanel implements Runnable{
         int lastSecondTime = (int) (lastUpdateT / 1000000000);
         int oldFrameCount = 0;
 
+        tickCount = 0;
+        oldTickCount = 0;
+
         while(running){
 
             double now = System.nanoTime();
             int updateCount = 0;
             while(((now = lastUpdateT)> TBU) && (updateCount < MUBR)){
-                update();
+                update(now);
                 input(mouseIn, keyh);
                 lastUpdateT += TBU;
                 updateCount++;
-
+                tickCount++;
             }
 
             if(now - lastUpdateT > TBU){
@@ -103,7 +111,12 @@ public class GamePanel extends JPanel implements Runnable{
                     System.out.println("NEW SECOND "+ thisSecond + " " + frameCount);
                     oldFrameCount = frameCount;
                 }
+                if(tickCount != oldTickCount){
+                    System.out.println("NEW SECOND(T) "+ thisSecond + "" + tickCount);
+                    oldTickCount = tickCount;
+                }
                 frameCount = 0;
+                tickCount = 0;
                 lastSecondTime = thisSecond;
             }
 
@@ -123,8 +136,8 @@ public class GamePanel extends JPanel implements Runnable{
 
     }
 
-    public void update(){
-
+    public void update(double time){
+        gsm.update(time);
     }
 
     public void input(MouseHandler mouseIn, KeyHandler keyh){
@@ -133,13 +146,15 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void render(){
         if(g != null){
-            g.setColor(new Color(14, 135, 204));
+//            g.setColor(new Color(14, 135, 204));
+            g.setColor(Color.BLUE);
             g.fillRect(0,0,width, height);
             gsm.render(g);
         }
     }
 
     public void draw(){
+
         Graphics g2 = (Graphics) this.getGraphics();
         g2.drawImage(img, 0,0, width, height, null);
         g2.dispose();

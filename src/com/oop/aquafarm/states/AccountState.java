@@ -13,7 +13,7 @@ public class AccountState extends GameState {
     }
 
     @Override
-    public void update() {
+    public void update(double time) {
         System.out.println("login/signup");
     }
 

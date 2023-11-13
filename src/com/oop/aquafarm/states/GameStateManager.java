@@ -15,17 +15,24 @@ public class GameStateManager {
     public static final int ACCOUNT = 1;
     public static final int PLAY = 2;
 
-    public int onTopState = 0;
+    public static Graphics2D g;
 
-    public GameStateManager(){
+//    public int onTopState = 0;
+
+    public GameStateManager(Graphics2D g){
+        GameStateManager.g = g;
 
         states = new GameState[3];
 
-        states[PLAY] = new TitleState(this);
+        states[TITLE] = new TitleState(this);
     }
 
-    public boolean getState(int state){
+    public boolean isStateActive(int state){
         return states[state] != null;
+    }
+
+    public GameState getState(int state){
+        return states[state];
     }
 
     public void pop(int state){
@@ -37,44 +44,44 @@ public class GameStateManager {
         if(states[state] != null){
             return;
         }
-        if(state == PLAY){
-            states[TITLE] = new PlayState(this);
+        if(state == TITLE){
+            states[TITLE] = new TitleState(this);
         }
-        if(state == ACCOUNT){
+        else if(state == ACCOUNT){
             states[ACCOUNT] = new AccountState(this);
         }
-        if(state == PLAY){
+        else if(state == PLAY){
             states[PLAY] = new PlayState(this);
         }
     }
 
-    public void addandpop(int state, int remove){
-        addandpop(state, 0);
-    }
+//    public void addandpop(int state, int remove){
+//        addandpop(state, 0);
+//    }
+//
+//    public void addandpop(int state){
+//        pop(state);
+//        add(state);
+//    }
 
-    public void addandpop(int state){
-        pop(state);
-        add(state);
-    }
-
-    public  void update(){
-        for (int i = 0; i < states.length; i++) {
-            if (states[i] != null) {
-                states[i].update();
+    public  void update(double time){
+        for (GameState state : states) {
+            if (state != null) {
+                state.update(time);
             }
         }
     }
     public  void input(MouseHandler mouseIn, KeyHandler keyh){
-        for (int i = 0; i < states.length; i++) {
-            if (states[i] != null) {
-                states[i].input(mouseIn, keyh);
+        for (GameState state : states) {
+            if (state != null) {
+                state.input(mouseIn, keyh);
             }
         }
     }
     public  void render(Graphics2D g){
-        for (int i = 0; i < states.length; i++) {
-            if (states[i] != null) {
-                states[i].render(g);
+        for (GameState state : states) {
+            if (state != null) {
+                state.render(g);
             }
         }
     }
