@@ -1,28 +1,24 @@
 package Entity;
 
-import main.GamePanel;
-
+import java.util.List;
 import java.util.Random;
 
-public class Fish_movement extends Entity {
-    private final Random random = new Random();
+public class Fish_movement {
+    private Random random = new Random();
     private int fishX;
     private int fishY;
     private int destinationX;
     private int destinationY;
-    private double speed;
+    private int speed;
     public int maxX;
     public int maxY;
     private String currentDirection;
-    private Food food;  // Reference to the Food entity
 
-    public Fish_movement(int maxX, int maxY, GamePanel gp) {
-        super(gp);
+    public Fish_movement(int maxX, int maxY) {
         this.maxX = maxX;
         this.maxY = maxY;
-        this.food = food;
         setRandomDestination();
-        speed = 3.5;
+        speed = 2; // Default speed
     }
 
     public void setRandomDestination() {
@@ -34,6 +30,7 @@ public class Fish_movement extends Entity {
 
         destinationX = newX;
         destinationY = newY;
+
         updateDirection();
     }
 
@@ -47,8 +44,8 @@ public class Fish_movement extends Entity {
         double distance = Math.sqrt((destinationX - fishX) * (destinationX - fishX) +
                 (destinationY - fishY) * (destinationY - fishY));
 
-        double changeThreshold = 30.0;
-        if (distance < changeThreshold) {
+        if (distance < 1.0) {
+            // Fish is very close to the destination, set new random destination
             setRandomDestination();
         } else {
             double ratio = speed / distance;
@@ -56,32 +53,17 @@ public class Fish_movement extends Entity {
             int deltaY = (int) ((destinationY - fishY) * ratio);
 
             if (fishX + deltaX < 0 || fishX + deltaX > maxX || fishY + deltaY < 0 || fishY + deltaY > maxY) {
-                // Handle boundary conditions here, such as wrapping around the screen
-                fishX = (fishX + deltaX) % maxX;
-                fishY = (fishY + deltaY) % maxY;
+                // Handle boundary conditions if needed
             } else {
                 int waddleOffsetX = (int) (2 * Math.sin(System.currentTimeMillis() * 0.005));
                 int waddleOffsetY = (int) (2 * Math.cos(System.currentTimeMillis() * 0.005));
-                if (deltaX != 0) {
-                    fishX += deltaX + waddleOffsetY;
-                } else {
-                    fishX += deltaX + waddleOffsetX;
-                }
-                if (deltaY != 0) {
-                    fishY += deltaY + waddleOffsetX;
-                } else {
-                    fishY += deltaY + waddleOffsetY;
-                }
+
+                fishX += deltaX + waddleOffsetX;
+                fishY += deltaY + waddleOffsetY;
             }
 
             updateDirection();
         }
-    }
-
-    public void gotoFood() {
-        destinationX = Food.SummonedFood.foodX;
-        destinationY = Food.SummonedFood.foodY;
-        updateDirection();
     }
 
     private void updateDirection() {
@@ -110,5 +92,39 @@ public class Fish_movement extends Entity {
 
     public void setSpeed(int speed) {
         this.speed = speed;
+    }
+
+    public void gotoFood(List<Food.FoodLocation> foodLocations) {
+        if (!foodLocations.isEmpty()) {
+            Food.FoodLocation nearestFood = findNearestFood(foodLocations);
+
+            destinationX = nearestFood.getLocationX();
+            destinationY = nearestFood.getLocationY();
+
+            updateDirection();
+        } else {
+            // No food available, set random destination
+            setRandomDestination();
+        }
+    }
+
+    private Food.FoodLocation findNearestFood(List<Food.FoodLocation> foodLocations) {
+        Food.FoodLocation nearestFood = foodLocations.get(0);
+        double minDistance = distanceToFood(nearestFood);
+
+        for (Food.FoodLocation foodLocation : foodLocations) {
+            double distance = distanceToFood(foodLocation);
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestFood = foodLocation;
+            }
+        }
+
+        return nearestFood;
+    }
+
+    private double distanceToFood(Food.FoodLocation foodLocation) {
+        return Math.sqrt((foodLocation.getLocationX() - fishX) * (foodLocation.getLocationX() - fishX) +
+                (foodLocation.getLocationY() - fishY) * (foodLocation.getLocationY() - fishY));
     }
 }

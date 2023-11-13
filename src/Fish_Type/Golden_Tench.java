@@ -1,6 +1,7 @@
 package Fish_Type;
 
 import Entity.Fish;
+import Entity.Food;
 import main.GamePanel;
 
 public class Golden_Tench extends Fish {
@@ -12,5 +13,8 @@ public class Golden_Tench extends Fish {
     private void updateFishImages() {
         fish_left = setup("GoldenTench_left"); 
         fish_right = setup("GoldenTench_right"); 
+    }
+    public void eatFood(Food food) {
+        callEatingLogic(food);  // Call the eating logic from the Fish class
     }
 }

@@ -1,6 +1,7 @@
 package Fish_Type;
 
 import Entity.Fish;
+import Entity.Food;
 import main.GamePanel;
 
 public class Clown_fish extends Fish {
@@ -11,7 +12,14 @@ public class Clown_fish extends Fish {
     }
 
     private void updateFishImages() {
-        fish_left = setup("ClownFish_left"); 
-        fish_right = setup("ClownFish_right"); 
+        fish_left = setup("ClownFish_left");
+        fish_right = setup("ClownFish_right");
     }
+
+    public void eatFood(Food food) {
+        callEatingLogic(food);  // Call the eating logic from the Fish class
+    }
+
+
 }
+

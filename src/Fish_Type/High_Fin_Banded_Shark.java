@@ -1,6 +1,7 @@
 package Fish_Type;
 
 import Entity.Fish;
+import Entity.Food;
 import main.GamePanel;
 
 public class High_Fin_Banded_Shark extends Fish {
@@ -12,5 +13,8 @@ public class High_Fin_Banded_Shark extends Fish {
     private void updateFishImages() {
         fish_left = setup("HIghFinBandedShark_left"); 
         fish_right = setup("HIghFinBandedShark_right"); 
+    }
+    public void eatFood(Food food) {
+        callEatingLogic(food);  // Call the eating logic from the Fish class
     }
 }

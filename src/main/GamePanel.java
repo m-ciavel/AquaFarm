@@ -7,11 +7,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Toolkit;
 import java.awt.Dimension;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import Entity.Fish;
 import Entity.Food;
+import Entity.Fish;
 import Entity.GodHand;
 import Fish_Type.Atlantic_Bass;
 import Fish_Type.Blue_Gill;
@@ -19,7 +20,6 @@ import Fish_Type.Clown_fish;
 import Fish_Type.Golden_Tench;
 import Fish_Type.Guppy;
 import Fish_Type.High_Fin_Banded_Shark;
-
 
 public class GamePanel extends JPanel implements ActionListener {
 
@@ -41,9 +41,6 @@ public class GamePanel extends JPanel implements ActionListener {
     High_Fin_Banded_Shark highfinbandedshark;
     Food food;
 
-
-
-
     public GamePanel() {
         setPreferredSizeToScreenSize();
         setBackground(Color.BLUE);
@@ -64,8 +61,7 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     private void initializeFood() {
-
-        food =new Food(mouseIn, this);
+        food = new Food(mouseIn, this);
     }
 
     private void initializeFish() {
@@ -90,6 +86,8 @@ public class GamePanel extends JPanel implements ActionListener {
     public void update() {
         hands.update();
         food.update();
+
+        // Call the move method for all fish entities
         clownfish.move();
         bluegill.move();
         atlanticbass.move();
@@ -97,8 +95,25 @@ public class GamePanel extends JPanel implements ActionListener {
         guppy.move();
         highfinbandedshark.move();
 
+        clownfish.eatFood(food);
+        bluegill.eatFood(food);
+        atlanticbass.eatFood(food);
+        goldentench.eatFood(food);
+        guppy.eatFood(food);
+        highfinbandedshark.eatFood(food);
 
+        // Use while loop to continuously check and seek food for all fish entities
+        if (!food.foodLocations.isEmpty()) {
+            clownfish.seek_food(food.foodLocations);
+            bluegill.seek_food(food.foodLocations);
+            atlanticbass.seek_food(food.foodLocations);
+            goldentench.seek_food(food.foodLocations);
+            guppy.seek_food(food.foodLocations);
+            highfinbandedshark.seek_food(food.foodLocations);
+        }
     }
+
+
 
     @Override
     public void paintComponent(Graphics g) {
