@@ -5,9 +5,12 @@ import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
 
 import javax.swing.JPanel;
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.security.Key;
+import java.awt.RenderingHints;
 
 public class GamePanel extends JPanel implements Runnable{
 
@@ -28,8 +31,8 @@ public class GamePanel extends JPanel implements Runnable{
 
     private GameStateManager gsm;
     public GamePanel(int width, int height){
-        this.width = width;
-        this.height = height;
+        GamePanel.width = width;
+        GamePanel.height = height;
         setPreferredSize(new Dimension(width,height));
         setFocusable(true);
         requestFocus();
@@ -112,7 +115,7 @@ public class GamePanel extends JPanel implements Runnable{
                     oldFrameCount = frameCount;
                 }
                 if(tickCount != oldTickCount){
-                    System.out.println("NEW SECOND(T) "+ thisSecond + "" + tickCount);
+                    System.out.println("NEW SECOND(T) "+ thisSecond + " " + tickCount);
                     oldTickCount = tickCount;
                 }
                 frameCount = 0;
