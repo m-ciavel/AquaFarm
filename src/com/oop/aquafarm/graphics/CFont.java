@@ -1,6 +1,11 @@
 package com.oop.aquafarm.graphics;
 
-import java.awt.*;
+
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.RenderingHints;
+import java.awt.GraphicsEnvironment;
+import java.awt.Font;
 import java.io.File;
 
 public class CFont {

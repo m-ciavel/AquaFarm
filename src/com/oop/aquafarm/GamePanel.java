@@ -1,5 +1,6 @@
 package com.oop.aquafarm;
 
+import com.oop.aquafarm.entity.Entity;
 import com.oop.aquafarm.states.GameStateManager;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
@@ -16,9 +17,13 @@ public class GamePanel extends JPanel implements Runnable{
 
     public static int width;
     public static int height;
+    final int originalTileSize = 16;
+    final int scale = 3;
+    public final int tilesize = originalTileSize * scale;
     public static int oldFrameCount;
     public static int oldTickCount;
     public static int tickCount;
+    public static double FPS = 60;
 
     private Thread thread;
     private boolean running = false;
@@ -28,6 +33,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     private MouseHandler mouseIn;
     private KeyHandler keyh;
+    private Entity entity;
 
     private GameStateManager gsm;
     public GamePanel(int width, int height){
@@ -63,6 +69,8 @@ public class GamePanel extends JPanel implements Runnable{
         keyh = new KeyHandler(this);
 
         gsm = new GameStateManager(g);
+
+        entity = new Entity(this);
     }
 
     public void run(){
@@ -134,7 +142,6 @@ public class GamePanel extends JPanel implements Runnable{
 
                 now = System.nanoTime();
             }
-
         }
 
     }
