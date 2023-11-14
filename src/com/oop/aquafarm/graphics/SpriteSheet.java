@@ -107,6 +107,23 @@ public class SpriteSheet {
         }
         return simg;
     }
+//    public static BufferedImage Background(String imageName) {
+//        ScaledImage uTool = new ScaledImage();
+//        BufferedImage bgimg= null;
+//
+//        try {
+////            simg = ImageIO.read(Objects.requireNonNull(SpriteSheet.class.getResourceAsStream("/res/"+ folderName + "/" + imageName + ".png")));
+//            File f = new File("./res/"+ imageName + "/" + imageName + ".gif");
+//            bgimg = ImageIO.read(f);
+//            bgimg = uTool.scaledImage(bgimg, GamePanel.width, GamePanel.height);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            System.out.println("ERROR: could not load file: " + imageName);
+//        }
+//        return bgimg;
+//    }
+
+
 
     public void loadSpriteArray() {
         spriteArray = new Sprite[hSprite][wSprite];

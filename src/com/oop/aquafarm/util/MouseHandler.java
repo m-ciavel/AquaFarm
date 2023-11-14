@@ -12,10 +12,10 @@ public class MouseHandler extends MouseMotionAdapter implements MouseListener, M
     private static int mouseX;
     private static int mouseY;
     private static int mouseB;
-    public static boolean mousePressed;
     public static boolean mouseClicked;
     public static boolean mouseReleased;
     public static boolean mouseDragged;
+    public static boolean mouseMoved;
 
     private int offsetX;
     private int offsetY;
@@ -24,6 +24,7 @@ public class MouseHandler extends MouseMotionAdapter implements MouseListener, M
 
     public MouseHandler(GamePanel game){
         game.addMouseListener(this);
+        game.addMouseMotionListener(this);
     }
 
     public int getX(){
@@ -37,9 +38,7 @@ public class MouseHandler extends MouseMotionAdapter implements MouseListener, M
     public int getButton(){
         return mouseB;
     }
-    public boolean getPressed(){
-        return mousePressed;
-    }
+
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -49,11 +48,8 @@ public class MouseHandler extends MouseMotionAdapter implements MouseListener, M
     @Override
     public void mousePressed(MouseEvent e) {
         mouseB = e.getButton();
-        mousePressed = true;
         mouseX = e.getX();
         mouseY = e.getY();
-
-        // Check if the mouse click is on the fish
 
     }
 
@@ -61,7 +57,6 @@ public class MouseHandler extends MouseMotionAdapter implements MouseListener, M
     public void mouseReleased(MouseEvent e) {
         mouseB = -1;
         mouseReleased = true;
-        mousePressed = false;
         mouseClicked = false;
 
 
@@ -79,10 +74,10 @@ public class MouseHandler extends MouseMotionAdapter implements MouseListener, M
 
     @Override
     public void mouseDragged(MouseEvent e) {
-//        if(e.getButton()){
-//            mouseX = e.getX();
-//            mouseY = e.getY();
-//        }
+        if (mouseB == 1) {
+            mouseX = e.getX();
+            mouseY = e.getY();
+        }
         mouseDragged = true;
 
     }
@@ -91,5 +86,6 @@ public class MouseHandler extends MouseMotionAdapter implements MouseListener, M
     public void mouseMoved(MouseEvent e) {
         mouseX = e.getX();
         mouseY = e.getY();
+        mouseMoved = true;
     }
 }

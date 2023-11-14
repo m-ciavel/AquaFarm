@@ -39,15 +39,6 @@ public class Food extends Entity {
 
     @Override
     public void update(double time) {
-        if (clicked && canSpawnFood && ExistingFoods.size() < 10) {
-            int x = mouseIn.getX()- foodSize / 2;
-            int y = mouseIn.getY() - foodSize / 2;
-
-            ExistingFoods.add(new SummonedFood(x, y, x, y));
-            canSpawnFood = false;
-            foodSpawnTimer.start();
-        }
-
         // Calculate the shake angle
         double shakeAmplitude = 3;
         shakeAngle += 0.1;
@@ -124,7 +115,16 @@ public class Food extends Entity {
 
     @Override
     public void input(MouseHandler mouseIn) {
-        clicked = mouseIn.mousePressed;
+
+        if (clicked && canSpawnFood && ExistingFoods.size() < 10) {
+            int x = mouseIn.getX()- foodSize / 2;
+            int y = mouseIn.getY() - foodSize / 2;
+
+            ExistingFoods.add(new SummonedFood(x, y, x, y));
+            canSpawnFood = false;
+            foodSpawnTimer.start();
+        }
+
     }
 
     public static class SummonedFood {

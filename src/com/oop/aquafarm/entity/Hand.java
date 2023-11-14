@@ -27,16 +27,14 @@ public class Hand extends Entity{
         closehand = SpriteSheet.setup(foldername,foldername + ".close");
     }
     public void update(double time){
-
     }
     @Override
     public void render(Graphics2D g) {
         BufferedImage image;
-        if(clicked){
-            image = closehand;
-
-        }else {
+        if(!clicked){
             image = openhand;
+        }else {
+            image = closehand;
         }
         if (image != null) {
             g.drawImage(image, imageX, imageY, null);
@@ -52,6 +50,7 @@ public class Hand extends Entity{
         }else if (mouseIn.getButton() == -1){
             clicked = false;
         }
+
 
     }
 
