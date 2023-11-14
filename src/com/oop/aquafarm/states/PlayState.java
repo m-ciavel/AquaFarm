@@ -4,13 +4,14 @@ import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.entity.GodHand;
 import com.oop.aquafarm.entity.Food;
+import com.oop.aquafarm.entity.Hand;
 import com.oop.aquafarm.entity.fishes.*;
 import com.oop.aquafarm.graphics.CFont;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
+import com.oop.aquafarm.util.Vector2f;
 
-//import javax.swing.;
-import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -20,7 +21,8 @@ public class PlayState extends GameState{
 
     MouseHandler mouseIn;
     GamePanel game;
-    GodHand hands;
+    public static Vector2f map;
+    Hand hands;
     Fish fish;
     Clown_fish clownfish;
     Blue_Gill bluegill;
@@ -32,10 +34,12 @@ public class PlayState extends GameState{
 
     public PlayState(GameStateManager gsm){
         super(gsm);
-//        hands = new GodHand(mouseIn, game);
-//        food = new Food(mouseIn, game);
-//
-        clownfish = new Clown_fish(100, 100, null, mouseIn);
+        map = new Vector2f();
+        Vector2f.setWorldVar(map.x, map.y);
+//        hands = new Hand(mouseIn, game);
+//        food = new Food(mouseIn, g);
+
+//        clownfish = new Clown_fish(100, 100, game, mouseIn);
 //        atlanticbass = new Atlantic_Bass(100, 100, game);
 //        bluegill = new Blue_Gill(100, 100, game);
 //        goldentench = new Golden_Tench(100, 100, game);
@@ -51,19 +55,20 @@ public class PlayState extends GameState{
     @Override
     public void update(double time){
         System.out.println("gamestate");
+        Vector2f.setWorldVar(map.x, map.y);
         startGameTimer();
-//        hands.update();
+//        hands.update(time);
 //        food.update();
 
         // Call the move method for all fish entities
-        clownfish.move();
+//        clownfish.move();
 //        bluegill.move();
 //        atlanticbass.move();
 //        goldentench.move();
 //        guppy.move();
 //        highfinbandedshark.move();
 //
-        clownfish.eatFood(food);
+//        clownfish.eatFood(food);
 //        bluegill.eatFood(food);
 //        atlanticbass.eatFood(food);
 //        goldentench.eatFood(food);
@@ -72,7 +77,7 @@ public class PlayState extends GameState{
 //
 //        // Use while loop to continuously check and seek food for all fish entities
 //        if (!food.foodLocations.isEmpty()) {
-            clownfish.seek_food(food.foodLocations);
+//            clownfish.seek_food(food.foodLocations);
 //            bluegill.seek_food(food.foodLocations);
 //            atlanticbass.seek_food(food.foodLocations);
 //            goldentench.seek_food(food.foodLocations);
@@ -85,6 +90,7 @@ public class PlayState extends GameState{
     public void input(MouseHandler mouseIn, KeyHandler keyh){
 //        game.addMouseMotionListener(mouseIn);
 //        game.addMouseListener(mouseIn);
+//        hands.input(mouseIn);
 
         keyh.escape.tick();
         if(keyh.escape.clicked){
@@ -108,7 +114,7 @@ public class PlayState extends GameState{
         tps.drawString(g,GamePanel.oldTickCount + " TPS");
 
 //        hands.render(g);
-        clownfish.render(g);
+//        clownfish.render(g);
 //        bluegill.render(g);
 //        atlanticbass.render(g);
 //        goldentench.render(g);

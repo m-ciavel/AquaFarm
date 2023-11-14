@@ -1,6 +1,7 @@
 package com.oop.aquafarm.entity;
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.ScaledImage;
 
@@ -154,22 +155,10 @@ public class Fish extends Entity {
     }
 
     protected void updateFishImages(String fish_type) {
-        fish_left = setup(fish_type + "_left");
-        fish_right = setup(fish_type + "_left");
+        fish_left = SpriteSheet.setup("fish", fish_type + "_left");
+        fish_right = SpriteSheet.setup("fish",fish_type + "_right");
     }
 
-    public BufferedImage setup(String imageName) {
-        ScaledImage uTool = new ScaledImage();
-        BufferedImage fishImage = null;
-
-        try {
-            fishImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/fish/" + imageName + ".png")));
-            fishImage = uTool.scaledImage(fishImage, game.tilesize, game.tilesize);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return fishImage;
-    }
 
     public int getFishX() {
         return fishMovement.getFishX();

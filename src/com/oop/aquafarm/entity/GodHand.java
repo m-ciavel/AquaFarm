@@ -1,6 +1,13 @@
 package com.oop.aquafarm.entity;
 
+/*
+
+basis of src/com/oop/aquafarm/entity/Hand.java
+
+*/
+
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.ScaledImage;
 
@@ -24,33 +31,20 @@ public class GodHand extends Entity{
     }
 
     private void loadGodHandImages() {
-        hand1 = setup("hand.open");
-        hand2 = setup("hand.close");
+        openhand = SpriteSheet.setup("hand.open");
+        closehand = SpriteSheet.setup("hand.close");
     }
 
-    public BufferedImage setup(String imageName) {
-        ScaledImage uTool = new ScaledImage();
-        BufferedImage HandImage = null;
-
-        try {
-
-            HandImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/hand/" + imageName + ".png")));
-            HandImage = uTool.scaledImage(HandImage, game.tilesize, game.tilesize);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return HandImage;
-    }
 
     public void update() {
         clicked = mouseIn.mousePressed;
     }
 
-    public void draw(Graphics2D g2) {
+    public void render(Graphics2D g2) {
         int imageX = mouseIn.getX() - game.tilesize / 2;
         int imageY = mouseIn.getY() - game.tilesize / 2;
 
-        BufferedImage image = clicked ? hand2 : hand1;
+        BufferedImage image = clicked ? closehand : openhand;
 
         if (image != null) {
             g2.drawImage(image, imageX, imageY, null);

@@ -1,7 +1,9 @@
 package com.oop.aquafarm.states;
 
+import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
+import com.oop.aquafarm.util.Vector2f;
 
 import java.awt.Graphics2D;
 
@@ -10,6 +12,8 @@ import java.awt.Graphics2D;
 public class GameStateManager {
 
     private GameState[] states;
+
+    public static Vector2f map;
 
     public static final int TITLE = 0;
     public static final int ACCOUNT = 1;
@@ -21,6 +25,9 @@ public class GameStateManager {
 
     public GameStateManager(Graphics2D g){
         GameStateManager.g = g;
+
+        map = new Vector2f(GamePanel.width, GamePanel.height);
+        Vector2f.setWorldVar(map.x, map.y);
 
         states = new GameState[3];
 

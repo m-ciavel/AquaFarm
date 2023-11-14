@@ -17,9 +17,9 @@ public class GamePanel extends JPanel implements Runnable{
 
     public static int width;
     public static int height;
-    final int originalTileSize = 16;
-    final int scale = 3;
-    public final int tilesize = originalTileSize * scale;
+    final static int originalTileSize = 16;
+    final static int scale = 3;
+    public static int tilesize = originalTileSize * scale;
     public static int oldFrameCount;
     public static int oldTickCount;
     public static int tickCount;
@@ -69,8 +69,6 @@ public class GamePanel extends JPanel implements Runnable{
         keyh = new KeyHandler(this);
 
         gsm = new GameStateManager(g);
-
-        entity = new Entity(this);
     }
 
     public void run(){

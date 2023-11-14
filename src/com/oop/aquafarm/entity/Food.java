@@ -2,6 +2,7 @@ package com.oop.aquafarm.entity;
 
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.ScaledImage;
 
@@ -18,7 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Food extends Entity {
-    private final MouseHandler mouseIn;
+//    private final MouseHandler mouseIn;
     private BufferedImage foodImage;
     final List<SummonedFood> ExistingFoods = new ArrayList<>();
     public final List<FoodLocation> foodLocations = new ArrayList<>();
@@ -28,10 +29,8 @@ public class Food extends Entity {
 
     private double shakeAngle = 0; // Angle for shaking effect
 
-    public Food(MouseHandler mouseIn, GamePanel game) {
-        super(game);
-        this.mouseIn = mouseIn;
-        this.game = game;
+    public Food(MouseHandler mouseIn, Graphics2D g) {
+        super(g, mouseIn);
         setDefaultValues();
         loadFoodImage();
         initFoodSpawnTimer();
@@ -42,21 +41,9 @@ public class Food extends Entity {
     }
 
     private void loadFoodImage() {
-        foodImage = setup("pellet_left");
+        foodImage = SpriteSheet.setup("food", "pellet_left");
     }
 
-    public BufferedImage setup(String imageName) {
-        ScaledImage uTool = new ScaledImage();
-        BufferedImage image = null;
-
-        try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/food/" + imageName + ".png")));
-            image = uTool.scaledImage(image, foodSize, foodSize);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return image;
-    }
 
     private void initFoodSpawnTimer() {
         foodSpawnTimer = new Timer(1000, new ActionListener() {
@@ -129,7 +116,7 @@ public class Food extends Entity {
         }
     }
 
-    public void draw(Graphics2D g2) {
+    public void render(Graphics2D g2) {
         for (SummonedFood food : ExistingFoods) {
             g2.drawImage(foodImage, food.foodX, food.foodY, null);
         }
