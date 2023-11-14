@@ -4,10 +4,11 @@ import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.entity.Food;
 import com.oop.aquafarm.util.MouseHandler;
+import com.oop.aquafarm.util.Vector2f;
 
 public class Clown_fish extends Fish {
-    public Clown_fish(int initialX, int initialY, GamePanel game, MouseHandler mouseIn) {
-        super(initialX, initialY, game, mouseIn);
+    public Clown_fish(Vector2f origin, int initialX, int initialY) {
+        super( origin, initialX, initialY);
 
         updateFishImages("ClownFish_left");
     }

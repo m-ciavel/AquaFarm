@@ -1,24 +1,21 @@
 package com.oop.aquafarm.entity;
 
-import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.graphics.Fish_movement;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.MouseHandler;
-import com.oop.aquafarm.util.ScaledImage;
+import com.oop.aquafarm.util.Vector2f;
+import com.oop.aquafarm.util.Eating_logic;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Fish extends Entity {
     private final Fish_movement fishMovement;
+
     private int offsetX;
     private int offsetY;
     public boolean isDragging;
@@ -30,14 +27,13 @@ public class Fish extends Entity {
     private final int increasedSpeed;
     private final Timer speedIncreaseTimer;
 
-    public Fish(int initialX, int initialY, GamePanel game, MouseHandler mouseIn) {
-        super(game);
+    public Fish(Vector2f origin, int initialX, int initialY) {
+        super(origin);
 
         fishMovement = new Fish_movement(1920, 1080);
         fishMovement.setInitialPosition(initialX, initialY);
-        this.game = game;
-        this.mouseIn = mouseIn;
         getFishImages(); // Load fish images
+//        updateFishImages(fish_type);
 
         // Initialize dragging variables
         offsetX = 0;
@@ -49,59 +45,13 @@ public class Fish extends Entity {
         increasedSpeed = 15; // Set the increased speed
         speedIncreaseTimer = new Timer();
 
-        // Add a mouse listener to the game panel for dragging
-//        game.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mousePressed(MouseEvent e) {
-//                int mouseX = e.getX();
-//                int mouseY = e.getY();
-//
-//                // Check if the mouse click is on the fish
-//                if (mouseX >= fishMovement.getFishX() && mouseX <= fishMovement.getFishX() + fish_left.getWidth() &&
-//                        mouseY >= fishMovement.getFishY() && mouseY <= fishMovement.getFishY() + fish_left.getHeight()) {
-//                    offsetX = mouseX - fishMovement.getFishX();
-//                    offsetY = mouseY - fishMovement.getFishY();
-//                    isDragging = true;
-//                    isMoving = false; // Pause fish movement while dragging
-//                }
-//            }
-//
-//            @Override
-//            public void mouseReleased(MouseEvent e) {
-//                if (isDragging) {
-//                    isDragging = false;
-//                    isMoving = true; // Resume fish movement when released
-//
-//                    if (!isSpeedIncreased) {
-//                        isSpeedIncreased = true;
-//                        fishMovement.setSpeed(increasedSpeed);
-//
-//                        // Schedule a timer to revert the speed back to the original value after 3 seconds
-//                        speedIncreaseTimer.schedule(new TimerTask() {
-//                            @Override
-//                            public void run() {
-//                                fishMovement.setSpeed(originalSpeed);
-//                                isSpeedIncreased = false;
-//                            }
-//                        }, 3000);
-//                    }
-//                }
-//            }
-//            @Override
-//            public void mouseDragged(MouseEvent e) {
-//                if (isDragging) {
-//                    int mouseX = e.getX();
-//                    int mouseY = e.getY();
-//                    fishMovement.setInitialPosition(mouseX - offsetX, mouseY - offsetY);
-//                }
-//            }
-//
-//        });
+    }
 
+    private void dragAnimation(){
         int mouseX = mouseIn.getX();
         int mouseY = mouseIn.getY();
         // Check if the mouse click is on the fish
-        if(MouseHandler.mousePressed){
+        if(mouseIn.getButton() == 1){
             if (mouseX >= fishMovement.getFishX() && mouseX <= fishMovement.getFishX() + fish_left.getWidth() &&
                     mouseY >= fishMovement.getFishY() && mouseY <= fishMovement.getFishY() + fish_left.getHeight()) {
                 offsetX = mouseX - fishMovement.getFishX();
@@ -110,7 +60,7 @@ public class Fish extends Entity {
                 isMoving = false; // Pause fish movement while dragging
             }
         }
-        if(MouseHandler.mouseReleased){
+        if(mouseIn.getButton() == -1){
             if (isDragging) {
                 isDragging = false;
                 isMoving = true; // Resume fish movement when released
@@ -135,7 +85,6 @@ public class Fish extends Entity {
                 fishMovement.setInitialPosition(mouseX - offsetX, mouseY - offsetY);
             }
         }
-
     }
 
     public void move() {
@@ -168,7 +117,13 @@ public class Fish extends Entity {
         return fishMovement.getFishY();
     }
 
+    @Override
+    public void update(double time) {
+        update(time);
+    }
+
     public void render(Graphics2D g2) {
+//        dragAnimation();
         BufferedImage fishImage = null;
 
         String currentDirection = fishMovement.getCurrentDirection();
@@ -180,6 +135,47 @@ public class Fish extends Entity {
         }
 
         g2.drawImage(fishImage, fishMovement.getFishX(), fishMovement.getFishY(), null);
+    }
+
+    @Override
+    public void input(MouseHandler mouseIn) {
+        int mouseX = mouseIn.getX();
+        int mouseY = mouseIn.getY();
+        // Check if the mouse click is on the fish
+        if(mouseIn.getButton() == 1){
+            if (mouseX >= fishMovement.getFishX() && mouseX <= fishMovement.getFishX() + fish_left.getWidth() &&
+                    mouseY >= fishMovement.getFishY() && mouseY <= fishMovement.getFishY() + fish_left.getHeight()) {
+                offsetX = mouseX - fishMovement.getFishX();
+                offsetY = mouseY - fishMovement.getFishY();
+                isDragging = true;
+                isMoving = false; // Pause fish movement while dragging
+            }
+        }
+        if(mouseIn.getButton() == -1){
+            if (isDragging) {
+                isDragging = false;
+                isMoving = true; // Resume fish movement when released
+
+                if (!isSpeedIncreased) {
+                    isSpeedIncreased = true;
+                    fishMovement.setSpeed(increasedSpeed);
+
+                    // Schedule a timer to revert the speed back to the original value after 3 seconds
+                    speedIncreaseTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            fishMovement.setSpeed(originalSpeed);
+                            isSpeedIncreased = false;
+                        }
+                    }, 3000);
+                }
+            }
+        }
+        if(MouseHandler.mouseDragged){
+            if (isDragging) {
+                fishMovement.setInitialPosition(mouseX - offsetX, mouseY - offsetY);
+            }
+        }
     }
 
     public void callEatingLogic(Food food) {

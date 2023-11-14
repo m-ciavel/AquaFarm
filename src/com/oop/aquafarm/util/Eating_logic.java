@@ -1,4 +1,7 @@
-package com.oop.aquafarm.entity;
+package com.oop.aquafarm.util;
+
+import com.oop.aquafarm.entity.Fish;
+import com.oop.aquafarm.entity.Food;
 
 import java.util.Iterator;
 
