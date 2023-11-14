@@ -5,7 +5,6 @@ import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.Vector2f;
 
-
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;;
 
@@ -27,6 +26,7 @@ public class Hand extends Entity{
         closehand = SpriteSheet.setup(foldername,foldername + ".close");
     }
     public void update(double time){
+
     }
     @Override
     public void render(Graphics2D g) {
@@ -50,7 +50,6 @@ public class Hand extends Entity{
         }else if (mouseIn.getButton() == -1){
             clicked = false;
         }
-
 
     }
 
