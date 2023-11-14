@@ -4,7 +4,9 @@ import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.graphics.Animation;
 import com.oop.aquafarm.graphics.Sprite;
 import com.oop.aquafarm.graphics.SpriteSheet;
-import com.oop.aquafarm.util.*;
+import com.oop.aquafarm.util.MouseHandler;
+import com.oop.aquafarm.util.KeyHandler;
+import com.oop.aquafarm.util.Vector2f;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -16,11 +18,12 @@ import java.util.Objects;
 public abstract class Entity  {
 
     GamePanel game;
-    public static MouseHandler mouseIn;
+    static MouseHandler mouseIn;
     public static Graphics2D g;
+    protected Vector2f pos;
     public boolean xCol = false;
     public boolean yCol = false;
-    public int x , y, initialX, initialY;
+//    public int x , y, initialX, initialY;
     public int dragX, dragY;
     public BufferedImage openhand, closehand, fish_left, fish_right, food_left, food_right ;
     public boolean clicked;
@@ -29,30 +32,15 @@ public abstract class Entity  {
     public String fish_type;
     public String add_fishes;
 
-    public Entity() {
-        super();
-
+    public Entity(Vector2f origin) {
+        this.pos = origin;
     }
 
-    public void animate(){
-        if(clicked){
 
-            int imageX = mouseIn.getX() - GamePanel.tilesize / 2;
-            int imageY = mouseIn.getY() - GamePanel.tilesize / 2;
-
-            BufferedImage image = clicked ? closehand : openhand;
-
-            if (image != null) {
-                g.drawImage(image, imageX, imageY, null);
-            }
-        }
-    }
-    public void update(double time) {
-//        animate();
-    }
+    public abstract void update(double time);
 
     public abstract void render(Graphics2D g);
-    public void input(MouseHandler mouseIn, KeyHandler keyh){};
+    public abstract void input(MouseHandler mouseIn);
 
 
 }

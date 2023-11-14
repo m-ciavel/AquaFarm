@@ -5,6 +5,7 @@ import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.ScaledImage;
+import com.oop.aquafarm.util.Vector2f;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -21,7 +22,7 @@ import java.awt.event.ActionListener;
 public class Food extends Entity {
 //    private final MouseHandler mouseIn;
     private BufferedImage foodImage;
-    final List<SummonedFood> ExistingFoods = new ArrayList<>();
+    public final List<SummonedFood> ExistingFoods = new ArrayList<>();
     public final List<FoodLocation> foodLocations = new ArrayList<>();
     private static final int foodSize = 20;
     private Timer foodSpawnTimer;
@@ -29,36 +30,15 @@ public class Food extends Entity {
 
     private double shakeAngle = 0; // Angle for shaking effect
 
-    public Food(MouseHandler mouseIn, Graphics2D g) {
-        super(g, mouseIn);
+    public Food(Vector2f origin) {
+        super(origin);
         setDefaultValues();
         loadFoodImage();
         initFoodSpawnTimer();
     }
 
-    public void setDefaultValues() {
-        clicked = false;
-    }
-
-    private void loadFoodImage() {
-        foodImage = SpriteSheet.setup("food", "pellet_left");
-    }
-
-
-    private void initFoodSpawnTimer() {
-        foodSpawnTimer = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                canSpawnFood = true;
-                foodSpawnTimer.stop();
-            }
-        });
-    }
-
-
-    public void update() {
-        clicked = mouseIn.mousePressed;
-
+    @Override
+    public void update(double time) {
         if (clicked && canSpawnFood && ExistingFoods.size() < 10) {
             int x = mouseIn.getX()- foodSize / 2;
             int y = mouseIn.getY() - foodSize / 2;
@@ -99,6 +79,26 @@ public class Food extends Entity {
         printFoodLocations();
     }
 
+    public void setDefaultValues() {
+        clicked = false;
+    }
+
+    private void loadFoodImage() {
+        foodImage = SpriteSheet.setup("food", "pellet_left");
+    }
+
+
+    private void initFoodSpawnTimer() {
+        foodSpawnTimer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                canSpawnFood = true;
+                foodSpawnTimer.stop();
+            }
+        });
+    }
+
+
     private void updateFoodLocations() {
         // Clear existing locations
         foodLocations.clear();
@@ -120,6 +120,11 @@ public class Food extends Entity {
         for (SummonedFood food : ExistingFoods) {
             g2.drawImage(foodImage, food.foodX, food.foodY, null);
         }
+    }
+
+    @Override
+    public void input(MouseHandler mouseIn) {
+        clicked = mouseIn.mousePressed;
     }
 
     public static class SummonedFood {

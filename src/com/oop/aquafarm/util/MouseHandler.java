@@ -6,8 +6,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MouseHandler extends MouseMotionAdapter implements MouseListener, MouseMotionListener {
 
@@ -38,6 +36,9 @@ public class MouseHandler extends MouseMotionAdapter implements MouseListener, M
 
     public int getButton(){
         return mouseB;
+    }
+    public boolean getPressed(){
+        return mousePressed;
     }
 
     @Override

@@ -4,10 +4,11 @@ import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.entity.Food;
 import com.oop.aquafarm.util.MouseHandler;
+import com.oop.aquafarm.util.Vector2f;
 
 public class Blue_Gill extends Fish {
-    public Blue_Gill(int initialX, int initialY, GamePanel game, MouseHandler mouseIn) {
-        super(initialX, initialY, game, mouseIn);
+    public Blue_Gill(Vector2f origin, int initialX, int initialY) {
+        super( origin, initialX, initialY);
         updateFishImages("BlueGill");
     }
 

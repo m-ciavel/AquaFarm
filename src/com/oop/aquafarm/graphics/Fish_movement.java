@@ -1,4 +1,6 @@
-package com.oop.aquafarm.entity;
+package com.oop.aquafarm.graphics;
+
+import com.oop.aquafarm.entity.Food;
 
 import java.util.List;
 import java.util.Random;

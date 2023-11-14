@@ -5,9 +5,10 @@ import com.oop.aquafarm.util.ScaledImage;
 import com.oop.aquafarm.util.Vector2f;
 
 import javax.imageio.ImageIO;
-import java.awt.Graphics2D;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -96,8 +97,9 @@ public class SpriteSheet {
         BufferedImage simg = null;
 
         try {
-
-            simg = ImageIO.read(Objects.requireNonNull(SpriteSheet.class.getResourceAsStream("/"+ folderName + "/" + imageName + ".png")));
+//            simg = ImageIO.read(Objects.requireNonNull(SpriteSheet.class.getResourceAsStream("/res/"+ folderName + "/" + imageName + ".png")));
+            File f = new File("./res/"+ folderName + "/" + imageName + ".png");
+            simg = ImageIO.read(f);
             simg = uTool.scaledImage(simg, GamePanel.tilesize, GamePanel.tilesize);
         } catch (IOException e) {
             e.printStackTrace();

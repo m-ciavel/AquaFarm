@@ -1,6 +1,7 @@
 package com.oop.aquafarm.graphics;
 
-import com.oop.aquafarm.graphics.Sprite;
+import java.awt.*;
+
 public class Animation {
 
 //    private Sprite[] frames;
@@ -13,6 +14,8 @@ public class Animation {
 
     private int timesPlayed;
     private Sprite[] frames;
+    private Fish_movement fishMovement;
+    Graphics2D g;
 
     public Animation(Sprite[] frames) {
         setFrames(0, frames);
@@ -63,5 +66,6 @@ public class Animation {
     public Sprite getImage() { return frames[currentFrame]; }
     public boolean hasPlayedOnce() { return timesPlayed > 0; }
     public boolean hasPlayed(int i) { return timesPlayed == i; }
+
 
 }
