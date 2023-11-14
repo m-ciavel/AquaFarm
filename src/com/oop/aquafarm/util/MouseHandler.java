@@ -38,9 +38,7 @@ public class MouseHandler extends MouseMotionAdapter implements MouseListener, M
     public int getButton(){
         return mouseB;
     }
-    public boolean getPressed(){
-        return mousePressed;
-    }
+
 
 
     @Override
