@@ -45,7 +45,8 @@ public class TitleState extends GameState {
     public void render(Graphics2D g) {
         BufferedImage background = null;
 
-        File f = new File("./res/background/background.gif");
+//        File f = new File("./res/background/background.gif");
+        File f = new File("./res/background/bg.png");
         try {
             background = ImageIO.read(f);
         } catch (IOException e) {

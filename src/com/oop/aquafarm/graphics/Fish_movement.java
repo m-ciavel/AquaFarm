@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Fish_movement {
-    private Random random = new Random();
+    private final Random random = new Random();
     private int fishX;
     private int fishY;
     private int destinationX;

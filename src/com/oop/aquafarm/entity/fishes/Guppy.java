@@ -8,8 +8,8 @@ import com.oop.aquafarm.util.Vector2f;
 
 public class Guppy extends Fish {
     public Guppy(Vector2f origin, int initialX, int initialY) {
-        super( origin, initialX, initialY);
-        updateFishImages("Guppy");
+        super( origin, initialX, initialY, "Guppy");
+//        updateFishImages("Guppy");
     }
 
     public void eatFood(Food food) {

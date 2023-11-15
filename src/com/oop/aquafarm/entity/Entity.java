@@ -4,6 +4,7 @@ import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.graphics.Animation;
 import com.oop.aquafarm.graphics.Sprite;
 import com.oop.aquafarm.graphics.SpriteSheet;
+import com.oop.aquafarm.util.Eating_logic;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.Vector2f;
@@ -17,7 +18,7 @@ import java.util.Objects;
 
 public abstract class Entity  {
 
-    GamePanel game;
+//    GamePanel game;
     static MouseHandler mouseIn;
     public static Graphics2D g;
     protected Vector2f pos;

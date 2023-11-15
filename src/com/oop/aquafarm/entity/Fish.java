@@ -22,18 +22,21 @@ public class Fish extends Entity {
     private boolean isMoving;
     private boolean isSpeedIncreased;
 
+    private int mouseX;
+    private int mouseY;
+    private int mouseB;
 
     private final int originalSpeed;
     private final int increasedSpeed;
     private final Timer speedIncreaseTimer;
 
-    public Fish(Vector2f origin, int initialX, int initialY) {
+    public Fish(Vector2f origin, int initialX, int initialY, String fish_type) {
         super(origin);
 
         fishMovement = new Fish_movement(1920, 1080);
         fishMovement.setInitialPosition(initialX, initialY);
         getFishImages(); // Load fish images
-//        updateFishImages(fish_type);
+        updateFishImages(fish_type);
 
         // Initialize dragging variables
         offsetX = 0;
@@ -45,46 +48,6 @@ public class Fish extends Entity {
         increasedSpeed = 15; // Set the increased speed
         speedIncreaseTimer = new Timer();
 
-    }
-
-    private void dragAnimation(){
-        int mouseX = mouseIn.getX();
-        int mouseY = mouseIn.getY();
-        // Check if the mouse click is on the fish
-        if(mouseIn.getButton() == 1){
-            if (mouseX >= fishMovement.getFishX() && mouseX <= fishMovement.getFishX() + fish_left.getWidth() &&
-                    mouseY >= fishMovement.getFishY() && mouseY <= fishMovement.getFishY() + fish_left.getHeight()) {
-                offsetX = mouseX - fishMovement.getFishX();
-                offsetY = mouseY - fishMovement.getFishY();
-                isDragging = true;
-                isMoving = false; // Pause fish movement while dragging
-            }
-        }
-        if(mouseIn.getButton() == -1){
-            if (isDragging) {
-                isDragging = false;
-                isMoving = true; // Resume fish movement when released
-
-                if (!isSpeedIncreased) {
-                    isSpeedIncreased = true;
-                    fishMovement.setSpeed(increasedSpeed);
-
-                    // Schedule a timer to revert the speed back to the original value after 3 seconds
-                    speedIncreaseTimer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            fishMovement.setSpeed(originalSpeed);
-                            isSpeedIncreased = false;
-                        }
-                    }, 3000);
-                }
-            }
-        }
-        if(MouseHandler.mouseDragged){
-            if (isDragging) {
-                fishMovement.setInitialPosition(mouseX - offsetX, mouseY - offsetY);
-            }
-        }
     }
 
     public void move() {
@@ -119,7 +82,8 @@ public class Fish extends Entity {
 
     @Override
     public void update(double time) {
-        update(time);
+//        update(time);
+
     }
 
     public void render(Graphics2D g2) {
@@ -139,19 +103,22 @@ public class Fish extends Entity {
 
     @Override
     public void input(MouseHandler mouseIn) {
-        int mouseX = mouseIn.getX();
-        int mouseY = mouseIn.getY();
+        this.mouseX = mouseIn.getX();
+        this.mouseY = mouseIn.getY();
+        this.mouseB = mouseIn.getButton();
+
         // Check if the mouse click is on the fish
-        if(mouseIn.getButton() == 1){
+        if(mouseB == 1){
             if (mouseX >= fishMovement.getFishX() && mouseX <= fishMovement.getFishX() + fish_left.getWidth() &&
                     mouseY >= fishMovement.getFishY() && mouseY <= fishMovement.getFishY() + fish_left.getHeight()) {
                 offsetX = mouseX - fishMovement.getFishX();
                 offsetY = mouseY - fishMovement.getFishY();
                 isDragging = true;
                 isMoving = false; // Pause fish movement while dragging
+
             }
         }
-        if(mouseIn.getButton() == -1){
+        else if(mouseB == -1){
             if (isDragging) {
                 isDragging = false;
                 isMoving = true; // Resume fish movement when released
@@ -171,6 +138,7 @@ public class Fish extends Entity {
                 }
             }
         }
+
         if(MouseHandler.mouseDragged){
             if (isDragging) {
                 fishMovement.setInitialPosition(mouseX - offsetX, mouseY - offsetY);

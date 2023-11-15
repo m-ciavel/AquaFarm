@@ -43,9 +43,9 @@ public class Hand extends Entity{
 
     @Override
     public void input(MouseHandler mouseIn) {
+        this.imageX = mouseIn.getX() - GamePanel.tilesize / 2;
+        this.imageY = mouseIn.getY() - GamePanel.tilesize / 2;
         if(mouseIn.getButton() == 1){
-            this.imageX = mouseIn.getX() - GamePanel.tilesize / 2;
-            this.imageY = mouseIn.getY() - GamePanel.tilesize / 2;
             clicked = true;
         }else if (mouseIn.getButton() == -1){
             clicked = false;

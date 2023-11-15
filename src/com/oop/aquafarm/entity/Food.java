@@ -1,33 +1,26 @@
 package com.oop.aquafarm.entity;
 
-
 import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.MouseHandler;
-import com.oop.aquafarm.util.ScaledImage;
 import com.oop.aquafarm.util.Vector2f;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
-import javax.imageio.ImageIO;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Food extends Entity {
-//    private final MouseHandler mouseIn;
     private BufferedImage foodImage;
     public final List<SummonedFood> ExistingFoods = new ArrayList<>();
     public final List<FoodLocation> foodLocations = new ArrayList<>();
     private static final int foodSize = 20;
     private Timer foodSpawnTimer;
     private boolean canSpawnFood = true;
-
     private double shakeAngle = 0; // Angle for shaking effect
 
     public Food(Vector2f origin) {
@@ -44,7 +37,8 @@ public class Food extends Entity {
         shakeAngle += 0.1;
 
         // Update the positions of summoned foods to make them move down
-        Iterator<SummonedFood> iterator = ExistingFoods.iterator();
+        Iterator<SummonedFood> iterator;
+        iterator = ExistingFoods.iterator();
         while (iterator.hasNext()) {
             SummonedFood food = iterator.next();
 
@@ -58,7 +52,7 @@ public class Food extends Entity {
             // Check for collision with the fish (you need to implement this logic)
 
             // Check if the food is off the screen and remove it
-            if (food.foodY > game.getHeight()) {
+            if (food.foodY > GamePanel.height) {
                 iterator.remove();
             }
         }
@@ -106,7 +100,7 @@ public class Food extends Entity {
             System.out.println("X: " + location.getLocationX() + ", Y: " + location.getLocationY());
         }
     }
-
+    @Override
     public void render(Graphics2D g2) {
         for (SummonedFood food : ExistingFoods) {
             g2.drawImage(foodImage, food.foodX, food.foodY, null);
@@ -115,6 +109,15 @@ public class Food extends Entity {
 
     @Override
     public void input(MouseHandler mouseIn) {
+
+        int mouseB = mouseIn.getButton();
+
+        if(mouseB == 1){
+            clicked = true;
+        }else if(mouseB == -1){
+            clicked = false;
+        }
+
 
         if (clicked && canSpawnFood && ExistingFoods.size() < 10) {
             int x = mouseIn.getX()- foodSize / 2;
