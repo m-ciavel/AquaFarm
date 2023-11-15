@@ -22,10 +22,9 @@ public class SpriteSheet {
     public int h;
     private int wSprite;
     private int hSprite;
-    private String foldername, imagename;
+    private String imagename;
 
     public SpriteSheet(String foldername, String imagename) {
-        this.foldername = foldername;
         this.imagename = imagename;
         w = TILE_SIZE;
         h = TILE_SIZE;
@@ -54,7 +53,6 @@ public class SpriteSheet {
     public SpriteSheet(String foldername, String imagename, int w, int h) {
         this.w = w;
         this.h = h;
-        this.foldername = foldername;
         this.imagename = imagename;
 
         System.out.println("Loading: " + foldername + "/" +imagename + "...");

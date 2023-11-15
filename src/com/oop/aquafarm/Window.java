@@ -8,6 +8,7 @@ public class Window extends JFrame{
 
     public Window(){
         setTitle("AquaFarm");
+        setLayout(new FlowLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setContentPane(new GamePanel(1280, 720));
         pack();

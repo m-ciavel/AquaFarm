@@ -1,21 +1,23 @@
 package com.oop.aquafarm.states;
 
 import com.oop.aquafarm.GamePanel;
-import com.oop.aquafarm.graphics.CFont;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
+import com.oop.aquafarm.util.ScaledImage;
 
-import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
-import java.awt.Color;
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 
 public class TitleState extends GameState {
+
+    private int imagewidth;
+    private int newWidth;
+    private int imageheight;
 
     public TitleState(GameStateManager gsm) {
         super(gsm);
@@ -43,23 +45,49 @@ public class TitleState extends GameState {
 
     @Override
     public void render(Graphics2D g) {
+        ScaledImage uTool = new ScaledImage();
         BufferedImage background = null;
 
-//        File f = new File("./res/background/background.gif");
-        File f = new File("./res/background/bg.png");
+//        File f = new File("./res/background/bg.png");
+
+
+//        background = SpriteSheet.setup("background", "bg");
+//        System.out.println("ERROR: could not load file: background");
+
+
+        File f = new File("./res/background/background.gif");
         try {
             background = ImageIO.read(f);
+            background = uTool.scaledImage(background, GamePanel.width, GamePanel.height);
         } catch (IOException e) {
-//            throw new RuntimeException(e);
             e.printStackTrace();
             System.out.println("ERROR: could not load file: " + f);
         }
+
         g.drawImage(background, GamePanel.width, GamePanel.height, null);
 
 //        g.setColor(Color.BLACK);
 //        g.fillRect(0,0, GamePanel.width, GamePanel.height);
 
-        CFont title = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, GamePanel.width / 2, 32);
-        title.drawString(g, "title");
+        BufferedImage logo = null;
+        g.drawImage(painttitle(logo),  (GamePanel.width - newWidth )/ 2, 64, null);
+
     }
+
+    private BufferedImage painttitle(BufferedImage title){
+        ScaledImage uTool = new ScaledImage();
+        File titlelogo = new File("res/background/logo.png");
+        try {
+            title = ImageIO.read(titlelogo);
+            this.imagewidth = title.getWidth();
+            this.imageheight = title.getHeight();
+            this.newWidth = GamePanel.width/2;
+            title = uTool.scaledImage(title, newWidth, (GamePanel.width/2) * imageheight / imagewidth);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("ERROR: could not load file: " + titlelogo);
+        }
+        return title;
+    }
+
 }
