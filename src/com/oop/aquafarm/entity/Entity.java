@@ -1,19 +1,10 @@
 package com.oop.aquafarm.entity;
 
-import com.oop.aquafarm.GamePanel;
-import com.oop.aquafarm.graphics.Animation;
-import com.oop.aquafarm.graphics.Sprite;
-import com.oop.aquafarm.graphics.SpriteSheet;
-import com.oop.aquafarm.util.Eating_logic;
 import com.oop.aquafarm.util.MouseHandler;
-import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.Vector2f;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
-import java.io.IOException;
-import java.util.Objects;
 
 
 public abstract class Entity  {

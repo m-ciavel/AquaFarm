@@ -11,13 +11,15 @@ import java.awt.Graphics2D;
 
 public class GameStateManager {
 
-    private GameState[] states;
+    public static GameState[] states;
 
     public static Vector2f map;
 
     public static final int TITLE = 0;
     public static final int ACCOUNT = 1;
     public static final int PLAY = 2;
+    public static final int SETTINGS = 3;
+    public static final int QUIT = 4;
 
     public static Graphics2D g;
 
@@ -29,7 +31,7 @@ public class GameStateManager {
         map = new Vector2f(GamePanel.width, GamePanel.height);
         Vector2f.setWorldVar(map.x, map.y);
 
-        states = new GameState[3];
+        states = new GameState[5];
 
         states[TITLE] = new TitleState(this);
     }
@@ -38,11 +40,11 @@ public class GameStateManager {
         return states[state] != null;
     }
 
-    public GameState getState(int state){
+    public static GameState getState(int state){
         return states[state];
     }
 
-    public void pop(int state){
+    public static void pop(int state){
 
         states[state] = null;
     }
@@ -59,6 +61,12 @@ public class GameStateManager {
         }
         else if(state == PLAY){
             states[PLAY] = new PlayState(this);
+        }
+        else if(state == SETTINGS){
+            states[SETTINGS] = new SettingsState(this);
+        }
+        else if(state == QUIT){
+            states[QUIT] = new QuitState(this);
         }
     }
 

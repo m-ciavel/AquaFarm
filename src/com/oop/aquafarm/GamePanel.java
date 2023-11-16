@@ -4,21 +4,21 @@ import com.oop.aquafarm.entity.Entity;
 import com.oop.aquafarm.states.GameStateManager;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
+import com.oop.aquafarm.util.ScaledImage;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import java.awt.Graphics2D;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.RenderingHints;
+import java.io.File;
+import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable{
 
     public static int width;
     public static int height;
     final static int originalTileSize = 16;
-    final static int scale = 3;
+    public final static int scale = 3;
     public static int tilesize = originalTileSize * scale;
     public static int oldFrameCount;
     public static int oldTickCount;
@@ -154,8 +154,6 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void render(){
         if(g != null){
-//            g.setColor(new Color(14, 135, 204));
-            g.setColor(Color.BLUE);
             g.fillRect(0,0,width, height);
             gsm.render(g);
         }
@@ -167,5 +165,6 @@ public class GamePanel extends JPanel implements Runnable{
         g2.drawImage(img, 0,0, width, height, null);
         g2.dispose();
     }
+
 
 }

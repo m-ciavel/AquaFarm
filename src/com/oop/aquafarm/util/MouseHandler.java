@@ -13,6 +13,7 @@ public class MouseHandler extends MouseMotionAdapter implements MouseListener, M
     private static int mouseY;
     private static int mouseB;
     public static boolean mouseClicked;
+    public static boolean mousePressed;
     public static boolean mouseReleased;
     public static boolean mouseDragged;
     public static boolean mouseMoved;
@@ -51,7 +52,7 @@ public class MouseHandler extends MouseMotionAdapter implements MouseListener, M
         mouseB = e.getButton();
         mouseX = e.getX();
         mouseY = e.getY();
-
+        mousePressed = true;
     }
 
     @Override
@@ -59,7 +60,7 @@ public class MouseHandler extends MouseMotionAdapter implements MouseListener, M
         mouseB = -1;
         mouseReleased = true;
         mouseClicked = false;
-
+        mousePressed = false;
 
     }
 
