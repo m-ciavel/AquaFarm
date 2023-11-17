@@ -7,7 +7,7 @@ import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.ScaledImage;
 
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;

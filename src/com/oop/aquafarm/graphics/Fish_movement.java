@@ -20,7 +20,7 @@ public class Fish_movement {
         this.maxX = maxX;
         this.maxY = maxY;
         setRandomDestination();
-        speed = 2; // Default speed
+        speed = 3; // Default speed
     }
 
     public void setRandomDestination() {
@@ -57,8 +57,8 @@ public class Fish_movement {
             if (fishX + deltaX < 0 || fishX + deltaX > maxX || fishY + deltaY < 0 || fishY + deltaY > maxY) {
                 // Handle boundary conditions if needed
             } else {
-                int waddleOffsetX = (int) (2 * Math.sin(System.currentTimeMillis() * 0.005));
-                int waddleOffsetY = (int) (2 * Math.cos(System.currentTimeMillis() * 0.005));
+                int waddleOffsetX = (int) (2 * Math.sin(System.currentTimeMillis() * 0.002));
+                int waddleOffsetY = (int) (2 * Math.cos(System.currentTimeMillis() * 0.002));
 
                 fishX += deltaX + waddleOffsetX;
                 fishY += deltaY + waddleOffsetY;

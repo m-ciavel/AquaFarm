@@ -1,10 +1,9 @@
 package com.oop.aquafarm.entity;
 
+import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.graphics.Fish_movement;
 import com.oop.aquafarm.graphics.SpriteSheet;
-import com.oop.aquafarm.util.MouseHandler;
-import com.oop.aquafarm.util.Vector2f;
-import com.oop.aquafarm.util.Eating_logic;
+import com.oop.aquafarm.util.*;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -18,9 +17,15 @@ public class Fish extends Entity {
 
     private int offsetX;
     private int offsetY;
+
+    public int eatCounter;
+    private int sizeIncreaseCounter;
+
     public boolean isDragging;
     private boolean isMoving;
     private boolean isSpeedIncreased;
+
+    public boolean isHungry;
 
     private int mouseX;
     private int mouseY;
@@ -29,6 +34,8 @@ public class Fish extends Entity {
     private final int originalSpeed;
     private final int increasedSpeed;
     private final Timer speedIncreaseTimer;
+
+    private Timer hungerTime;
 
     public Fish(Vector2f origin, int initialX, int initialY, String fish_type) {
         super(origin);
@@ -41,25 +48,53 @@ public class Fish extends Entity {
         // Initialize dragging variables
         offsetX = 0;
         offsetY = 0;
-        isDragging = false;
-        isMoving = true;
-        isSpeedIncreased = false;
+
         originalSpeed = 2; // Set the original speed
         increasedSpeed = 15; // Set the increased speed
+
+        eatCounter = 0;
+        sizeIncreaseCounter = 0;
+
+        isDragging = false;
+        this.isMoving = true;
+        isSpeedIncreased = false;
+        isHungry = false;
+
         speedIncreaseTimer = new Timer();
+        hungerTime = new Timer();
+
+        hungerTime.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                isHungry = true;
+
+            }
+        }, 60000);
 
     }
 
-    public void move() {
-        if (isMoving) {
-            fishMovement.move();
+
+    public void seek_food(List<Food.FoodLocation> foodLocations) {
+        fishMovement.move();
+        if (isHungry) {
+            fishMovement.gotoFood(foodLocations);
+            resetHungerTimer();
+
         }
     }
-    public void seek_food(List<Food.FoodLocation> foodLocations) {
-        fishMovement.gotoFood(foodLocations);
+
+    private void resetHungerTimer() {
+
+        hungerTime.cancel();
+
+        hungerTime = new Timer();
+        hungerTime.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                isHungry = true;
+            }
+        }, 60000);
     }
-
-
 
     private void getFishImages() {
         fish_left = null;
@@ -70,6 +105,8 @@ public class Fish extends Entity {
         fish_left = SpriteSheet.setup("fish", fish_type + "_left");
         fish_right = SpriteSheet.setup("fish",fish_type + "_right");
     }
+
+
 
 
     public int getFishX() {
@@ -107,6 +144,7 @@ public class Fish extends Entity {
         this.mouseY = mouseIn.getY();
         this.mouseB = mouseIn.getButton();
 
+
         // Check if the mouse click is on the fish
         if(mouseB == 1){
             if (mouseX >= fishMovement.getFishX() && mouseX <= fishMovement.getFishX() + fish_left.getWidth() &&
@@ -138,12 +176,30 @@ public class Fish extends Entity {
                 }
             }
         }
-
         if(MouseHandler.mouseDragged){
             if (isDragging) {
                 fishMovement.setInitialPosition(mouseX - offsetX, mouseY - offsetY);
             }
         }
+
+    }
+
+
+    public void increaseSize() {
+
+        if (isHungry && sizeIncreaseCounter < 2 && eatCounter >= 10) {
+            int newWidth = (int) (fish_right.getWidth() * 1.125);
+            int newHeight = (int) (fish_left.getHeight() * 1.125);
+
+            // Resize the fish images
+            fish_left = ScaledImage.scaledImage(fish_left, newWidth, newHeight);
+            fish_right = ScaledImage.scaledImage(fish_right, newWidth, newHeight);
+
+
+            sizeIncreaseCounter++;
+            eatCounter = 0;
+        }
+
     }
 
     public void callEatingLogic(Food food) {

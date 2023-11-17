@@ -43,6 +43,12 @@ public class KeyHandler implements KeyListener {
     public Key enter = new Key();
     public Key escape = new Key();
     public Key p = new Key();
+    public Key key1= new Key();
+    public Key key2= new Key();
+    public Key key3= new Key();
+    public Key key4= new Key();
+    public Key key5= new Key();
+    public Key key6= new Key();
 
     public KeyHandler(GamePanel game){
         game.addKeyListener(this);
@@ -69,6 +75,24 @@ public class KeyHandler implements KeyListener {
         }
         if(e.getKeyCode() == KeyEvent.VK_P){
             p.toggle(pressed);
+        }
+        if(e.getKeyCode() == KeyEvent.VK_1){
+            key1.toggle(pressed);
+        }
+        if(e.getKeyCode() == KeyEvent.VK_2){
+            key2.toggle(pressed);
+        }
+        if(e.getKeyCode() == KeyEvent.VK_3){
+            key3.toggle(pressed);
+        }
+        if(e.getKeyCode() == KeyEvent.VK_4){
+            key4.toggle(pressed);
+        }
+        if(e.getKeyCode() == KeyEvent.VK_5){
+            key5.toggle(pressed);
+        }
+        if(e.getKeyCode() == KeyEvent.VK_6){
+            key6.toggle(pressed);
         }
     }
 

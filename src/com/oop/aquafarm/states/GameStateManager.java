@@ -1,6 +1,7 @@
 package com.oop.aquafarm.states;
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.Vector2f;
@@ -14,6 +15,8 @@ public class GameStateManager {
     public static GameState[] states;
 
     public static Vector2f map;
+
+    public static SpriteSheet button;
 
     public static final int TITLE = 0;
     public static final int ACCOUNT = 1;
@@ -32,6 +35,8 @@ public class GameStateManager {
         Vector2f.setWorldVar(map.x, map.y);
 
         states = new GameState[5];
+
+//        button = new SpriteSheet("res/menubutton/buttons.png", 144, 42);
 
         states[TITLE] = new TitleState(this);
     }

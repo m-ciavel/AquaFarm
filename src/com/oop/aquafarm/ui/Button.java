@@ -1,7 +1,5 @@
 package com.oop.aquafarm.ui;
 
-import com.oop.aquafarm.GamePanel;
-import com.oop.aquafarm.states.GameStateManager;
 import com.oop.aquafarm.util.AABB;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
@@ -53,11 +51,11 @@ public class Button {
     private BufferedImage createIconButton(BufferedImage icon, BufferedImage image, int width, int height, int iconsize) {
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-        if(image.getWidth() != width || image.getHeight() != height) {
+        if (image.getWidth() != width || image.getHeight() != height) {
             image = resizeImage(image, width, height);
         }
 
-        if(icon.getWidth() != width - iconsize || icon.getHeight() != height - iconsize) {
+        if (icon.getWidth() != width - iconsize || icon.getHeight() != height - iconsize) {
             icon = resizeImage(icon, width - iconsize, height - iconsize);
         }
 
@@ -76,22 +74,14 @@ public class Button {
 
     // ******************************************** LABEL TTF CUSTOM MIDDLE POS *******************************************
 
-    public Button(String label, BufferedImage image, Font font, Vector2f pos, int buttonSize) {
-        this(label, image, font, pos, buttonSize, -1);
+    public Button(BufferedImage image, Vector2f pos, int buttonSize) {
+        this(image, pos, buttonSize, -1);
     }
 
-    public Button(String label, BufferedImage image, Font font, Vector2f pos, int buttonWidth, int buttonHeight) {
-        GameStateManager.g.setFont(font);
-        FontMetrics met = GameStateManager.g.getFontMetrics(font);
-        int height = met.getHeight();
-        int width = met.stringWidth(label);
+    public Button(BufferedImage image, Vector2f pos, int buttonWidth, int buttonHeight) {
 
-        if(buttonWidth == -1) buttonWidth = buttonHeight;
-
-        this.label = label;
-
-        this.image = createButton(label, image, font, width + buttonWidth, height + buttonHeight, buttonWidth, buttonHeight);
-        this.iPos = new Vector2f(pos.x - this.image.getWidth() / 2, pos.y - this.image.getHeight() / 2);
+        this.image = createButton(image, buttonWidth, buttonHeight);
+        this.iPos = new Vector2f(pos.x - (float) this.image.getWidth() / 2, pos.y - (float) this.image.getHeight() / 2);
         this.bounds = new AABB(iPos, this.image.getWidth(), this.image.getHeight());
 
 
@@ -100,18 +90,15 @@ public class Button {
         this.drawString = false;
     }
 
-    public BufferedImage createButton(String label, BufferedImage image, Font font, int width, int height, int buttonWidth, int buttonHeight) {
+    public BufferedImage createButton(BufferedImage image, int width, int height) {
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-        if(image.getWidth() != width || image.getHeight() != height) {
+        if (image.getWidth() != width || image.getHeight() != height) {
             image = resizeImage(image, width, height);
         }
 
         Graphics g = result.getGraphics();
         g.drawImage(image, 0, 0, width, height, null);
-
-        g.setFont(font);
-        g.drawString(label, buttonWidth / 2, (height - buttonHeight));
 
         g.dispose();
 
@@ -130,45 +117,40 @@ public class Button {
     }
 
     // ******************************************** LABEL PNG GAMEPANEL POS *******************************************
-
-    public Button(String label, int lbWidth, int lbHeight, BufferedImage image, int iWidth, int iHeight, Vector2f offset) {
-        this(label, lbWidth, lbHeight, image, iWidth, iHeight);
-
-        iPos = new Vector2f((GamePanel.width / 2 - iWidth / 2 + offset.x) , (GamePanel.height / 2 - iHeight / 2 + offset.y));
-        lbPos = new Vector2f((iPos.x + iWidth / 2 + lbWidth / 2) - ((label.length()) * lbWidth / 2), iPos.y + iHeight / 2 - lbHeight / 2 - 4);
-
-        this.bounds = new AABB(iPos, iWidth, iHeight);
-    }
-
-    public Button(String label, int lbWidth, int lbHeight, BufferedImage image, int iWidth, int iHeight) {
-        this.label = label;
-        this.lbWidth = lbWidth;
-        this.lbHeight = lbHeight;
-        this.image = image;
-        this.hoverSize = 20;
-
-        iPos = new Vector2f((GamePanel.width / 2 - iWidth / 2) , (GamePanel.height / 2 - iHeight / 2));
-        lbPos = new Vector2f((iPos.x + iWidth / 2 + lbWidth / 2) - ((label.length()) * lbWidth / 2), iPos.y + iHeight / 2 - lbHeight / 2 - 4);
-
-        this.bounds = new AABB(iPos, iWidth, iHeight);
-
-        events = new ArrayList<ClickedEvent>();
-    }
-
-    // ******************************************** LABEL PNG CUSTOM POS *******************************************
-
-    public Button(String label, int lbWidth, int lbHeight, BufferedImage image, Vector2f iPos, int iWidth, int iHeight) {
-        this(label, new Vector2f((iPos.x + iWidth / 2 + lbWidth / 2) - ((label.length()) * lbWidth / 2), iPos.y + iHeight / 2 - lbHeight / 2 - 4), lbWidth, lbHeight, image, iPos, iWidth, iHeight);
-    }
-
-    public Button(String label, Vector2f lbPos, int lbWidth, int lbHeight, BufferedImage image, Vector2f iPos, int iWidth, int iHeight) {
-        this(label, lbWidth, lbHeight, image, iWidth, iHeight);
-
-        this.iPos = iPos;
-        this.lbPos = lbPos;
-
-        this.bounds = new AABB(iPos, iWidth, iHeight);
-    }
+//
+//    public Button(BufferedImage icon, BufferedImage image, int iWidth, int iHeight, Vector2f offset) {
+//        this(icon, image, iWidth, iHeight);
+//
+//        iPos = new Vector2f(((float) GamePanel.width / 2 - (float) iWidth / 2 + offset.x) , ((float) GamePanel.height / 2 - (float) iHeight / 2 + offset.y));
+//
+//        this.bounds = new AABB(iPos, iWidth, iHeight);
+//    }
+//
+//    public Button(BufferedImage image, int iWidth, int iHeight) {
+//        this.image = image;
+//        this.hoverSize = 20;
+//
+//        iPos = new Vector2f(((float) GamePanel.width / 2 - (float) iWidth / 2) , ((float) GamePanel.height / 2 - (float) iHeight / 2));
+//
+//        this.bounds = new AABB(iPos, iWidth, iHeight);
+//
+//        events = new ArrayList<ClickedEvent>();
+//    }
+//
+//    // ******************************************** LABEL PNG CUSTOM POS *******************************************
+//
+//    public Button(BufferedImage image, Vector2f iPos, int iWidth, int iHeight) {
+//        this(image, iPos, iWidth, iHeight);
+//    }
+//
+//    public Button(BufferedImage image, Vector2f iPos, int iWidth, int iHeight) {
+//        this(image, iWidth, iHeight);
+//        this.image = image;
+//
+//        this.iPos = iPos;
+//
+//        this.bounds = new AABB(iPos, iWidth, iHeight);
+//    }
 
 
     // ******************************************** END ************************************************************
@@ -182,25 +164,50 @@ public class Button {
         this.pressedImage = image;
     }
 
-    public void setHoverSize(int size) { this.hoverSize = size; }
-    public boolean getHovering() { return hovering; }
-    public void setHover(boolean b) { this.canHover = b; }
-    public void addEvent(ClickedEvent e) { events.add(e);}
-    public void addSlotEvent(SlotEvent e) { slotevents.add(e); }
-    public void setSlot(Slots slot) { this.slot = slot;} // temp fix
+    public void setHoverSize(int size) {
+        this.hoverSize = size;
+    }
 
-    public int getWidth() { return (int) bounds.getWidth(); }
-    public int getHeight() { return (int) bounds.getHeight(); }
-    public Vector2f getPos() { return bounds.getPos(); }
+    public boolean getHovering() {
+        return hovering;
+    }
+
+    public void setHover(boolean b) {
+        this.canHover = b;
+    }
+
+    public void addEvent(ClickedEvent e) {
+        events.add(e);
+    }
+
+    public void addSlotEvent(SlotEvent e) {
+        slotevents.add(e);
+    }
+
+    public void setSlot(Slots slot) {
+        this.slot = slot;
+    } // temp fix
+
+    public int getWidth() {
+        return (int) bounds.getWidth();
+    }
+
+    public int getHeight() {
+        return (int) bounds.getHeight();
+    }
+
+    public Vector2f getPos() {
+        return bounds.getPos();
+    }
 
     public void update(double time) {
-        if(pressedImage != null && pressed && pressedtime + 300 < time / 1000000) {
+        if (pressedImage != null && pressed && pressedtime + 300 < time / 1000000) {
             pressed = false;
         }
     }
 
     private void hover(int value) {
-        if(hoverImage == null) {
+        if (hoverImage == null) {
             iPos.x -= value / 2;
             iPos.y -= value / 2;
             float iWidth = value + bounds.getWidth();
@@ -218,31 +225,34 @@ public class Button {
     }
 
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
-        if(bounds.inside(mouseIn.getX(), mouseIn.getY())) {
-        }
-            if(canHover && !hovering) {
+        if (bounds.inside(mouseIn.getX(), mouseIn.getY())) {
+
+            if (canHover && !hovering) {
                 hover(hoverSize);
             }
-            if(mouseIn.getButton() == 1 && !clicked) {
+            if (mouseIn.getButton() == 1 && !clicked) {
                 clicked = true;
                 pressed = true;
 
-                pressedtime = System.nanoTime() / 1000000;
+                pressedtime = (float) System.nanoTime() / 1000000;
 
-                for(int i = 0; i < events.size(); i++) {
+                for (int i = 0; i < events.size(); i++) {
                     events.get(i).action(1);
                 }
-                if(slotevents == null) return;
-                for(int i = 0; i < slotevents.size(); i++) {
+                if (slotevents == null) return;
+                for (int i = 0; i < slotevents.size(); i++) {
                     slotevents.get(i).action(slot);
                 }
-            } else if(mouseIn.getButton() == -1) {
+            } else if (mouseIn.getButton() == -1) {
                 clicked = false;
             }
-//        } else if(canHover && hovering) {
-//            hover(-hoverSize);
-//            hovering = false;
+        } else if (canHover && hovering) {
+            hover(-hoverSize);
+            hovering = false;
         }
+
+
+    }
 
     public void render(Graphics2D g) {
 
@@ -256,15 +266,12 @@ public class Button {
 
     }
 
-}
 
-
-
-    interface ClickedEvent {
+    public interface ClickedEvent {
         void action(int mouseButton);
     }
 
-    interface SlotEvent {
+    public interface SlotEvent {
         void action(Slots slot);
     }
-
+}

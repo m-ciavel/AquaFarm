@@ -5,20 +5,24 @@ import java.awt.image.BufferedImage;
 public class Sprite {
 
     public BufferedImage image;
+
     private int[] pixels;
     private int[] ogpixels;
+
     private int w;
     private int h;
 
     public Sprite(BufferedImage image) {
         this.image = image;
-        this.w = image.getWidth();
-        this.h = image.getHeight();
-        ogpixels = image.getRGB(0, 0, w, h, ogpixels, 0, w);
-        pixels = ogpixels;
+//        this.w = image.getWidth();
+//        this.h = image.getHeight();
+//        ogpixels = image.getRGB(0, 0, w, h, ogpixels, 0, w);
+//        pixels = ogpixels;
     }
 
-    public int getWidth() { return w; }
+    public int getWidth() {
+        return w;
+    }
     public int getHeight() { return h; }
 
     public Sprite getSubimage(int x, int y, int w, int h) {

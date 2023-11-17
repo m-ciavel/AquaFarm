@@ -19,13 +19,7 @@ public class PlayState extends GameState{
     public static Vector2f map;
     public static Vector2f origin;
     Hand hands;
-    Fish atlanticbass, clownfish, bluegill, goldentench, guppy, highfinbandedshark;
-//    Clown_fish clownfish;
-//    Blue_Gill bluegill;
-//    Atlantic_Bass atlanticbass;
-//    Golden_Tench goldentench;
-//    Guppy guppy;
-//    High_Fin_Banded_Shark highfinbandedshark;
+    Fish[] fishes;
     Food food;
 
     public PlayState(GameStateManager gsm){
@@ -35,20 +29,14 @@ public class PlayState extends GameState{
         origin = new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2);
         hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2));
         food = new Food(origin);
+        fishes = new Fish[10];
 
-//        clownfish = new Clown_fish(origin, 100, 100);
-//        atlanticbass = new Atlantic_Bass(origin, 100, 100);
-//        bluegill = new Blue_Gill(origin, 100, 100);
-//        goldentench = new Golden_Tench(origin, 100, 100);
-//        guppy = new Guppy(origin, 100, 100);
-//        highfinbandedshark = new High_Fin_Banded_Shark(origin, 100, 100);
-
-        clownfish = new Fish(origin, 100, 100, "ClownFish");
-        atlanticbass = new Fish(origin, 100, 100, "AtlanticBass");
-        bluegill = new Fish(origin, 100, 100, "BlueGill");
-        goldentench = new Fish(origin, 100, 100, "GoldenTench");
-        guppy = new Fish(origin, 100, 100, "Guppy");
-        highfinbandedshark = new Fish(origin, 100, 100, "HIghFinBandedShark");
+        fishes[0] = new Fish(origin, 100, 100, "ClownFish");
+        fishes[1] = new Fish(origin, 100, 100, "AtlanticBass");
+        fishes[2]= new Fish(origin, 100, 100, "BlueGill");
+        fishes[3] = new Fish(origin, 100, 100, "GoldenTench");
+        fishes[4] = new Fish(origin, 100, 100, "Guppy");
+        fishes[5] = new Fish(origin, 100, 100, "HIghFinBandedShark");
 
     }
 
@@ -60,56 +48,33 @@ public class PlayState extends GameState{
 
     @Override
     public void update(double time){
-//        System.out.println("gamestate");
         Vector2f.setWorldVar(map.x, map.y);
         startGameTimer();
         hands.update(time);
         food.update(time);
 
-        // Call the move method for all fish entities
+        for (Fish fish : fishes) {
 
-        clownfish.move();
-        bluegill.move();
-        atlanticbass.move();
-        goldentench.move();
-        guppy.move();
-        highfinbandedshark.move();
+            if (fish != null) {
+                fish.callEatingLogic(food);
+                fish.seek_food(food.foodLocations);
+            }
 
-//        clownfish.eatFood(food);
-//        bluegill.eatFood(food);
-//        atlanticbass.eatFood(food);
-//        goldentench.eatFood(food);
-//        guppy.eatFood(food);
-//        highfinbandedshark.eatFood(food);
-//
-        clownfish.callEatingLogic(food);
-        bluegill.callEatingLogic(food);
-        atlanticbass.callEatingLogic(food);
-        goldentench.callEatingLogic(food);
-        guppy.callEatingLogic(food);
-        highfinbandedshark.callEatingLogic(food);
-
-        // Use while loop to continuously check and seek food for all fish entities
-        if (!food.foodLocations.isEmpty()) {
-            clownfish.seek_food(food.foodLocations);
-            bluegill.seek_food(food.foodLocations);
-            atlanticbass.seek_food(food.foodLocations);
-            goldentench.seek_food(food.foodLocations);
-            guppy.seek_food(food.foodLocations);
-            highfinbandedshark.seek_food(food.foodLocations);
         }
+
     }
 
     @Override
     public void input(MouseHandler mouseIn, KeyHandler keyh){
         food.input(mouseIn);
 
-        clownfish.input(mouseIn);
-        bluegill.input(mouseIn);
-        atlanticbass.input(mouseIn);
-        goldentench.input(mouseIn);
-        guppy.input(mouseIn);
-        highfinbandedshark.input(mouseIn);
+        for (Fish fish : fishes) {
+
+            if (fish != null) {
+                fish.input(mouseIn);
+            }
+
+        }
 
         hands.input(mouseIn);
 
@@ -123,6 +88,50 @@ public class PlayState extends GameState{
             }
 
         }
+
+        keyh.key1.tick();
+        keyh.key2.tick();
+        keyh.key3.tick();
+        keyh.key4.tick();
+        keyh.key5.tick();
+        keyh.key6.tick();
+
+        if (keyh.key1.clicked) {
+            Fish AtlanticBass = new Fish(origin, 100, 100, "AtlanticBass");
+            addFishToArray(AtlanticBass);
+        }
+        if (keyh.key2.clicked) {
+
+            Fish BlueGill = new Fish(origin, 100, 100, "BlueGill");
+            addFishToArray(BlueGill);
+        }
+        if (keyh.key3.clicked) {
+            Fish ClownFish = new Fish(origin, 100, 100, "ClownFish");
+            addFishToArray(ClownFish);
+        }
+        if (keyh.key4.clicked) {
+            Fish GoldenTench= new Fish(origin, 100, 100, "GoldenTench");
+            addFishToArray(GoldenTench);
+        }
+        if (keyh.key5.clicked) {
+            Fish Guppy = new Fish(origin, 100, 100, "Guppy");
+            addFishToArray(Guppy);
+        }
+        if (keyh.key6.clicked) {
+            Fish HIghFinBandedShark= new Fish(origin, 100, 100, "HIghFinBandedShark");
+            addFishToArray(HIghFinBandedShark);
+        }
+
+    }
+
+    public void addFishToArray(Fish fish) {
+        for (int i = 0; i < fishes.length; i++) {
+            if (fishes[i] == null) {
+                fishes[i] = fish;
+                System.out.println(fishes[i]);
+                break;
+            }
+        }
     }
 
     @Override
@@ -134,13 +143,14 @@ public class PlayState extends GameState{
         CFont tps = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 32, 32*2);
         tps.drawString(g,GamePanel.oldTickCount + " TPS");
 
+        for (Fish fish : fishes) {
 
-        clownfish.render(g);
-        bluegill.render(g);
-        atlanticbass.render(g);
-        goldentench.render(g);
-        guppy.render(g);
-        highfinbandedshark.render(g);
+            if (fish != null) {
+                fish.render(g);
+            }
+
+        }
+
         food.render(g);
         hands.render(g);
 

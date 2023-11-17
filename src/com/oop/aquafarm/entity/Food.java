@@ -3,6 +3,7 @@ package com.oop.aquafarm.entity;
 import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.MouseHandler;
+import com.oop.aquafarm.util.ScaledImage;
 import com.oop.aquafarm.util.Vector2f;
 
 import java.awt.Graphics2D;
@@ -37,8 +38,7 @@ public class Food extends Entity {
         shakeAngle += 0.1;
 
         // Update the positions of summoned foods to make them move down
-        Iterator<SummonedFood> iterator;
-        iterator = ExistingFoods.iterator();
+        Iterator<SummonedFood> iterator = ExistingFoods.iterator();
         while (iterator.hasNext()) {
             SummonedFood food = iterator.next();
 
@@ -48,8 +48,6 @@ public class Food extends Entity {
 
             // Move the food down
             food.foodY += 1; // Adjust the value to control the speed of descent
-
-            // Check for collision with the fish (you need to implement this logic)
 
             // Check if the food is off the screen and remove it
             if (food.foodY > GamePanel.height) {
@@ -70,6 +68,7 @@ public class Food extends Entity {
 
     private void loadFoodImage() {
         foodImage = SpriteSheet.setup("food", "pellet_left");
+        foodImage = ScaledImage.scaledImage(foodImage, foodSize, foodSize);
     }
 
 
@@ -119,6 +118,8 @@ public class Food extends Entity {
         }
 
 
+
+        // Check for collision with the fish (you need to implement this logic)
         if (clicked && canSpawnFood && ExistingFoods.size() < 10) {
             int x = mouseIn.getX()- foodSize / 2;
             int y = mouseIn.getY() - foodSize / 2;

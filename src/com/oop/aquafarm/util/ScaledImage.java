@@ -5,7 +5,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 public class ScaledImage {
-    public BufferedImage scaledImage(BufferedImage original, int width, int height) {
+    public static BufferedImage scaledImage(BufferedImage original, int width, int height) {
         BufferedImage scaledImage = new BufferedImage(width, height, original.getType());
         Graphics2D g2 = scaledImage.createGraphics();
         g2.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY));
