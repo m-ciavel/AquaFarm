@@ -50,7 +50,7 @@ public class Food extends Entity {
 
         try {
             image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/food/" + imageName + ".png")));
-            image = uTool.scaledImage(image, foodSize, foodSize);
+            image = UtilityTool.scaledImage(image, foodSize, foodSize);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,7 +67,6 @@ public class Food extends Entity {
         });
     }
 
-
     public void update() {
         clicked = mouseIn.mousePressed;
 
@@ -80,51 +79,31 @@ public class Food extends Entity {
             foodSpawnTimer.start();
         }
 
-        // Calculate the shake angle
         double shakeAmplitude = 3;
         shakeAngle += 0.1;
 
-        // Update the positions of summoned foods to make them move down
         Iterator<SummonedFood> iterator = ExistingFoods.iterator();
         while (iterator.hasNext()) {
             SummonedFood food = iterator.next();
 
-            // Apply a sinusoidal left-to-right shake effect
             food.foodX += (int) (shakeAmplitude * Math.cos(food.shakeAngle));
-            food.shakeAngle = shakeAngle; // Store the shake angle in the food
+            food.shakeAngle = shakeAngle;
 
-            // Move the food down
-            food.foodY += 1; // Adjust the value to control the speed of descent
+            food.foodY += 1;
 
-            // Check for collision with the fish (you need to implement this logic)
-
-            // Check if the food is off the screen and remove it
             if (food.foodY > gp.getHeight()) {
                 iterator.remove();
             }
         }
 
-        // Update food locations
         updateFoodLocations();
-
-        // Print food locations
-        printFoodLocations();
     }
 
     private void updateFoodLocations() {
-        // Clear existing locations
         foodLocations.clear();
 
-        // Update locations based on current food positions
         for (SummonedFood food : ExistingFoods) {
             foodLocations.add(new FoodLocation(food.foodX, food.foodY));
-        }
-    }
-
-    public void printFoodLocations() {
-        System.out.println("Food Locations:");
-        for (FoodLocation location : foodLocations) {
-            System.out.println("X: " + location.getLocationX() + ", Y: " + location.getLocationY());
         }
     }
 

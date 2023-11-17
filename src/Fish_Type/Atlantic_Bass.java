@@ -6,7 +6,7 @@ import Entity.Food;  // Import the Food class if it's not already imported
 
 public class Atlantic_Bass extends Fish {
     public Atlantic_Bass(int initialX, int initialY, GamePanel gp) {
-        super(initialX, initialY, gp);
+        super(initialX, initialY, gp );
         updateFishImages();
     }
 
@@ -15,7 +15,5 @@ public class Atlantic_Bass extends Fish {
         fish_right = setup("AtlanticBass_right");
     }
 
-    public void eatFood(Food food) {
-        callEatingLogic(food);  // Call the eating logic from the Fish class
-    }
+
 }

@@ -3,7 +3,7 @@ package Entity;
 import java.util.List;
 import java.util.Random;
 
-public class Fish_movement {
+public class FishMovement {
     private Random random = new Random();
     private int fishX;
     private int fishY;
@@ -14,11 +14,11 @@ public class Fish_movement {
     public int maxY;
     private String currentDirection;
 
-    public Fish_movement(int maxX, int maxY) {
+    public FishMovement(int maxX, int maxY, Fish fish) {
         this.maxX = maxX;
         this.maxY = maxY;
         setRandomDestination();
-        speed = 2; // Default speed
+        speed = 3; // Default speed
     }
 
     public void setRandomDestination() {
@@ -44,7 +44,7 @@ public class Fish_movement {
         double distance = Math.sqrt((destinationX - fishX) * (destinationX - fishX) +
                 (destinationY - fishY) * (destinationY - fishY));
 
-        if (distance < 1.0) {
+        if (distance < 3) {
             // Fish is very close to the destination, set new random destination
             setRandomDestination();
         } else {
@@ -53,10 +53,10 @@ public class Fish_movement {
             int deltaY = (int) ((destinationY - fishY) * ratio);
 
             if (fishX + deltaX < 0 || fishX + deltaX > maxX || fishY + deltaY < 0 || fishY + deltaY > maxY) {
-                // Handle boundary conditions if needed
+
             } else {
-                int waddleOffsetX = (int) (2 * Math.sin(System.currentTimeMillis() * 0.005));
-                int waddleOffsetY = (int) (2 * Math.cos(System.currentTimeMillis() * 0.005));
+                int waddleOffsetX = (int) (2 * Math.sin(System.currentTimeMillis() * 0.002));
+                int waddleOffsetY = (int) (2 * Math.cos(System.currentTimeMillis() * 0.002));
 
                 fishX += deltaX + waddleOffsetX;
                 fishY += deltaY + waddleOffsetY;
@@ -71,40 +71,19 @@ public class Fish_movement {
             currentDirection = "left";
         } else if (destinationX > fishX) {
             currentDirection = "right";
-        } else if (destinationY < fishY) {
-            currentDirection = "up";
-        } else if (destinationY > fishY) {
-            currentDirection = "down";
         }
-    }
-
-    public String getCurrentDirection() {
-        return currentDirection;
-    }
-
-    public int getFishX() {
-        return fishX;
-    }
-
-    public int getFishY() {
-        return fishY;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
     }
 
     public void gotoFood(List<Food.FoodLocation> foodLocations) {
         if (!foodLocations.isEmpty()) {
+
             Food.FoodLocation nearestFood = findNearestFood(foodLocations);
 
             destinationX = nearestFood.getLocationX();
             destinationY = nearestFood.getLocationY();
 
             updateDirection();
-        } else {
-            // No food available, set random destination
-            setRandomDestination();
+
         }
     }
 
@@ -126,5 +105,21 @@ public class Fish_movement {
     private double distanceToFood(Food.FoodLocation foodLocation) {
         return Math.sqrt((foodLocation.getLocationX() - fishX) * (foodLocation.getLocationX() - fishX) +
                 (foodLocation.getLocationY() - fishY) * (foodLocation.getLocationY() - fishY));
+    }
+
+    public String getCurrentDirection() {
+        return currentDirection;
+    }
+
+    public int getFishX() {
+        return fishX;
+    }
+
+    public int getFishY() {
+        return fishY;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 }

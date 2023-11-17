@@ -14,7 +14,5 @@ public class Guppy extends Fish {
         fish_left = setup("Guppy_left"); 
         fish_right = setup("Guppy_right"); 
     }
-    public void eatFood(Food food) {
-        callEatingLogic(food);  // Call the eating logic from the Fish class
-    }
+
 }

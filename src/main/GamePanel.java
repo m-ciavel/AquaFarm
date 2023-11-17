@@ -7,46 +7,32 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Toolkit;
 import java.awt.Dimension;
-import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import Entity.Food;
 import Entity.Fish;
 import Entity.GodHand;
-import Fish_Type.Atlantic_Bass;
-import Fish_Type.Blue_Gill;
-import Fish_Type.Clown_fish;
-import Fish_Type.Golden_Tench;
-import Fish_Type.Guppy;
-import Fish_Type.High_Fin_Banded_Shark;
 
 public class GamePanel extends JPanel implements ActionListener {
 
-    final int originalTileSize = 16;
-    final int scale = 3;
-    public final int tilesize = originalTileSize * scale;
+    final int originalTileSize = 48;
+    public int tilesize = originalTileSize;
 
-    int FPS = 480;
-    MouseInput mouseIn = new MouseInput(tilesize);
-    KeyHandler keyH = new KeyHandler();
+    private static final int FPS = 480;
+    private final MouseInput mouseIn = new MouseInput(tilesize);
+    private KeyHandler keyh;
 
-    GodHand hands;
-    Fish fish;
-    Clown_fish clownfish;
-    Blue_Gill bluegill;
-    Atlantic_Bass atlanticbass;
-    Golden_Tench goldentench;
-    Guppy guppy;
-    High_Fin_Banded_Shark highfinbandedshark;
-    Food food;
+    private GodHand hands;
+    public Fish[] fishes;
+    private Food food;
 
     public GamePanel() {
         setPreferredSizeToScreenSize();
         setBackground(Color.BLUE);
         initializeGodHand();
         initializeFood();
-        initializeFish();
+        initializeFishes();
         addMouseListeners();
         startGameTimer();
     }
@@ -64,14 +50,23 @@ public class GamePanel extends JPanel implements ActionListener {
         food = new Food(mouseIn, this);
     }
 
-    private void initializeFish() {
-        clownfish = new Clown_fish(100, 100, this);
-        atlanticbass = new Atlantic_Bass(100, 100, this);
-        bluegill = new Blue_Gill(100, 100, this);
-        goldentench = new Golden_Tench(100, 100, this);
-        guppy = new Guppy(100, 100, this);
-        highfinbandedshark = new High_Fin_Banded_Shark(100, 100, this);
+    public void initializeFishes() {
+        fishes = new Fish[10];
+    //    Fish fish = new Fish(100, 100, this);
+        //    fish.add_fish();
+
+
+
+                //{
+                //new Clown_fish(100, 100, this),
+                //new Atlantic_Bass(100, 100, this),
+                //new  Blue_Gill(100, 100, this),
+                //new Golden_Tench(100, 100, this),
+                //new Guppy(100, 100, this),
+                //new High_Fin_Banded_Shark(100, 100, this)
+                //};
     }
+
 
     private void addMouseListeners() {
         addMouseMotionListener(mouseIn);
@@ -87,51 +82,36 @@ public class GamePanel extends JPanel implements ActionListener {
         hands.update();
         food.update();
 
-        // Call the move method for all fish entities
-        clownfish.move();
-        bluegill.move();
-        atlanticbass.move();
-        goldentench.move();
-        guppy.move();
-        highfinbandedshark.move();
 
-        clownfish.eatFood(food);
-        bluegill.eatFood(food);
-        atlanticbass.eatFood(food);
-        goldentench.eatFood(food);
-        guppy.eatFood(food);
-        highfinbandedshark.eatFood(food);
+        for (Fish fish : fishes) {
 
-        // Use while loop to continuously check and seek food for all fish entities
-        if (!food.foodLocations.isEmpty()) {
-            clownfish.seek_food(food.foodLocations);
-            bluegill.seek_food(food.foodLocations);
-            atlanticbass.seek_food(food.foodLocations);
-            goldentench.seek_food(food.foodLocations);
-            guppy.seek_food(food.foodLocations);
-            highfinbandedshark.seek_food(food.foodLocations);
+            if (fish != null) {
+                fish.callEatingLogic(food);
+                fish.seek_food(food.foodLocations);
+            }
+
         }
+
+
     }
-
-
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         hands.draw(g2);
-        clownfish.draw(g2);
-        bluegill.draw(g2);
-        atlanticbass.draw(g2);
-        goldentench.draw(g2);
-        guppy.draw(g2);
-        highfinbandedshark.draw(g2);
+
+        for (Fish fish : fishes)
+            if (fish != null) {
+            fish.draw(g2);
+        }
         food.draw(g2);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         update();
+
         repaint();
     }
 }
