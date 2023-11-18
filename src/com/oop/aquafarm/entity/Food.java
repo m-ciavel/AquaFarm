@@ -20,6 +20,8 @@ public class Food extends Entity {
     public final List<SummonedFood> ExistingFoods = new ArrayList<>();
     public final List<FoodLocation> foodLocations = new ArrayList<>();
     private static final int foodSize = 20;
+    private int x;
+    private int y;
     private Timer foodSpawnTimer;
     private boolean canSpawnFood = true;
     private double shakeAngle = 0; // Angle for shaking effect
@@ -33,6 +35,14 @@ public class Food extends Entity {
 
     @Override
     public void update(double time) {
+
+        if (clicked && canSpawnFood && ExistingFoods.size() < 10) {
+
+            ExistingFoods.add(new SummonedFood(x, y));
+            canSpawnFood = false;
+            foodSpawnTimer.start();
+        }
+
         // Calculate the shake angle
         double shakeAmplitude = 3;
         shakeAngle += 0.1;
@@ -73,7 +83,7 @@ public class Food extends Entity {
 
 
     private void initFoodSpawnTimer() {
-        foodSpawnTimer = new Timer(1000, new ActionListener() {
+        foodSpawnTimer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 canSpawnFood = true;
@@ -117,17 +127,9 @@ public class Food extends Entity {
             clicked = false;
         }
 
-
-
         // Check for collision with the fish (you need to implement this logic)
-        if (clicked && canSpawnFood && ExistingFoods.size() < 10) {
-            int x = mouseIn.getX()- foodSize / 2;
-            int y = mouseIn.getY() - foodSize / 2;
-
-            ExistingFoods.add(new SummonedFood(x, y, x, y));
-            canSpawnFood = false;
-            foodSpawnTimer.start();
-        }
+        this.x = mouseIn.getX()- foodSize / 2;
+        this.y = mouseIn.getY() - foodSize / 2;
 
     }
 
@@ -136,7 +138,7 @@ public class Food extends Entity {
         private int foodY;
         private double shakeAngle;
 
-        public SummonedFood(int x, int y, int foodX, int foodY) {
+        public SummonedFood(int foodX, int foodY) {
             this.foodX = foodX;
             this.foodY = foodY;
             this.shakeAngle = 0;
