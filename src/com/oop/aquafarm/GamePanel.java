@@ -23,7 +23,7 @@ public class GamePanel extends JPanel implements Runnable{
     public static int oldFrameCount;
     public static int oldTickCount;
     public static int tickCount;
-    public static double FPS = 60;
+    public static double FPS = 480;
 
     private Thread thread;
     private boolean running = false;
@@ -83,7 +83,7 @@ public class GamePanel extends JPanel implements Runnable{
         double lastUpdateT = System.nanoTime();
         double lastRenderTime;
 
-        final double TARGET_FPS = 480;
+        final double TARGET_FPS = FPS;
         final double TTBR = 1000000000 / TARGET_FPS; //total time before render
 
         int lastSecondTime = (int) (lastUpdateT / 1000000000);
