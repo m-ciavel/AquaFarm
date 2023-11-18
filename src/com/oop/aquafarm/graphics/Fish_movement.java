@@ -16,9 +16,10 @@ public class Fish_movement {
     public int maxY;
     private String currentDirection;
 
-    public Fish_movement(int maxX, int maxY) {
-        this.maxX = maxX;
-        this.maxY = maxY;
+    public Fish_movement(int screenWidth, int screenHeight) {
+
+        this.maxX = screenWidth;
+        this.maxY = screenHeight;
         setRandomDestination();
         speed = 3; // Default speed
     }
@@ -46,7 +47,7 @@ public class Fish_movement {
         double distance = Math.sqrt((destinationX - fishX) * (destinationX - fishX) +
                 (destinationY - fishY) * (destinationY - fishY));
 
-        if (distance < 1.0) {
+        if (distance < 3.0) {
             // Fish is very close to the destination, set new random destination
             setRandomDestination();
         } else {
@@ -55,7 +56,10 @@ public class Fish_movement {
             int deltaY = (int) ((destinationY - fishY) * ratio);
 
             if (fishX + deltaX < 0 || fishX + deltaX > maxX || fishY + deltaY < 0 || fishY + deltaY > maxY) {
-                // Handle boundary conditions if needed
+
+                setRandomDestination();
+                updateDirection();
+
             } else {
                 int waddleOffsetX = (int) (2 * Math.sin(System.currentTimeMillis() * 0.002));
                 int waddleOffsetY = (int) (2 * Math.cos(System.currentTimeMillis() * 0.002));
@@ -73,10 +77,6 @@ public class Fish_movement {
             currentDirection = "left";
         } else if (destinationX > fishX) {
             currentDirection = "right";
-        } else if (destinationY < fishY) {
-            currentDirection = "up";
-        } else if (destinationY > fishY) {
-            currentDirection = "down";
         }
     }
 
@@ -98,15 +98,14 @@ public class Fish_movement {
 
     public void gotoFood(List<Food.FoodLocation> foodLocations) {
         if (!foodLocations.isEmpty()) {
+
             Food.FoodLocation nearestFood = findNearestFood(foodLocations);
 
             destinationX = nearestFood.getLocationX();
             destinationY = nearestFood.getLocationY();
 
             updateDirection();
-        } else {
-            // No food available, set random destination
-            setRandomDestination();
+
         }
     }
 

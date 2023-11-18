@@ -40,7 +40,7 @@ public class Fish extends Entity {
     public Fish(Vector2f origin, int initialX, int initialY, String fish_type) {
         super(origin);
 
-        fishMovement = new Fish_movement(1920, 1080);
+        fishMovement = new Fish_movement(1280, 720);
         fishMovement.setInitialPosition(initialX, initialY);
         getFishImages(); // Load fish images
         updateFishImages(fish_type);
@@ -74,7 +74,8 @@ public class Fish extends Entity {
     }
 
 
-    public void seek_food(List<Food.FoodLocation> foodLocations) {
+    public void seek_food(java.util.List<Food.FoodLocation> foodLocations) {
+
         fishMovement.move();
         if (isHungry) {
             fishMovement.gotoFood(foodLocations);

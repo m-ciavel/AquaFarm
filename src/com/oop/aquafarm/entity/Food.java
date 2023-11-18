@@ -1,6 +1,7 @@
 package com.oop.aquafarm.entity;
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.Window;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.ScaledImage;
@@ -49,9 +50,10 @@ public class Food extends Entity {
             // Move the food down
             food.foodY += 1; // Adjust the value to control the speed of descent
 
-            // Check if the food is off the screen and remove it
             if (food.foodY > GamePanel.height) {
                 iterator.remove();
+
+
             }
         }
 
@@ -73,7 +75,7 @@ public class Food extends Entity {
 
 
     private void initFoodSpawnTimer() {
-        foodSpawnTimer = new Timer(1000, new ActionListener() {
+        foodSpawnTimer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 canSpawnFood = true;
@@ -124,7 +126,7 @@ public class Food extends Entity {
             int x = mouseIn.getX()- foodSize / 2;
             int y = mouseIn.getY() - foodSize / 2;
 
-            ExistingFoods.add(new SummonedFood(x, y, x, y));
+            ExistingFoods.add(new SummonedFood(x, y));
             canSpawnFood = false;
             foodSpawnTimer.start();
         }
@@ -136,7 +138,7 @@ public class Food extends Entity {
         private int foodY;
         private double shakeAngle;
 
-        public SummonedFood(int x, int y, int foodX, int foodY) {
+        public SummonedFood(int foodX, int foodY) {
             this.foodX = foodX;
             this.foodY = foodY;
             this.shakeAngle = 0;
