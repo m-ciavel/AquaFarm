@@ -36,7 +36,7 @@ public class GameStateManager {
 
         states = new GameState[5];
 
-//        button = new SpriteSheet("res/menubutton/buttons.png", 144, 42);
+        button = new SpriteSheet("menubutton/buttons.png", 144, 42);
 
         states[TITLE] = new TitleState(this);
     }
@@ -105,5 +105,6 @@ public class GameStateManager {
             }
         }
     }
+
 
 }

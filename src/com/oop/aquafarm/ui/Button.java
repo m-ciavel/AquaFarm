@@ -5,72 +5,69 @@ import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.Vector2f;
 
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Button {
-
-    private String label;
-    private int lbWidth;
-    private int lbHeight;
 
     private BufferedImage image;
     private BufferedImage hoverImage;
     private BufferedImage pressedImage;
 
     private Vector2f iPos;
-    private Vector2f lbPos;
-
     private AABB bounds;
+
     private boolean hovering = false;
     private int hoverSize;
+
     private ArrayList<ClickedEvent> events;
     private ArrayList<SlotEvent> slotevents;
+
     private boolean clicked = false;
     private boolean pressed = false;
     private boolean canHover = true;
-    private boolean drawString = true;
 
     private float pressedtime;
     private Slots slot; // temp fix
 
     // ******************************************** ICON CUSTOM POS *******************************************
 
-    public Button(BufferedImage icon, BufferedImage image, Vector2f pos, int width, int height, int iconsize) {
-        this.image = createIconButton(icon, image, width + iconsize, height + iconsize, iconsize);
-        this.iPos = pos;
-        this.bounds = new AABB(iPos, this.image.getWidth(), this.image.getHeight());
+//    public Button(BufferedImage icon, BufferedImage image, Vector2f pos, int width, int height, int iconsize) {
+//        this.image = createIconButton(icon, image, width + iconsize, height + iconsize, iconsize);
+//        this.iPos = pos;
+//        this.bounds = new AABB(iPos, this.image.getWidth(), this.image.getHeight());
+//
+//        events = new ArrayList<ClickedEvent>();
+//        slotevents = new ArrayList<SlotEvent>();
+//        this.canHover = false;
+//    }
 
-        events = new ArrayList<ClickedEvent>();
-        slotevents = new ArrayList<SlotEvent>();
-        this.canHover = false;
-        this.drawString = false;
-    }
-
-    private BufferedImage createIconButton(BufferedImage icon, BufferedImage image, int width, int height, int iconsize) {
-        BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-
-        if (image.getWidth() != width || image.getHeight() != height) {
-            image = resizeImage(image, width, height);
-        }
-
-        if (icon.getWidth() != width - iconsize || icon.getHeight() != height - iconsize) {
-            icon = resizeImage(icon, width - iconsize, height - iconsize);
-        }
-
-        Graphics g = result.getGraphics();
-        g.drawImage(image, 0, 0, width, height, null);
-
-        g.drawImage(icon,
-                image.getWidth() / 2 - icon.getWidth() / 2,
-                image.getHeight() / 2 - icon.getHeight() / 2,
-                icon.getWidth(), icon.getHeight(), null);
-
-        g.dispose();
-
-        return result;
-    }
+//    private BufferedImage createIconButton(BufferedImage icon, BufferedImage image, int width, int height, int iconsize) {
+//        BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+//
+//        if (image.getWidth() != width || image.getHeight() != height) {
+//            image = resizeImage(image, width, height);
+//        }
+//
+//        if (icon.getWidth() != width - iconsize || icon.getHeight() != height - iconsize) {
+//            icon = resizeImage(icon, width - iconsize, height - iconsize);
+//        }
+//
+//        Graphics g = result.getGraphics();
+//        g.drawImage(image, 0, 0, width, height, null);
+//
+//        g.drawImage(icon,
+//                image.getWidth() / 2 - icon.getWidth() / 2,
+//                image.getHeight() / 2 - icon.getHeight() / 2,
+//                icon.getWidth(), icon.getHeight(), null);
+//
+//        g.dispose();
+//
+//        return result;
+//    }
 
     // ******************************************** LABEL TTF CUSTOM MIDDLE POS *******************************************
 
@@ -87,7 +84,6 @@ public class Button {
 
         events = new ArrayList<ClickedEvent>();
         this.canHover = false;
-        this.drawString = false;
     }
 
     public BufferedImage createButton(BufferedImage image, int width, int height) {

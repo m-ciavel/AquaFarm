@@ -1,6 +1,7 @@
 package com.oop.aquafarm.states;
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.ui.Button;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
@@ -16,9 +17,17 @@ import java.io.IOException;
 
 public class TitleState extends GameState {
 
-    private BufferedImage imgButton;
-    private BufferedImage imgHover;
+    private BufferedImage imgButtonPlay;
+    private BufferedImage imgButtonSettings;
+    private BufferedImage imgButtonExit;
+    private BufferedImage imgHoverPlay;
+    private BufferedImage imgHoverSettings;
+    private BufferedImage imgHoverExit;
     private int newWidth;
+    private int btnWidth = 144;
+    private int btnHeight = 42;
+    private int newbtnWidth = (int) (GamePanel.width/3.5);
+    private int newbtnHeight = newbtnWidth * btnHeight/btnWidth;
     private Button btnPlay;
     private Button btnSettings;
     private Button btnExit;
@@ -26,29 +35,36 @@ public class TitleState extends GameState {
 
     public TitleState(GameStateManager gsm) {
         super(gsm);
-//        imgButton = GameStateManager.button.getSubimage(0, 0, 144, 42);
-//        imgHover = GameStateManager.button.getSubimage(0, 43, 144, 42);
 
-//        btnPlay = new Button(imgButton, new Vector2f(GamePanel.width/2, GamePanel.height/2 - 48),32, 16);
-//        btnSettings = new Button(imgHover, new Vector2f(GamePanel.width/2, GamePanel.height/2 + 48), 32, 16);
-//        btnSettings = new Button(imgHover, new Vector2f(GamePanel.width/2, GamePanel.height/2 + 96), 32, 16);
-//
-//        btnPlay.addHoverImage(btnPlay.createButton(imgHover, 32, 20));
-//        btnSettings.addHoverImage(btnSettings.createButton(imgHover, 32, 20));
-//
-//        btnPlay.addEvent(e -> {
-//            gsm.add(GameStateManager.PLAY);
-//            gsm.pop(GameStateManager.TITLE);
-//        });
-//
-//        btnSettings.addEvent(e -> {
-//            gsm.add(GameStateManager.SETTINGS);
-//            gsm.pop(GameStateManager.TITLE);
-//        });
-//
-//        btnExit.addEvent(e -> {
-//            System.exit(0);
-//        });
+        imgButtonPlay = GameStateManager.button.getSubimage(0, 0, btnWidth, btnHeight);
+        imgButtonSettings = GameStateManager.button.getSubimage(btnWidth,0, btnWidth, btnHeight);
+        imgButtonExit = GameStateManager.button.getSubimage(btnWidth*2, 0, btnWidth, btnHeight);
+
+        imgHoverPlay = GameStateManager.button.getSubimage(0, btnHeight, btnWidth, btnHeight);
+        imgHoverSettings = GameStateManager.button.getSubimage(btnWidth, btnHeight, btnWidth, btnHeight);
+        imgHoverExit = GameStateManager.button.getSubimage(btnWidth*2, btnHeight, btnWidth, btnHeight);
+
+        btnPlay = new Button(imgButtonPlay, new Vector2f(GamePanel.width/2, GamePanel.height/2 ), newbtnWidth, newbtnHeight);
+        btnSettings = new Button(imgButtonSettings, new Vector2f(GamePanel.width/2, GamePanel.height/2 + newbtnHeight), newbtnWidth, newbtnHeight);
+        btnExit = new Button(imgButtonExit, new Vector2f(GamePanel.width/2, GamePanel.height/2 + newbtnHeight * 2), newbtnWidth, newbtnHeight);
+
+        btnPlay.addHoverImage(btnPlay.createButton(imgHoverPlay, newbtnWidth, newbtnHeight));
+        btnSettings.addHoverImage(btnSettings.createButton(imgHoverSettings, newbtnWidth, newbtnHeight));
+        btnExit.addHoverImage(btnSettings.createButton(imgHoverExit, newbtnWidth, newbtnHeight));
+
+        btnPlay.addEvent(e -> {
+                gsm.add(GameStateManager.ACCOUNT);
+                gsm.pop(GameStateManager.TITLE);
+        });
+
+        btnSettings.addEvent(e -> {
+            gsm.add(GameStateManager.SETTINGS);
+            gsm.pop(GameStateManager.TITLE);
+        });
+
+        btnExit.addEvent(e -> {
+            System.exit(0);
+        });
     }
 
     @Override
@@ -57,17 +73,10 @@ public class TitleState extends GameState {
 
     @Override
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
-        keyh.p.tick();
 
-        if(keyh.p.clicked){
-            if (gsm.isStateActive(GameStateManager.PLAY)){
-                gsm.pop(GameStateManager.PLAY);
-            }else{
-                gsm.add(GameStateManager.PLAY);
-                gsm.pop(GameStateManager.TITLE);
-            }
-
-        }
+        btnPlay.input(mouseIn, keyh);
+        btnSettings.input(mouseIn, keyh);
+        btnExit.input(mouseIn, keyh);
 
     }
 
@@ -75,11 +84,15 @@ public class TitleState extends GameState {
     public void render(Graphics2D g) {
 
         BufferedImage background  = null;
-        g.drawImage(paintbg(background), 0, 0, null);
+        background = SpriteSheet.paintbg(background);
+        g.drawImage(background, 0, 0, null);
 
         BufferedImage logo = null;
         g.drawImage(painttitle(logo),  (GamePanel.width - newWidth )/ 2, 115, null);
 
+        btnPlay.render(g);
+        btnSettings.render(g);
+        btnExit.render(g);
 
     }
 
@@ -96,20 +109,6 @@ public class TitleState extends GameState {
         }
         return title;
     }
-    private BufferedImage paintbg(BufferedImage background){
-        ScaledImage uTool = new ScaledImage();
-        File f = new File("res/background/bg.jpg");
-        try {
-            background = ImageIO.read(f);
-            this.newWidth = GamePanel.width;
-            background = uTool.scaledImage(background, newWidth, GamePanel.height);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("ERROR: could not load file: " + f);
-        }
-        return background;
-    }
-
 
 
 }
