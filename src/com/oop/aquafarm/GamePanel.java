@@ -1,17 +1,17 @@
 package com.oop.aquafarm;
 
-import com.oop.aquafarm.entity.Entity;
 import com.oop.aquafarm.states.GameStateManager;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
-import com.oop.aquafarm.util.ScaledImage;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+
+import javax.swing.JPanel;
+import java.awt.Graphics2D;
+import java.awt.Graphics;
+import java.awt.Dimension;
+import java.awt.RenderingHints;
+import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable{
 
@@ -28,17 +28,18 @@ public class GamePanel extends JPanel implements Runnable{
     private Thread thread;
     private boolean running = false;
 
+    private BufferStrategy bs;
     private BufferedImage img;
     private Graphics2D g;
 
     private MouseHandler mouseIn;
     private KeyHandler keyh;
-    private Entity entity;
 
     private GameStateManager gsm;
-    public GamePanel(int width, int height){
+    public GamePanel(BufferStrategy bs, int width, int height){
         GamePanel.width = width;
         GamePanel.height = height;
+        this.bs = bs;
         setPreferredSize(new Dimension(width,height));
         setFocusable(true);
         requestFocus();
@@ -161,10 +162,12 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void draw(){
-
-        Graphics g2 = (Graphics) this.getGraphics();
-        g2.drawImage(img, 0,0, width, height, null);
-        g2.dispose();
+        do{
+            Graphics g2 = (Graphics) bs.getDrawGraphics();
+            g2.drawImage(img, 3,26, width+10, height+10, null);
+            g2.dispose();
+            bs.show();
+        } while(bs.contentsLost());
     }
 
 

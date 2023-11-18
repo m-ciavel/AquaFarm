@@ -9,7 +9,7 @@ import java.awt.Graphics2D;
 
 public abstract class Entity  {
 
-//    GamePanel game;
+
     static MouseHandler mouseIn;
     public static Graphics2D g;
     protected Vector2f pos;
