@@ -33,32 +33,32 @@ public class Slots {
         }
     }
 
-    public Slots(Button button, BufferedImage[] sprite, Vector2f[] pos, int size) {
-        this(sprite, new Vector2f[]{ button.getPos(), pos[0], pos[1] }, size); // is this okay?
-        this.button = button;
+//    public Slots(Button button, BufferedImage[] sprite, Vector2f[] pos, int size) {
+//        this(sprite, new Vector2f[]{ button.getPos(), pos[0], pos[1] }, size); // is this okay?
+//        this.button = button;
+//
+//        this.width = button.getWidth() + size;
+//        this.height = button.getHeight() + size;
+//
+//        this.button.setSlot(this); // temp fix
+//    }
+//
+//    public Slots(Button button, Slots[] childSlots, BufferedImage[] sprite, Vector2f[] pos, int size) {
+//        this(sprite, new Vector2f[]{ button.getPos(), pos[0], pos[1] }, size); // is this okay?
+//        this.button = button;
+//
+//        this.width = button.getWidth() + size;
+//        this.height = button.getHeight() + size;
+//        this.childSlots = childSlots;
+//
+//        this.button.setSlot(this); // temp fix
+//    }
 
-        this.width = button.getWidth() + size;
-        this.height = button.getHeight() + size;
-
-        this.button.setSlot(this); // temp fix
-    }
-
-    public Slots(Button button, Slots[] childSlots, BufferedImage[] sprite, Vector2f[] pos, int size) {
-        this(sprite, new Vector2f[]{ button.getPos(), pos[0], pos[1] }, size); // is this okay?
-        this.button = button;
-
-        this.width = button.getWidth() + size;
-        this.height = button.getHeight() + size;
-        this.childSlots = childSlots;
-
-        this.button.setSlot(this); // temp fix
-    }
-
-    public void setVisible(boolean b) { visibility = b; }
-    public void showChildren(boolean b) { showChildren = (childSlots != null) ? b : false; }
-
-    public Button getButton() { return button; }
-    public boolean isVisibleChildren() { return showChildren; }
+//    public void setVisible(boolean b) { visibility = b; }
+//    public void showChildren(boolean b) { showChildren = (childSlots != null) ? b : false; }
+//
+//    public Button getButton() { return button; }
+//    public boolean isVisibleChildren() { return showChildren; }
 
     public void update(double time) {
         button.update(time);
