@@ -1,6 +1,7 @@
 package com.oop.aquafarm.states;
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.Window;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.ui.Button;
 import com.oop.aquafarm.util.KeyHandler;
@@ -53,8 +54,10 @@ public class TitleState extends GameState {
         btnExit.addHoverImage(btnSettings.createButton(imgHoverExit, newbtnWidth, newbtnHeight));
 
         btnPlay.addEvent(e -> {
-                gsm.add(GameStateManager.ACCOUNT);
-                gsm.pop(GameStateManager.TITLE);
+//                gsm.add(GameStateManager.ACCOUNT);
+            new Signup().setVisible(true);
+//            gsm.pop(GameStateManager.TITLE);
+            Window.window.setVisible(false);
         });
 
         btnSettings.addEvent(e -> {

@@ -1,17 +1,34 @@
 package com.oop.aquafarm.states;
 
+
 import com.oop.aquafarm.GamePanel;
-import com.oop.aquafarm.graphics.CFont;
+import com.oop.aquafarm.Window;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
 
-import java.awt.*;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import java.awt.Graphics2D;
+import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.image.BufferedImage;
 
 public class AccountState extends GameState {
+
+    private JFrame win = new JFrame("AquaFarm");
+
     public AccountState(GameStateManager gsm) {
         super(gsm);
+        initComponents();
+        win.setVisible(true);
+    }
+
+    public void initComponents() {
+        Container cp = win.getContentPane();
+        cp.setLayout(new FlowLayout() );
+        cp.add(new JLabel("Hello world") );
     }
 
     @Override
@@ -33,6 +50,7 @@ public class AccountState extends GameState {
             }
 
         }
+
 
     }
 

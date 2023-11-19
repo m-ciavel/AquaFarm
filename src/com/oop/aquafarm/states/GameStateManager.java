@@ -6,6 +6,7 @@ import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.Vector2f;
 
+import javax.swing.*;
 import java.awt.Graphics2D;
 
 
@@ -23,6 +24,7 @@ public class GameStateManager {
     public static final int PLAY = 2;
     public static final int SETTINGS = 3;
     public static final int QUIT = 4;
+//    public static final int ACCOUNT1 = 5;
 
     public static Graphics2D g;
 
