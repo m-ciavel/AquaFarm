@@ -8,7 +8,7 @@ import com.oop.aquafarm.util.Vector2f;
 
 public class Golden_Tench extends Fish {
     public Golden_Tench(Vector2f origin, int initialX, int initialY) {
-        super( origin, initialX, initialY, "GoldenTench");
+        super( origin, "GoldenTench");
 //        updateFishImages("GoldenTench");
     }
 

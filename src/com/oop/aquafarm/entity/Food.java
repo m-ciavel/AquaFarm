@@ -37,6 +37,7 @@ public class Food extends Entity {
         // Calculate the shake angle
         double shakeAmplitude = 3;
         shakeAngle += 0.1;
+        System.out.println("Remaining Time: " + (foodSpawnTimer.getInitialDelay() - foodSpawnTimer.getDelay()) / 1000 + " seconds");
 
         // Update the positions of summoned foods to make them move down
         Iterator<SummonedFood> iterator = ExistingFoods.iterator();
@@ -73,9 +74,8 @@ public class Food extends Entity {
         foodImage = ScaledImage.scaledImage(foodImage, foodSize, foodSize);
     }
 
-
     private void initFoodSpawnTimer() {
-        foodSpawnTimer = new Timer(100, new ActionListener() {
+        foodSpawnTimer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 canSpawnFood = true;
@@ -110,28 +110,29 @@ public class Food extends Entity {
 
     @Override
     public void input(MouseHandler mouseIn) {
-
         int mouseB = mouseIn.getButton();
 
-        if(mouseB == 1){
+        if (mouseB == 1) {
             clicked = true;
-        }else if(mouseB == -1){
+        } else if (mouseB == -1) {
             clicked = false;
         }
 
-
-
         // Check for collision with the fish (you need to implement this logic)
         if (clicked && canSpawnFood && ExistingFoods.size() < 10) {
-            int x = mouseIn.getX()- foodSize / 2;
+            int x = mouseIn.getX() - foodSize / 2;
             int y = mouseIn.getY() - foodSize / 2;
 
             ExistingFoods.add(new SummonedFood(x, y));
             canSpawnFood = false;
-            foodSpawnTimer.start();
-        }
 
+
+            if (!foodSpawnTimer.isRunning()) {
+                foodSpawnTimer.start();
+            }
+        }
     }
+
 
     public static class SummonedFood {
         private int foodX;

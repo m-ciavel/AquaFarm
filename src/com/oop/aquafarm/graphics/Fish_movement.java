@@ -1,6 +1,7 @@
 package com.oop.aquafarm.graphics;
 
 import com.oop.aquafarm.entity.Food;
+import com.oop.aquafarm.util.Vector2f;
 
 import java.util.List;
 import java.util.Random;
@@ -9,6 +10,8 @@ public class Fish_movement {
     private final Random random = new Random();
     private int fishX;
     private int fishY;
+
+    private Vector2f origin;
     private int destinationX;
     private int destinationY;
     private int speed;
@@ -37,9 +40,8 @@ public class Fish_movement {
         updateDirection();
     }
 
-    public void setInitialPosition(int x, int y) {
-        fishX = x;
-        fishY = y;
+    public void setInitialPosition(Vector2f origin) {
+        this.origin = origin;
         setRandomDestination();
     }
 

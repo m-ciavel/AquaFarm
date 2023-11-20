@@ -20,6 +20,9 @@ public class Fish extends Entity {
 
     public int eatCounter;
     private int sizeIncreaseCounter;
+//FOR BREEDING
+
+
 
     public boolean isDragging;
     private boolean isMoving;
@@ -37,11 +40,13 @@ public class Fish extends Entity {
 
     private Timer hungerTime;
 
-    public Fish(Vector2f origin, int initialX, int initialY, String fish_type) {
+    public Fish(Vector2f origin, String fish_type) {
         super(origin);
 
-        fishMovement = new Fish_movement(1280, 720);
-        fishMovement.setInitialPosition(initialX, initialY);
+
+
+        fishMovement = new Fish_movement(1280, 700);
+        fishMovement.setInitialPosition(origin);
         getFishImages(); // Load fish images
         updateFishImages(fish_type);
 
@@ -137,6 +142,10 @@ public class Fish extends Entity {
         }
 
         g2.drawImage(fishImage, fishMovement.getFishX(), fishMovement.getFishY(), null);
+        System.out.println(fish_type);
+
+
+
     }
 
     @Override
@@ -179,7 +188,7 @@ public class Fish extends Entity {
         }
         if(MouseHandler.mouseDragged){
             if (isDragging) {
-                fishMovement.setInitialPosition(mouseX - offsetX, mouseY - offsetY);
+                fishMovement.setInitialPosition(new Vector2f(mouseX - offsetX, mouseY - offsetY));
             }
         }
 
@@ -196,10 +205,10 @@ public class Fish extends Entity {
             fish_left = ScaledImage.scaledImage(fish_left, newWidth, newHeight);
             fish_right = ScaledImage.scaledImage(fish_right, newWidth, newHeight);
 
-
             sizeIncreaseCounter++;
             eatCounter = 0;
         }
+
 
     }
 
@@ -209,12 +218,15 @@ public class Fish extends Entity {
     }
 
 
+
     public int getFishWidth() {
         return fish_right.getWidth();
     }
     public int getFishHeight() {
         return fish_left.getHeight();
     }
+
+
 
 
 

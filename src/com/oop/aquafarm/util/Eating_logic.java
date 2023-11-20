@@ -21,6 +21,7 @@ public class Eating_logic {
                     fish.eatCounter++;
                     fish.increaseSize();
                     fish.isHungry = false;
+
                     return;
                 }
             }

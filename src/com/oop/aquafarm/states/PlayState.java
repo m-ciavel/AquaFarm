@@ -29,14 +29,15 @@ public class PlayState extends GameState{
         origin = new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2);
         hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2));
         food = new Food(origin);
-        fishes = new Fish[10];
+        fishes = new Fish[100000];
 
-        fishes[0] = new Fish(origin, 100, 100, "ClownFish");
-        fishes[1] = new Fish(origin, 100, 100, "AtlanticBass");
-        fishes[2]= new Fish(origin, 100, 100, "BlueGill");
-        fishes[3] = new Fish(origin, 100, 100, "GoldenTench");
-        fishes[4] = new Fish(origin, 100, 100, "Guppy");
-        fishes[5] = new Fish(origin, 100, 100, "HIghFinBandedShark");
+
+//        fishes[0] = new Fish(origin, 100, 100, "ClownFish");
+//        fishes[1] = new Fish(origin, 100, 100, "AtlanticBass");
+//        fishes[2]= new Fish(origin, 100, 100, "BlueGill");
+//        fishes[3] = new Fish(origin, 100, 100, "GoldenTench");
+//        fishes[4] = new Fish(origin, 100, 100, "Guppy");
+//        fishes[5] = new Fish(origin, 100, 100, "HIghFinBandedShark");
 
     }
 
@@ -97,28 +98,28 @@ public class PlayState extends GameState{
         keyh.key6.tick();
 
         if (keyh.key1.clicked) {
-            Fish AtlanticBass = new Fish(origin, 100, 100, "AtlanticBass");
+            Fish AtlanticBass = new Fish(origin, "AtlanticBass");
             addFishToArray(AtlanticBass);
         }
         if (keyh.key2.clicked) {
 
-            Fish BlueGill = new Fish(origin, 100, 100, "BlueGill");
+            Fish BlueGill = new Fish(origin,"BlueGill");
             addFishToArray(BlueGill);
         }
         if (keyh.key3.clicked) {
-            Fish ClownFish = new Fish(origin, 100, 100, "ClownFish");
+            Fish ClownFish = new Fish(origin,  "ClownFish");
             addFishToArray(ClownFish);
         }
         if (keyh.key4.clicked) {
-            Fish GoldenTench= new Fish(origin, 100, 100, "GoldenTench");
+            Fish GoldenTench= new Fish(origin,  "GoldenTench");
             addFishToArray(GoldenTench);
         }
         if (keyh.key5.clicked) {
-            Fish Guppy = new Fish(origin, 100, 100, "Guppy");
+            Fish Guppy = new Fish(origin, "Guppy");
             addFishToArray(Guppy);
         }
         if (keyh.key6.clicked) {
-            Fish HIghFinBandedShark= new Fish(origin, 100, 100, "HIghFinBandedShark");
+            Fish HIghFinBandedShark= new Fish(origin,  "HIghFinBandedShark");
             addFishToArray(HIghFinBandedShark);
         }
 

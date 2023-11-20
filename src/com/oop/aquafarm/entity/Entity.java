@@ -23,6 +23,8 @@ public abstract class Entity  {
     public String direction;
     public String fish_type;
     public String add_fishes;
+    public int breedingcount;
+
 
     public Entity(Vector2f origin) {
         this.pos = origin;
