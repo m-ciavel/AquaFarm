@@ -73,7 +73,7 @@ public class Food extends Entity {
     }
 
     private void initFoodSpawnTimer() {
-        foodSpawnTimer = new Timer(1000, new ActionListener() {
+        foodSpawnTimer = new Timer(1, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 canSpawnFood = true;

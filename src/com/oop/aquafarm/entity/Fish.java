@@ -2,6 +2,7 @@ package com.oop.aquafarm.entity;
 
 import com.oop.aquafarm.graphics.Fish_movement;
 import com.oop.aquafarm.graphics.SpriteSheet;
+import com.oop.aquafarm.states.PlayState;
 import com.oop.aquafarm.util.*;
 
 import java.awt.*;
@@ -10,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static com.oop.aquafarm.states.PlayState.origin;
 
 public class Fish extends Entity {
     private final Fish_movement fishMovement;
@@ -26,6 +29,8 @@ public class Fish extends Entity {
     private boolean isSpeedIncreased;
 
     public boolean isHungry;
+
+    public boolean isBreedable;
 
     private int mouseX;
     private int mouseY;
@@ -61,6 +66,7 @@ public class Fish extends Entity {
         this.isMoving = true;
         isSpeedIncreased = false;
         isHungry = false;
+        isBreedable = true;
 
         speedIncreaseTimer = new Timer();
         hungerTime = new Timer();
@@ -72,7 +78,7 @@ public class Fish extends Entity {
                 isHungry = true;
 
             }
-        }, 60000);
+        }, 10000);
 
         addGender(gender);
 
@@ -99,7 +105,7 @@ public class Fish extends Entity {
             public void run() {
                 isHungry = true;
             }
-        }, 60000);
+        }, 10000);
     }
 
     private void getFishImages() {
@@ -149,6 +155,14 @@ public class Fish extends Entity {
             int dotY = fishMovement.getFishY() - 10; // Adjust the position of the dot above the fish
 
             g2.setColor(Color.RED);
+            g2.fillOval(dotX, dotY, 10, 10);
+        }
+
+        if (isBreedable) {
+            int dotX = fishMovement.getFishX() + fishImage.getWidth() / 2 - 10; // Adjust the position of the dot
+            int dotY = fishMovement.getFishY() - 10; // Adjust the position of the dot above the fish
+
+            g2.setColor(Color.GREEN);
             g2.fillOval(dotX, dotY, 10, 10);
         }
     }
@@ -203,7 +217,7 @@ public class Fish extends Entity {
 
     public void increaseSize() {
 
-        if (isHungry && sizeIncreaseCounter < 2 && eatCounter >= 10) {
+        if (isHungry && sizeIncreaseCounter < 2 && eatCounter >= 2) {
             int newWidth = (int) (fish_right.getWidth() * 1.125);
             int newHeight = (int) (fish_left.getHeight() * 1.125);
 
@@ -213,6 +227,9 @@ public class Fish extends Entity {
 
             sizeIncreaseCounter++;
             eatCounter = 0;
+            if(sizeIncreaseCounter == 2){
+                isBreedable = true;
+            }
         }
 
 
@@ -229,13 +246,13 @@ public class Fish extends Entity {
 
         switch (randomNumber) {
             case 1:
-                this.gender = "Male";
+                this.gender = "male";
                 break;
             case 2:
-                this.gender = "Female";
+                this.gender = "female";
                 break;
             case 3:
-                this.gender = "GAE OR EUROPEAN";
+                this.gender = "they";
                 break;
             default:
                 this.gender = "Unknown";
@@ -255,10 +272,5 @@ public class Fish extends Entity {
     public int getFishHeight() {
         return fish_left.getHeight();
     }
-
-
-
-
-
 
 }

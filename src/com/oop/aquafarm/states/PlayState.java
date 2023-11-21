@@ -7,6 +7,7 @@ import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.entity.Food;
 import com.oop.aquafarm.entity.Hand;
 import com.oop.aquafarm.graphics.CFont;
+import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.Vector2f;
@@ -15,6 +16,7 @@ import javax.swing.Timer;
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 public class PlayState extends GameState{
     GamePanel game;
@@ -161,17 +163,24 @@ public class PlayState extends GameState{
 
 
         for (Fish fish : fishes) {
-
             if (fish != null) {
                 fish.render(g);
+
                 String gender = fish.getGender();
                 if (gender != null) {
-                    CFont fishGender = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 12, fish.getFishX(), fish.getFishY() - 10);
-                    fishGender.drawString(g, gender);
+                    BufferedImage genderImg = SpriteSheet.setup("genders", gender);
+
+                    double scale = 0.4;
+
+                    int scaledWidth = (int) (genderImg.getWidth() * scale);
+                    int scaledHeight = (int) (genderImg.getHeight() * scale);
+
+                    int genderX = fish.getFishX() + (fish.getFishWidth() - scaledWidth) / 2;
+                    int genderY = fish.getFishY() - 10;
+
+                    g.drawImage(genderImg, genderX + 30, genderY, scaledWidth, scaledHeight, null);
                 }
-
             }
-
         }
 
         food.render(g);
