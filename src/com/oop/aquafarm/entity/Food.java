@@ -37,7 +37,6 @@ public class Food extends Entity {
         // Calculate the shake angle
         double shakeAmplitude = 3;
         shakeAngle += 0.1;
-        System.out.println("Remaining Time: " + (foodSpawnTimer.getInitialDelay() - foodSpawnTimer.getDelay()) / 1000 + " seconds");
 
         // Update the positions of summoned foods to make them move down
         Iterator<SummonedFood> iterator = ExistingFoods.iterator();
@@ -61,8 +60,7 @@ public class Food extends Entity {
         // Update food locations
         updateFoodLocations();
 
-        // Print food locations
-        printFoodLocations();
+
     }
 
     public void setDefaultValues() {
@@ -95,12 +93,6 @@ public class Food extends Entity {
         }
     }
 
-    public void printFoodLocations() {
-        System.out.println("Food Locations:");
-        for (FoodLocation location : foodLocations) {
-            System.out.println("X: " + location.getLocationX() + ", Y: " + location.getLocationY());
-        }
-    }
     @Override
     public void render(Graphics2D g2) {
         for (SummonedFood food : ExistingFoods) {
@@ -119,9 +111,10 @@ public class Food extends Entity {
         }
 
         // Check for collision with the fish (you need to implement this logic)
-        if (clicked && canSpawnFood && ExistingFoods.size() < 10) {
+        if (clicked && canSpawnFood && ExistingFoods.size() < 10 && Finance.money > 0) {
             int x = mouseIn.getX() - foodSize / 2;
             int y = mouseIn.getY() - foodSize / 2;
+            Finance.money = Finance.money- 1;
 
             ExistingFoods.add(new SummonedFood(x, y));
             canSpawnFood = false;

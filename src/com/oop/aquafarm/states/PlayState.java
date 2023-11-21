@@ -1,6 +1,8 @@
 package com.oop.aquafarm.states;
 
+import com.oop.aquafarm.GameLauncher;
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.entity.Finance;
 import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.entity.Food;
 import com.oop.aquafarm.entity.Hand;
@@ -30,6 +32,7 @@ public class PlayState extends GameState{
         hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2));
         food = new Food(origin);
         fishes = new Fish[100000];
+        System.out.println();
 
 
 //        fishes[0] = new Fish(origin, 100, 100, "ClownFish");
@@ -97,31 +100,36 @@ public class PlayState extends GameState{
         keyh.key5.tick();
         keyh.key6.tick();
 
-        if (keyh.key1.clicked) {
-            Fish AtlanticBass = new Fish(origin, "AtlanticBass");
-            addFishToArray(AtlanticBass);
-        }
-        if (keyh.key2.clicked) {
+        if (Finance.money > 10) {
 
-            Fish BlueGill = new Fish(origin,"BlueGill");
-            addFishToArray(BlueGill);
+            if (keyh.key1.clicked) {
+                Fish AtlanticBass = new Fish(origin, "AtlanticBass", null , null);
+                addFishToArray(AtlanticBass);
+            }
+            if (keyh.key2.clicked) {
+
+                Fish BlueGill = new Fish(origin, "BlueGill", null , null);
+                addFishToArray(BlueGill);
+            }
+            if (keyh.key3.clicked) {
+                Fish ClownFish = new Fish(origin, "ClownFish", null , null);
+                addFishToArray(ClownFish);
+            }
+            if (keyh.key4.clicked) {
+                Fish GoldenTench = new Fish(origin, "GoldenTench", null , null);
+                addFishToArray(GoldenTench);
+            }
+            if (keyh.key5.clicked) {
+                Fish Guppy = new Fish(origin, "Guppy", null , null);
+                addFishToArray(Guppy);
+            }
+            if (keyh.key6.clicked) {
+                Fish HIghFinBandedShark = new Fish(origin, "HIghFinBandedShark", null , null);
+                addFishToArray(HIghFinBandedShark);
+            }
+
         }
-        if (keyh.key3.clicked) {
-            Fish ClownFish = new Fish(origin,  "ClownFish");
-            addFishToArray(ClownFish);
-        }
-        if (keyh.key4.clicked) {
-            Fish GoldenTench= new Fish(origin,  "GoldenTench");
-            addFishToArray(GoldenTench);
-        }
-        if (keyh.key5.clicked) {
-            Fish Guppy = new Fish(origin, "Guppy");
-            addFishToArray(Guppy);
-        }
-        if (keyh.key6.clicked) {
-            Fish HIghFinBandedShark= new Fish(origin,  "HIghFinBandedShark");
-            addFishToArray(HIghFinBandedShark);
-        }
+
 
     }
 
@@ -130,6 +138,7 @@ public class PlayState extends GameState{
             if (fishes[i] == null) {
                 fishes[i] = fish;
                 System.out.println(fishes[i]);
+                Finance.money = Finance.money- 10;
                 break;
             }
         }
@@ -139,15 +148,28 @@ public class PlayState extends GameState{
     public void render(Graphics2D g) {
         g.setColor(new Color(14, 135, 204));
         g.fillRect(0,0, GamePanel.width, GamePanel.height);
+
         CFont fps = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 32, 32);
         fps.drawString(g, GamePanel.oldFrameCount +" FPS");
+
         CFont tps = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 32, 32*2);
         tps.drawString(g,GamePanel.oldTickCount + " TPS");
+
+        CFont money = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 1100, 32);
+        money.drawString(g, "$" + Finance.money );
+
+
 
         for (Fish fish : fishes) {
 
             if (fish != null) {
                 fish.render(g);
+                String gender = fish.getGender();
+                if (gender != null) {
+                    CFont fishGender = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 12, fish.getFishX(), fish.getFishY() - 10);
+                    fishGender.drawString(g, gender);
+                }
+
             }
 
         }
