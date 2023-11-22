@@ -1,36 +1,42 @@
 package com.oop.aquafarm.states;
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.Window;
 import com.oop.aquafarm.graphics.SpriteSheet;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
 import javax.swing.border.LineBorder;
-import java.awt.*;
+import java.awt.FlowLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
 
 import static com.oop.aquafarm.states.Signup.generatedSecuredPasswordHash;
 
 public class Login extends JFrame  implements ActionListener {
     private JLabel loginLbl;
-    private JLabel unameLbl, passLbl, confpassLbl, emailLbl, ageLbl;
-    private JTextField unameTF, emailTF, ageTF;
-    private JPasswordField passPF, confpassPF;
+    private JLabel unameLbl, passLbl;
+    private JTextField unameTF;
+    private JPasswordField passPF;
     private JButton signupBtn, loginBtn;
 
-    private String uname, password, confpassword, email, age;
+    private String uname, password;
+    GameStateManager gsm;
 
-    public Login(){
-//        this.gsm = gsm;
+    public Login(GameStateManager gsm){
+        this.gsm = gsm;
         setTitle("AquaFarm");
         setLayout(new FlowLayout());
         setSize(GamePanel.width, GamePanel.height);
@@ -39,7 +45,7 @@ public class Login extends JFrame  implements ActionListener {
         setLocationRelativeTo(null);
         BufferedImage background  = null;
         background = SpriteSheet.paintbg(background);
-        setContentPane(new ImagePanel(background));
+        setContentPane(new SpriteSheet.ImagePanel(background));
 
 
 
@@ -47,14 +53,11 @@ public class Login extends JFrame  implements ActionListener {
         loginLbl.setBounds((GamePanel.width - loginLbl.getWidth())/3,60, GamePanel.width,100);
 
         unameLbl = new JLabel("Username");
-        unameLbl.setBounds((GamePanel.width - unameLbl.getWidth())/6,190, 1000,60);
+        unameLbl.setBounds((GamePanel.width - unameLbl.getWidth())/6,270, 1000,60);
 
         passLbl = new JLabel("Password");
-        passLbl.setBounds((GamePanel.width - passLbl.getWidth())/6,255, 1000,60);
+        passLbl.setBounds((GamePanel.width - passLbl.getWidth())/6,360, 1000,60);
 
-
-        emailLbl = new JLabel("Email");
-        emailLbl.setBounds((GamePanel.width - emailLbl.getWidth())/6,450, 1000,60);
 
         loginBtn = new JButton("Login");
         loginBtn.setBounds((GamePanel.width / 2) - 100, 525, 200, 50);
@@ -99,14 +102,14 @@ public class Login extends JFrame  implements ActionListener {
 
     public void input(){
         unameTF = new JTextField();
-        unameTF.setBounds(GamePanel.width/2,190, GamePanel.width/2 - GamePanel.width/6,50);
+        unameTF.setBounds(GamePanel.width/2,270, GamePanel.width/2 - GamePanel.width/6,50);
         unameTF.setOpaque(false);
         unameTF.setMargin(new Insets(0, 10,0,0));
         unameTF.setBorder(new LineBorder(Color.white,3));
         unameTF.setFont(new Font("Courier New", Font.PLAIN, 20));
 
         passPF = new JPasswordField();
-        passPF.setBounds(GamePanel.width/2,255, GamePanel.width/2 - GamePanel.width/6,50);
+        passPF.setBounds(GamePanel.width/2,360, GamePanel.width/2 - GamePanel.width/6,50);
         passPF.setOpaque(false);
         passPF.setMargin(new Insets(0, 10,0,0));
         passPF.setBorder(new LineBorder(Color.white,3));
@@ -114,7 +117,6 @@ public class Login extends JFrame  implements ActionListener {
 
         this.add(unameTF);
         this.add(passPF);
-
 
     }
 
@@ -156,12 +158,21 @@ public class Login extends JFrame  implements ActionListener {
 //                System.out.println("Passwords do not match");
 //            }
 
-
             System.out.println(uname);
+
+            if (matched){
+                gsm.add(GameStateManager.PLAY);
+                Window.window.setVisible(true);
+                this.dispose();
+            }else if (!matched){
+                System.out.println("Password does not match");
+                unameTF.setBorder(new LineBorder(Color.red,3));
+                passPF.setBorder(new LineBorder(Color.red,3));
+            }
         }
         if(e.getSource() == signupBtn){
             this.dispose();
-            new Signup().setVisible(true);
+            new Signup(gsm).setVisible(true);
         }
     }
 
@@ -196,16 +207,4 @@ public class Login extends JFrame  implements ActionListener {
         return bytes;
     }
 
-    class ImagePanel extends JComponent{
-        private Image image;
-        public ImagePanel(Image image) {
-            this.image = image;
-        }
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            g.drawImage(image, 0, 0, this);
-        }
-
-    }
 }

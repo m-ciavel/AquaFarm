@@ -2,6 +2,7 @@ package com.oop.aquafarm.states;
 
 import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.graphics.SpriteSheet;
+import com.oop.aquafarm.util.dbConnection;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -17,20 +18,29 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Random;
 
 public class Signup extends JFrame implements ActionListener {
-//    protected GameStateManager gsm;
+    private GameStateManager gsm;
+    private static byte[] hash;
     private JLabel signupLbl;
-    private JLabel unameLbl, passLbl, confpassLbl, emailLbl, ageLbl;
-    private JTextField unameTF, emailTF, ageTF;
+    private JLabel unameLbl, passLbl, confpassLbl, ageLbl;
+    private JTextField unameTF, ageTF;
     private JPasswordField passPF, confpassPF;
     private JButton signupBtn, loginBtn;
 
-    private String uname, password, confpassword, email, age;
+    private String uname, password, age;
     static String generatedSecuredPasswordHash = null;
+    static String passSalt, passHash;
+    private Date created_date;
+    private int uid;
+//    Random random = new Random();
+//    long number = Math.abs(Math.floor(random.nextLong() % 10000000000L)* 9000000000L) + 1000000000L);
 
-    public Signup(){
-//        this.gsm = gsm;
+
+    public Signup(GameStateManager gsm){
+        this.gsm = gsm;
         setTitle("AquaFarm");
         setLayout(new FlowLayout());
         setSize(GamePanel.width, GamePanel.height);
@@ -39,7 +49,7 @@ public class Signup extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         BufferedImage background  = null;
         background = SpriteSheet.paintbg(background);
-        setContentPane(new ImagePanel(background));
+        setContentPane(new SpriteSheet.ImagePanel(background));
 
 
 
@@ -47,19 +57,16 @@ public class Signup extends JFrame implements ActionListener {
         signupLbl.setBounds((GamePanel.width - signupLbl.getWidth())/3,60, GamePanel.width,100);
 
         unameLbl = new JLabel("Username");
-        unameLbl.setBounds((GamePanel.width - unameLbl.getWidth())/6,190, 1000,60);
+        unameLbl.setBounds((GamePanel.width - unameLbl.getWidth())/6,210, 1000,60);
 
         passLbl = new JLabel("Password");
-        passLbl.setBounds((GamePanel.width - passLbl.getWidth())/6,255, 1000,60);
+        passLbl.setBounds((GamePanel.width - passLbl.getWidth())/6,280, 1000,60);
 
         confpassLbl = new JLabel("Confirm Password");
-        confpassLbl.setBounds((GamePanel.width - confpassLbl.getWidth())/6,320, 1000,60);
+        confpassLbl.setBounds((GamePanel.width - confpassLbl.getWidth())/6,350, 1000,60);
 
         ageLbl = new JLabel("Age");
-        ageLbl.setBounds((GamePanel.width - ageLbl.getWidth())/6,375, 1000,60);
-
-        emailLbl = new JLabel("Email");
-        emailLbl.setBounds((GamePanel.width - emailLbl.getWidth())/6,450, 1000,60);
+        ageLbl.setBounds((GamePanel.width - ageLbl.getWidth())/6,420, 1000,60);
 
         signupBtn = new JButton("Sign up");
         signupBtn.setBounds((GamePanel.width / 2) - 100, 525, 200, 50);
@@ -84,13 +91,11 @@ public class Signup extends JFrame implements ActionListener {
             passLbl.setFont(font.deriveFont(Font.BOLD, 50));
             confpassLbl.setFont(font.deriveFont(Font.BOLD, 50));
             ageLbl.setFont(font.deriveFont(Font.BOLD, 50));
-            emailLbl.setFont(font.deriveFont(Font.BOLD, 50));
 
             unameTF.setFont(font.deriveFont(Font.BOLD, 40));
             passPF.setFont(font.deriveFont(Font.BOLD, 40));
             confpassPF.setFont(font.deriveFont(Font.BOLD, 40));
             ageTF.setFont(font.deriveFont(Font.BOLD, 40));
-            emailTF.setFont(font.deriveFont(Font.BOLD, 40));
 
 //            signupBtn.setFont(font.deriveFont(Font.BOLD, 40));
 //            loginBtn.setFont(font.deriveFont(Font.BOLD, 40));
@@ -103,7 +108,6 @@ public class Signup extends JFrame implements ActionListener {
         add(passLbl);
         add(confpassLbl);
         add(ageLbl);
-        add(emailLbl);
 
         add(signupBtn);
         add(loginBtn);
@@ -113,45 +117,38 @@ public class Signup extends JFrame implements ActionListener {
 
     public void input(){
         unameTF = new JTextField();
-        unameTF.setBounds(GamePanel.width/2,190, GamePanel.width/2 - GamePanel.width/6,50);
+        unameTF.setBounds(GamePanel.width/2,210, GamePanel.width/2 - GamePanel.width/6,50);
         unameTF.setOpaque(false);
         unameTF.setMargin(new Insets(0, 10,0,0));
         unameTF.setBorder(new LineBorder(Color.white,3));
         unameTF.setFont(new Font("Courier New", Font.PLAIN, 20));
 
         passPF = new JPasswordField();
-        passPF.setBounds(GamePanel.width/2,255, GamePanel.width/2 - GamePanel.width/6,50);
+        passPF.setBounds(GamePanel.width/2,280, GamePanel.width/2 - GamePanel.width/6,50);
         passPF.setOpaque(false);
         passPF.setMargin(new Insets(0, 10,0,0));
         passPF.setBorder(new LineBorder(Color.white,3));
         passPF.setFont(new Font("Courier New", Font.PLAIN, 20));
 
         confpassPF = new JPasswordField();
-        confpassPF.setBounds(GamePanel.width/2,320, GamePanel.width/2 - GamePanel.width/6,50);
+        confpassPF.setBounds(GamePanel.width/2,350, GamePanel.width/2 - GamePanel.width/6,50);
         confpassPF.setOpaque(false);
         confpassPF.setMargin(new Insets(0, 10,0,0));
         confpassPF.setBorder(new LineBorder(Color.white,3));
         confpassPF.setFont(new Font("Courier New", Font.PLAIN, 20));
 
         ageTF = new JTextField();
-        ageTF.setBounds(GamePanel.width/2,385, GamePanel.width/2 - GamePanel.width/6,50);
+        ageTF.setBounds(GamePanel.width/2,420, GamePanel.width/2 - GamePanel.width/6,50);
         ageTF.setOpaque(false);
         ageTF.setMargin(new Insets(0, 10,0,0));
         ageTF.setBorder(new LineBorder(Color.white,3));
         ageTF.setFont(new Font("Courier New", Font.PLAIN, 20));
 
-        emailTF = new JTextField();
-        emailTF.setBounds(GamePanel.width/2,450, GamePanel.width/2 - GamePanel.width/6,50);
-        emailTF.setOpaque(false);
-        emailTF.setMargin(new Insets(0, 10,0,0));
-        emailTF.setBorder(new LineBorder(Color.white,3));
-        emailTF.setFont(new Font("Courier New", Font.PLAIN, 20));
 
         this.add(unameTF);
         this.add(passPF);
         this.add(confpassPF);
         this.add(ageTF);
-        this.add(emailTF);
 
 
     }
@@ -167,7 +164,25 @@ public class Signup extends JFrame implements ActionListener {
                 password = "pass";
                 try {
                     generatedSecuredPasswordHash = doHashing(password);
+                    passSalt = toHex(getSalt());
+                    passHash= toHex(hash);
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                try{
+                    if(unameTF.getText().equals("") || passPF.getPassword().equals("") || confpassPF.getPassword().equals("") || ageTF.getText().equals("")){
+                        JOptionPane.showMessageDialog(null, "Please fill all the required fields");
+                    }else{
+//                    dbConnection con1 = new dbConnection();
+                        String q = "INSERT INTO userTable VALUES (" + uid + ", '" + uname + "', 'null', " + age + ", '" + passHash + "', '" + created_date + "', NULL, FALSE, '" + passSalt +"');" ;
+                        System.out.println(q);
+//                        con1.s.executeUpdate(q);
+
+//                    this.dispose();
+//                    new Login(gsm).setVisible(true);
+                    }
+                } catch (HeadlessException ex) {
                     throw new RuntimeException(ex);
                 }
 //                System.out.println(generatedSecuredPasswordHash);
@@ -184,32 +199,38 @@ public class Signup extends JFrame implements ActionListener {
             }
 
             age = ageTF.getText();
-            email = emailTF.getText();
+            uid = (int) generate();
+            created_date = new java.sql.Date(System.currentTimeMillis());
 
-            System.out.println(uname);
-            System.out.println(generatedSecuredPasswordHash);
-            System.out.println(age);
-            System.out.println(email);
+
+//            System.out.println(uid);
+//            System.out.println(created_date);
+//
+//            System.out.println(uname);
+//            System.out.println(generatedSecuredPasswordHash);
+//            System.out.println(age);
         }
         if(e.getSource() == loginBtn){
             this.dispose();
-            new Login().setVisible(true);
+            new Login(gsm).setVisible(true);
         }
     }
 
-    public static String doHashing(String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
+    public String doHashing(String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
 
-        int iterations = 1000;
+        int iterations = 1000; //  number of times that the password is hashed
         char[] chars = password.toCharArray();
         byte[] salt = getSalt();
 
         PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
         SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 
-        byte[] hash = skf.generateSecret(spec).getEncoded();
-        return iterations + ":" + toHex(salt) + ":" + toHex(hash);
-    }
+        this.hash = skf.generateSecret(spec).getEncoded();
 
+
+        return iterations + ":" + toHex(salt) + ":" + toHex(hash);
+//        return toHex(hash);
+    }
     private static byte[] getSalt() throws NoSuchAlgorithmException
     {
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
@@ -232,16 +253,26 @@ public class Signup extends JFrame implements ActionListener {
         }
     }
 
-    class ImagePanel extends JComponent{
-        private Image image;
-        public ImagePanel(Image image) {
-            this.image = image;
+    public static long generate() {
+        try {
+            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+            int l = secureRandom.nextInt();
+            int abs = Math.abs(1000000000 + l);
+            return abs;
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            g.drawImage(image, 0, 0, this);
-        }
-
     }
+
+//    private static long last = 0;
+//
+//    public static long getID() {
+//        // 10 digits.
+//        long id = System.currentTimeMillis() % 10000000000L;
+//        if ( id <= last ) {
+//            id = (last + 1) % 10000000000L;
+//        }
+//        return last = id;
+//    }
+
 }

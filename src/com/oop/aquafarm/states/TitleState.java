@@ -55,7 +55,7 @@ public class TitleState extends GameState {
 
         btnPlay.addEvent(e -> {
 //                gsm.add(GameStateManager.ACCOUNT);
-            new Signup().setVisible(true);
+            new Login(gsm).setVisible(true);
 //            gsm.pop(GameStateManager.TITLE);
             Window.window.setVisible(false);
         });
