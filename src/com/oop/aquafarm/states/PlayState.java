@@ -8,6 +8,7 @@ import com.oop.aquafarm.entity.Food;
 import com.oop.aquafarm.entity.Hand;
 import com.oop.aquafarm.graphics.CFont;
 import com.oop.aquafarm.graphics.SpriteSheet;
+import com.oop.aquafarm.ui.Button;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.Vector2f;
@@ -17,6 +18,7 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 public class PlayState extends GameState{
     GamePanel game;
@@ -64,6 +66,7 @@ public class PlayState extends GameState{
             if (fish != null) {
                 fish.callEatingLogic(food);
                 fish.seek_food(food.foodLocations);
+
             }
 
         }
@@ -162,6 +165,8 @@ public class PlayState extends GameState{
 
 
 
+
+
         for (Fish fish : fishes) {
             if (fish != null) {
                 fish.render(g);
@@ -185,6 +190,8 @@ public class PlayState extends GameState{
 
         food.render(g);
         hands.render(g);
+        Button.buy_fish(g);
+
 
     }
 }

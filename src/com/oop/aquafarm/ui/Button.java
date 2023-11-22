@@ -1,13 +1,12 @@
 package com.oop.aquafarm.ui;
 
+import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.util.AABB;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.Vector2f;
 
-import java.awt.Graphics2D;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -263,6 +262,7 @@ public class Button {
     }
 
 
+
     public interface ClickedEvent {
         void action(int mouseButton);
     }
@@ -270,4 +270,65 @@ public class Button {
     public interface SlotEvent {
         void action(Slots slot);
     }
+
+    public static void buy_fish(Graphics2D g) {
+        int buttonWidth = 100;
+        int buttonHeight = 40;
+        int buttonMargin = 10;
+        int totalWidth = 8 * buttonWidth + 7 * buttonMargin;
+        int buttonY = GamePanel.height - buttonHeight - 10;
+
+        int startX = (GamePanel.width - totalWidth) / 2;
+
+        // Button 1
+        g.setColor(Color.GRAY);
+        g.fillRect(startX, buttonY, buttonWidth, buttonHeight);
+        g.setColor(Color.BLACK);
+        g.drawString("Button 1", startX + 10, buttonY + buttonHeight - 10);
+
+        // Button 2
+        g.setColor(Color.GRAY);
+        g.fillRect(startX + buttonWidth + buttonMargin, buttonY, buttonWidth, buttonHeight);
+        g.setColor(Color.BLACK);
+        g.drawString("Button 2", startX + buttonWidth + buttonMargin + 10, buttonY + buttonHeight - 10);
+
+        // Button 3
+        g.setColor(Color.GRAY);
+        g.fillRect(startX + 2 * (buttonWidth + buttonMargin), buttonY, buttonWidth, buttonHeight);
+        g.setColor(Color.BLACK);
+        g.drawString("Button 3", startX + 2 * (buttonWidth + buttonMargin) + 10, buttonY + buttonHeight - 10);
+
+        // Button 4
+        g.setColor(Color.GRAY);
+        g.fillRect(startX + 3 * (buttonWidth + buttonMargin), buttonY, buttonWidth, buttonHeight);
+        g.setColor(Color.BLACK);
+        g.drawString("Button 4", startX + 3 * (buttonWidth + buttonMargin) + 10, buttonY + buttonHeight - 10);
+
+        // Button 5
+        g.setColor(Color.GRAY);
+        g.fillRect(startX + 4 * (buttonWidth + buttonMargin), buttonY, buttonWidth, buttonHeight);
+        g.setColor(Color.BLACK);
+        g.drawString("Button 5", startX + 4 * (buttonWidth + buttonMargin) + 10, buttonY + buttonHeight - 10);
+
+        // Button 6
+        g.setColor(Color.GRAY);
+        g.fillRect(startX + 5 * (buttonWidth + buttonMargin), buttonY, buttonWidth, buttonHeight);
+        g.setColor(Color.BLACK);
+        g.drawString("Button 6", startX + 5 * (buttonWidth + buttonMargin) + 10, buttonY + buttonHeight - 10);
+
+        // Button 7
+        g.setColor(Color.GRAY);
+        g.fillRect(startX + 6 * (buttonWidth + buttonMargin), buttonY, buttonWidth, buttonHeight);
+        g.setColor(Color.BLACK);
+        g.drawString("Button 7", startX + 6 * (buttonWidth + buttonMargin) + 10, buttonY + buttonHeight - 10);
+
+        // Button 8
+        g.setColor(Color.GRAY);
+        g.fillRect(startX + 7 * (buttonWidth + buttonMargin), buttonY, buttonWidth, buttonHeight);
+        g.setColor(Color.BLACK);
+        g.drawString("Button 8", startX + 7 * (buttonWidth + buttonMargin) + 10, buttonY + buttonHeight - 10);
+    }
+
+
+
 }

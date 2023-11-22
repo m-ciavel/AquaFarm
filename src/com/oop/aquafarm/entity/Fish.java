@@ -4,6 +4,7 @@ import com.oop.aquafarm.graphics.Fish_movement;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.states.PlayState;
 import com.oop.aquafarm.util.*;
+import com.oop.aquafarm.util.AABB;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -165,6 +166,7 @@ public class Fish extends Entity {
             g2.setColor(Color.GREEN);
             g2.fillOval(dotX, dotY, 10, 10);
         }
+
     }
 
 
@@ -272,5 +274,11 @@ public class Fish extends Entity {
     public int getFishHeight() {
         return fish_left.getHeight();
     }
+
+
+
+
+
+
 
 }

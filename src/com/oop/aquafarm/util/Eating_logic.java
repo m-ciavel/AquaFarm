@@ -43,9 +43,6 @@ public class Eating_logic {
     }
 
 
-    public void breeding(){
 
-
-    }
 
 }
