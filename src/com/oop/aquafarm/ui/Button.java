@@ -1,6 +1,7 @@
 package com.oop.aquafarm.ui;
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.AABB;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
@@ -15,6 +16,7 @@ public class Button {
     private BufferedImage image;
     private BufferedImage hoverImage;
     private BufferedImage pressedImage;
+
 
     private Vector2f iPos;
     private AABB bounds;
@@ -150,10 +152,11 @@ public class Button {
 
     // ******************************************** END ************************************************************
 
-    public void addHoverImage(BufferedImage image) {
-        this.hoverImage = image;
+    public void addHoverImage(BufferedImage hoverImage) {
+        this.hoverImage = hoverImage;
         this.canHover = true;
     }
+
 
     public void addPressedImage(BufferedImage image) {
         this.pressedImage = image;
@@ -219,7 +222,32 @@ public class Button {
         hovering = true;
     }
 
+
+
+    public void render(Graphics2D g) {
+        if (canHover && hoverImage != null && hovering) {
+            g.drawImage(hoverImage, (int) iPos.x, (int) iPos.y, (int) bounds.getWidth(), (int) bounds.getHeight(), null);
+        } else if (pressedImage != null && pressed) {
+            g.drawImage(pressedImage, (int) iPos.x, (int) iPos.y, (int) bounds.getWidth(), (int) bounds.getHeight(), null);
+        } else {
+            g.drawImage(image, (int) iPos.x, (int) iPos.y, (int) bounds.getWidth(), (int) bounds.getHeight(), null);
+        }
+    }
+
+
+
+
+    public interface ClickedEvent {
+        void action(int mouseButton);
+    }
+
+    public interface SlotEvent {
+        void action(Slots slot);
+    }
+
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
+
+
         if (bounds.inside(mouseIn.getX(), mouseIn.getY())) {
 
             if (canHover && !hovering) {
@@ -249,85 +277,7 @@ public class Button {
 
     }
 
-    public void render(Graphics2D g) {
 
-        if (canHover && hoverImage != null && hovering) {
-            g.drawImage(hoverImage, (int) iPos.x, (int) iPos.y, (int) bounds.getWidth(), (int) bounds.getHeight(), null);
-        } else if (pressedImage != null && pressed) {
-            g.drawImage(pressedImage, (int) iPos.x, (int) iPos.y, (int) bounds.getWidth(), (int) bounds.getHeight(), null);
-        } else {
-            g.drawImage(image, (int) iPos.x, (int) iPos.y, (int) bounds.getWidth(), (int) bounds.getHeight(), null);
-        }
-
-    }
-
-
-
-    public interface ClickedEvent {
-        void action(int mouseButton);
-    }
-
-    public interface SlotEvent {
-        void action(Slots slot);
-    }
-
-    public static void buy_fish(Graphics2D g) {
-        int buttonWidth = 100;
-        int buttonHeight = 40;
-        int buttonMargin = 10;
-        int totalWidth = 8 * buttonWidth + 7 * buttonMargin;
-        int buttonY = GamePanel.height - buttonHeight - 10;
-
-        int startX = (GamePanel.width - totalWidth) / 2;
-
-        // Button 1
-        g.setColor(Color.GRAY);
-        g.fillRect(startX, buttonY, buttonWidth, buttonHeight);
-        g.setColor(Color.BLACK);
-        g.drawString("Button 1", startX + 10, buttonY + buttonHeight - 10);
-
-        // Button 2
-        g.setColor(Color.GRAY);
-        g.fillRect(startX + buttonWidth + buttonMargin, buttonY, buttonWidth, buttonHeight);
-        g.setColor(Color.BLACK);
-        g.drawString("Button 2", startX + buttonWidth + buttonMargin + 10, buttonY + buttonHeight - 10);
-
-        // Button 3
-        g.setColor(Color.GRAY);
-        g.fillRect(startX + 2 * (buttonWidth + buttonMargin), buttonY, buttonWidth, buttonHeight);
-        g.setColor(Color.BLACK);
-        g.drawString("Button 3", startX + 2 * (buttonWidth + buttonMargin) + 10, buttonY + buttonHeight - 10);
-
-        // Button 4
-        g.setColor(Color.GRAY);
-        g.fillRect(startX + 3 * (buttonWidth + buttonMargin), buttonY, buttonWidth, buttonHeight);
-        g.setColor(Color.BLACK);
-        g.drawString("Button 4", startX + 3 * (buttonWidth + buttonMargin) + 10, buttonY + buttonHeight - 10);
-
-        // Button 5
-        g.setColor(Color.GRAY);
-        g.fillRect(startX + 4 * (buttonWidth + buttonMargin), buttonY, buttonWidth, buttonHeight);
-        g.setColor(Color.BLACK);
-        g.drawString("Button 5", startX + 4 * (buttonWidth + buttonMargin) + 10, buttonY + buttonHeight - 10);
-
-        // Button 6
-        g.setColor(Color.GRAY);
-        g.fillRect(startX + 5 * (buttonWidth + buttonMargin), buttonY, buttonWidth, buttonHeight);
-        g.setColor(Color.BLACK);
-        g.drawString("Button 6", startX + 5 * (buttonWidth + buttonMargin) + 10, buttonY + buttonHeight - 10);
-
-        // Button 7
-        g.setColor(Color.GRAY);
-        g.fillRect(startX + 6 * (buttonWidth + buttonMargin), buttonY, buttonWidth, buttonHeight);
-        g.setColor(Color.BLACK);
-        g.drawString("Button 7", startX + 6 * (buttonWidth + buttonMargin) + 10, buttonY + buttonHeight - 10);
-
-        // Button 8
-        g.setColor(Color.GRAY);
-        g.fillRect(startX + 7 * (buttonWidth + buttonMargin), buttonY, buttonWidth, buttonHeight);
-        g.setColor(Color.BLACK);
-        g.drawString("Button 8", startX + 7 * (buttonWidth + buttonMargin) + 10, buttonY + buttonHeight - 10);
-    }
 
 
 

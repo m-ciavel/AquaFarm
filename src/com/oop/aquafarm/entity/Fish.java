@@ -79,7 +79,7 @@ public class Fish extends Entity {
                 isHungry = true;
 
             }
-        }, 10000);
+        }, 60000);
 
         addGender(gender);
 
@@ -106,7 +106,7 @@ public class Fish extends Entity {
             public void run() {
                 isHungry = true;
             }
-        }, 10000);
+        }, 60000);
     }
 
     private void getFishImages() {
