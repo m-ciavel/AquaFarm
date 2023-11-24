@@ -3,14 +3,11 @@ package com.oop.aquafarm.states;
 import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.Window;
 import com.oop.aquafarm.graphics.SpriteSheet;
+import com.oop.aquafarm.util.dbConnection;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.FlowLayout;
 import java.awt.Color;
@@ -22,8 +19,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-
-import static com.oop.aquafarm.states.Signup.generatedSecuredPasswordHash;
+import java.sql.ResultSet;
 
 public class Login extends JFrame  implements ActionListener {
     private JLabel loginLbl;
@@ -33,6 +29,8 @@ public class Login extends JFrame  implements ActionListener {
     private JButton signupBtn, loginBtn;
 
     private String uname, password;
+    private int iterations = Signup.getIterations();
+    private static String passInDB;
     GameStateManager gsm;
 
     public Login(GameStateManager gsm){
@@ -123,58 +121,66 @@ public class Login extends JFrame  implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==loginBtn) {
-            uname = unameTF.getText();
-            password = String.valueOf(passPF.getPassword());
-            generatedSecuredPasswordHash = "1000:e7f7b64e917b923dd6231910b7ff1b3e:10d881cdc89ae8c48b001f7c49eb62db26221177b70f62b143badecb33f677c0f182c37c25f0127eeeeb42dcf5ad979656d4a7c1d2f8f100d8df80a1b958f033";
+            if(unameTF.getText().equals("") || passPF.getPassword().equals("")){
+                JOptionPane.showMessageDialog(null, "Please fill all the required fields");
+            }else {
+                // create connection
+                try {
+                    dbConnection con1 = new dbConnection();
+                    uname = unameTF.getText();
+                    String qUser = "SELECT * FROM userTable WHERE user_Name = '" + uname + "';";
+                    ResultSet rs = con1.s.executeQuery(qUser);
+                    if (rs.next()) {
 
-            boolean matched = false;
-            try {
-                matched = validatePassword(password, generatedSecuredPasswordHash);
-            } catch (NoSuchAlgorithmException ex) {
-                throw new RuntimeException(ex);
-            } catch (InvalidKeySpecException ex) {
-                throw new RuntimeException(ex);
+                        String pSalt = rs.getString("pass_salt");
+                        String pHash = rs.getString("pass_hash");
+                        passInDB =  iterations + ":" + pSalt + ":" + pHash;
+                        System.out.println(passInDB);
+
+//                        boolean matched;
+                        try {
+                            boolean matched = validatePassword(String.valueOf(passPF.getPassword()), passInDB);
+                            System.out.println(matched);
+
+                            if (matched){
+                                gsm.add(GameStateManager.PLAY);
+                                Window.window.setVisible(true);
+                                this.dispose();
+                            }else if (!matched){
+                                System.out.println("Password does not match");
+                                unameTF.setBorder(new LineBorder(Color.red,3));
+                                passPF.setBorder(new LineBorder(Color.red,3));
+                            }
+                        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+
+
+
+                    } else{
+                        JOptionPane.showMessageDialog(null, "No such user in database");
+                        unameTF.setBorder(new LineBorder(Color.red,3));
+                    }
+
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+
             }
-            System.out.println(matched);
 
-//            String generatedSecuredPasswordHash = null;
-//            if (Arrays.equals(passPF.getPassword(), confpassPF.getPassword())) {
-//                password = String.valueOf(passPF.getPassword());
-//                try {
-//                    generatedSecuredPasswordHash = doHashing(password);
-//                } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
-//                    throw new RuntimeException(ex);
-//                }
-//                System.out.println(generatedSecuredPasswordHash);
 
-//                Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(32,64,1,15*1024,2);
-//
-//                String encodedPassword = encoder.encode(password);
-//                System.out.println(encodedPassword);
-//
-//                String validPassword = encoder.matches(myPassword, encodedPassword);
-//                System.out.println(validPassword);
-//            } else if (!Arrays.equals(passPF.getPassword(), confpassPF.getPassword())){
-//                System.out.println("Passwords do not match");
-//            }
+//            generatedSecuredPasswordHash =  iterations + ":" + pSalt + ":" + pHash + "1000:e7f7b64e917b923dd6231910b7ff1b3e:10d881cdc89ae8c48b001f7c49eb62db26221177b70f62b143badecb33f677c0f182c37c25f0127eeeeb42dcf5ad979656d4a7c1d2f8f100d8df80a1b958f033";
+//            generatedSecuredPasswordHash = "1000:e7f7b64e917b923dd6231910b7ff1b3e:10d881cdc89ae8c48b001f7c49eb62db26221177b70f62b143badecb33f677c0f182c37c25f0127eeeeb42dcf5ad979656d4a7c1d2f8f100d8df80a1b958f033";
 
-            System.out.println(uname);
 
-            if (matched){
-                gsm.add(GameStateManager.PLAY);
-                Window.window.setVisible(true);
-                this.dispose();
-            }else if (!matched){
-                System.out.println("Password does not match");
-                unameTF.setBorder(new LineBorder(Color.red,3));
-                passPF.setBorder(new LineBorder(Color.red,3));
-            }
         }
         if(e.getSource() == signupBtn){
             this.dispose();
             new Signup(gsm).setVisible(true);
         }
     }
+
 
     private static boolean validatePassword(String originalPassword, String storedPassword)
             throws NoSuchAlgorithmException, InvalidKeySpecException
@@ -185,8 +191,7 @@ public class Login extends JFrame  implements ActionListener {
         byte[] salt = fromHex(parts[1]);
         byte[] hash = fromHex(parts[2]);
 
-        PBEKeySpec spec = new PBEKeySpec(originalPassword.toCharArray(),
-                salt, iterations, hash.length * 8);
+        PBEKeySpec spec = new PBEKeySpec(originalPassword.toCharArray(), salt, iterations, hash.length * 8);
         SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         byte[] testHash = skf.generateSecret(spec).getEncoded();
 

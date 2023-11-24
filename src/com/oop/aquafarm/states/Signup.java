@@ -1,14 +1,26 @@
 package com.oop.aquafarm.states;
 
+
 import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.dbConnection;
 
+
+//import javax.swing.*;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
-import java.awt.*;
+import java.awt.Font;
+import java.awt.FlowLayout;
+import java.awt.Color;
+import java.awt.Insets;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -17,26 +29,26 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Random;
 
 public class Signup extends JFrame implements ActionListener {
     private GameStateManager gsm;
-    private static byte[] hash;
     private JLabel signupLbl;
     private JLabel unameLbl, passLbl, confpassLbl, ageLbl;
     private JTextField unameTF, ageTF;
     private JPasswordField passPF, confpassPF;
     private JButton signupBtn, loginBtn;
 
-    private String uname, password, age;
+    private static int iterations = 1000; //  number of times that the password is hashed
+    private String uname, password;
     static String generatedSecuredPasswordHash = null;
     static String passSalt, passHash;
     private Date created_date;
-    private int uid;
-//    Random random = new Random();
-//    long number = Math.abs(Math.floor(random.nextLong() % 10000000000L)* 9000000000L) + 1000000000L);
+    private int uid, age, dbID;
+
 
 
     public Signup(GameStateManager gsm){
@@ -50,7 +62,6 @@ public class Signup extends JFrame implements ActionListener {
         BufferedImage background  = null;
         background = SpriteSheet.paintbg(background);
         setContentPane(new SpriteSheet.ImagePanel(background));
-
 
 
         signupLbl = new JLabel("SIGN UP");
@@ -113,7 +124,9 @@ public class Signup extends JFrame implements ActionListener {
         add(loginBtn);
 
         input();
+
     }
+
 
     public void input(){
         unameTF = new JTextField();
@@ -153,63 +166,93 @@ public class Signup extends JFrame implements ActionListener {
 
     }
 
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==signupBtn) {
-            uname = unameTF.getText();
-
-
-            if (Arrays.equals(passPF.getPassword(), confpassPF.getPassword())) {
-//                password = String.valueOf(passPF.getPassword());
-                password = "pass";
-                try {
-                    generatedSecuredPasswordHash = doHashing(password);
-                    passSalt = toHex(getSalt());
-                    passHash= toHex(hash);
-                } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
-                    throw new RuntimeException(ex);
+            if(unameTF.getText().equals("") || passPF.getPassword().equals("") || confpassPF.getPassword().equals("") || ageTF.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Please fill all the required fields");
+                if(unameTF.getText().equals("")){
+                    unameTF.setBorder(new LineBorder(Color.red,3));
                 }
-
-                try{
-                    if(unameTF.getText().equals("") || passPF.getPassword().equals("") || confpassPF.getPassword().equals("") || ageTF.getText().equals("")){
-                        JOptionPane.showMessageDialog(null, "Please fill all the required fields");
-                    }else{
-//                    dbConnection con1 = new dbConnection();
-                        String q = "INSERT INTO userTable VALUES (" + uid + ", '" + uname + "', 'null', " + age + ", '" + passHash + "', '" + created_date + "', NULL, FALSE, '" + passSalt +"');" ;
-                        System.out.println(q);
-//                        con1.s.executeUpdate(q);
-
-//                    this.dispose();
-//                    new Login(gsm).setVisible(true);
-                    }
-                } catch (HeadlessException ex) {
-                    throw new RuntimeException(ex);
+                if(passPF.getPassword().equals("")){
+                    passPF.setBorder(new LineBorder(Color.red,3));
                 }
-//                System.out.println(generatedSecuredPasswordHash);
+                if(confpassPF.getPassword().equals("")){
+                    confpassPF.setBorder(new LineBorder(Color.red,3));
+                }
+                if(passPF.getPassword().equals("")){
+                    unameTF.setBorder(new LineBorder(Color.red,3));
+                }
+                if(ageTF.getText().equals("")){
+                    ageTF.setBorder(new LineBorder(Color.red,3));
+                }
+            } else {
+                if (Arrays.equals(passPF.getPassword(), confpassPF.getPassword())) {
+                    // create connection
+                    try{
+                        dbConnection con1 = new dbConnection();
+                        String qID = "SELECT * FROM users WHERE id=(SELECT max(ID) FROM users)";
+                        ResultSet rs = con1.s.executeQuery(qID);
+                        if(rs.next()){
+                            dbID = Integer.parseInt(rs.getString("ID"));
+//                            System.out.println(dbID);
+                        }
 
-//                Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(32,64,1,15*1024,2);
-//
-//                String encodedPassword = encoder.encode(password);
-//                System.out.println(encodedPassword);
-//
-//                String validPassword = encoder.matches(myPassword, encodedPassword);
-//                System.out.println(validPassword);
-            } else if (!Arrays.equals(passPF.getPassword(), confpassPF.getPassword())){
-                System.out.println("Passwords do not match");
-            }
 
-            age = ageTF.getText();
-            uid = (int) generate();
-            created_date = new java.sql.Date(System.currentTimeMillis());
+                        // get values
+                        try {
+                            // password
+                            try {
+
+                                generatedSecuredPasswordHash = doHashing(Arrays.toString(passPF.getPassword()));
+//                                String[] parts = doHashing(Arrays.toString(passPF.getPassword())).split(":");
+                                String[] parts = generatedSecuredPasswordHash.split(":");
+                                passSalt = parts[1];
+                                passHash = parts[2];
+                                System.out.println(generatedSecuredPasswordHash);
+                                System.out.println(passSalt);
+                                System.out.println(passHash);
+                            } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            dbID++;
+                            age = Integer.parseInt(ageTF.getText());
+                            uname = unameTF.getText();
+                            uid = (int) generate();
+                            created_date = new java.sql.Date(System.currentTimeMillis());
+
+                            String q0 = "INSERT INTO users VALUES ( " + dbID + ", '" + uid + "', TRUE );";
+                            String q1 = "INSERT INTO userTable VALUES (" + uid + ", '" + uname + "', " + age + ", '" + passSalt + "', '" + passHash + "', '" + created_date + "', NULL, FALSE" + ");" ;
+                            System.out.println(q0); System.out.println(q1);
+                            con1.s.executeUpdate(q0);
+                            con1.s.executeUpdate(q1);
+                            System.out.println("Succesfully created account");
+
+                            this.dispose();
+                            new Login(gsm).setVisible(true);
+
+                        } catch (NumberFormatException nfe){
+                            ageTF.setText("");
+                            JOptionPane.showMessageDialog(null, "Please enter a valid number for age");
+                        }
+//                        catch (SQLException ex) {
+//                            throw new RuntimeException(ex);
+//                        }
+                        // end of inserting values
+                    } catch (HeadlessException | SQLException ex) {
+                        throw new RuntimeException(ex);
+                    } // end of connection
 
 
-//            System.out.println(uid);
-//            System.out.println(created_date);
-//
-//            System.out.println(uname);
-//            System.out.println(generatedSecuredPasswordHash);
-//            System.out.println(age);
+                } else if (!Arrays.equals(passPF.getPassword(), confpassPF.getPassword())){
+                    System.out.println("Passwords do not match");
+                }
+            } // blank textfields
+
         }
+
         if(e.getSource() == loginBtn){
             this.dispose();
             new Login(gsm).setVisible(true);
@@ -218,15 +261,14 @@ public class Signup extends JFrame implements ActionListener {
 
     public String doHashing(String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
 
-        int iterations = 1000; //  number of times that the password is hashed
+
         char[] chars = password.toCharArray();
         byte[] salt = getSalt();
 
         PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
         SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 
-        this.hash = skf.generateSecret(spec).getEncoded();
-
+        byte[] hash = skf.generateSecret(spec).getEncoded();
 
         return iterations + ":" + toHex(salt) + ":" + toHex(hash);
 //        return toHex(hash);
@@ -264,15 +306,8 @@ public class Signup extends JFrame implements ActionListener {
         }
     }
 
-//    private static long last = 0;
-//
-//    public static long getID() {
-//        // 10 digits.
-//        long id = System.currentTimeMillis() % 10000000000L;
-//        if ( id <= last ) {
-//            id = (last + 1) % 10000000000L;
-//        }
-//        return last = id;
-//    }
+    public static int getIterations(){
+        return iterations;
+    }
 
 }
