@@ -9,8 +9,9 @@ public class Window extends JFrame{
 
     private BufferStrategy bs;
     private GamePanel gp;
-
+    public static Window window;
     public Window(){
+        window = this;
         setTitle("AquaFarm");
         setLayout(new FlowLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,4 +38,3 @@ public class Window extends JFrame{
 
     }
 }
-
