@@ -28,6 +28,8 @@ public class PlayState extends GameState{
     Fish[] fishes;
     Food food;
 
+    Finance sells;
+
     private BufferedImage Imgbuy_fish1;
     private BufferedImage Imgbuy_fish2;
     private BufferedImage Imgbuy_fish3;
@@ -63,6 +65,9 @@ public class PlayState extends GameState{
     private boolean isBuyingFood = false;
 
 
+    private boolean isSellingFish = false;
+
+
 
 
     public PlayState(GameStateManager gsm){
@@ -71,6 +76,7 @@ public class PlayState extends GameState{
         Vector2f.setWorldVar(map.x, map.y);
         origin = new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2);
         hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2));
+        sells = new Finance(new Vector2f(((float) GamePanel.width+100), (float) GamePanel.height+100));
         food = new Food(origin);
         fishes = new Fish[100000];
         System.out.println();
@@ -171,19 +177,11 @@ public class PlayState extends GameState{
 
         btnBuyFood.addEvent(e -> {
             isBuyingFood = !isBuyingFood;
-
-            if (isBuyingFood) {
-                fishBtnNewWidth -= 20;
-                fishBtnNewHeight -= 20;
-            } else {
-                fishBtnNewWidth = (int) (GamePanel.width / 10); // Reset to the original size
-                fishBtnNewHeight = fishBtnNewWidth * fishBtnHeight / fishBtnWidth;
-            }
         });
 
 
         btnSellFish.addEvent(e -> {
-            // Add logic to handle selling fish
+            isSellingFish = !isSellingFish;
         });
 
 
@@ -204,6 +202,7 @@ public class PlayState extends GameState{
         startGameTimer();
         hands.update(time);
         food.update(time);
+        sells.update(time);
 
         for (Fish fish : fishes) {
 
@@ -231,8 +230,9 @@ public class PlayState extends GameState{
             }
 
         }
+            hands.input(mouseIn);
+            sells.input(mouseIn);
 
-        hands.input(mouseIn);
 
 
         btnFish1.input(mouseIn, keyh);
@@ -321,7 +321,12 @@ public class PlayState extends GameState{
         money.drawString(g, "$" + Finance.money );
 
         food.render(g);
-        hands.render(g);
+
+        if (isSellingFish) {
+            sells.render(g);
+        } else {
+            hands.render(g);
+        }
         btnFish1.render(g);
         btnFish2.render(g);
         btnFish3.render(g);
