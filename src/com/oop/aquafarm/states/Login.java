@@ -7,12 +7,7 @@ import com.oop.aquafarm.util.dbConnection;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.FlowLayout;
 import java.awt.Color;
@@ -32,11 +27,13 @@ public class Login extends JFrame  implements ActionListener {
     private JLabel unameLbl, passLbl;
     private JTextField unameTF;
     private JPasswordField passPF;
-    private JButton signupBtn, loginBtn;
+    private JButton signupBtn, loginBtn, backBtn;
 
-    private String uname, password;
+    private String uname;
     private int iterations = Signup.getIterations();
     private static String passInDB;
+
+    ImageIcon backBtnIcon = new ImageIcon("res/menubutton/arrow back.png");
     GameStateManager gsm;
 
     public Login(GameStateManager gsm){
@@ -78,6 +75,13 @@ public class Login extends JFrame  implements ActionListener {
         signupBtn.setBorderPainted(false);
         signupBtn.addActionListener(this);
 
+        backBtn = new JButton();
+        backBtn.setIcon(backBtnIcon);
+        backBtn.setBounds(GamePanel.width - 100, GamePanel.height - 100, 100, 50);
+        backBtn.setContentAreaFilled(false);
+        backBtn.setBorderPainted(false);
+        backBtn.addActionListener(this);
+
         try{
             Font font = Font.createFont(Font.TRUETYPE_FONT, new File("res/font/pixelated.ttf"));
 
@@ -100,6 +104,7 @@ public class Login extends JFrame  implements ActionListener {
 
         add(loginBtn);
         add(signupBtn);
+        add(backBtn);
 
         input();
     }
@@ -161,8 +166,6 @@ public class Login extends JFrame  implements ActionListener {
                         }
 
 
-
-
                     } else{
                         JOptionPane.showMessageDialog(null, "No such user in database");
                         unameTF.setBorder(new LineBorder(Color.red,3));
@@ -174,15 +177,19 @@ public class Login extends JFrame  implements ActionListener {
 
             }
 
-
 //            generatedSecuredPasswordHash = "1000:e7f7b64e917b923dd6231910b7ff1b3e:10d881cdc89ae8c48b001f7c49eb62db26221177b70f62b143badecb33f677c0f182c37c25f0127eeeeb42dcf5ad979656d4a7c1d2f8f100d8df80a1b958f033";
-
 
         }
         if(e.getSource() == signupBtn){
             this.dispose();
             new Signup(gsm).setVisible(true);
         }
+        if(e.getSource() == backBtn){
+            gsm.add(GameStateManager.TITLE);
+            Window.window.setVisible(true);
+            this.dispose();
+        }
+
     }
 
 

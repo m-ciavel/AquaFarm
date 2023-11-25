@@ -2,6 +2,7 @@ package com.oop.aquafarm.states;
 
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.Window;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.dbConnection;
 
@@ -9,12 +10,7 @@ import com.oop.aquafarm.util.dbConnection;
 //import javax.swing.*;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.Font;
 import java.awt.FlowLayout;
@@ -40,7 +36,7 @@ public class Signup extends JFrame implements ActionListener {
     private JLabel unameLbl, passLbl, confpassLbl, ageLbl;
     private JTextField unameTF, ageTF;
     private JPasswordField passPF, confpassPF;
-    private JButton signupBtn, loginBtn;
+    private JButton signupBtn, loginBtn, backBtn;
 
     private static int iterations = 1000; //  number of times that the password is hashed
     private String uname, password;
@@ -49,7 +45,7 @@ public class Signup extends JFrame implements ActionListener {
     private Date created_date;
     private int uid, age, dbID;
 
-
+    ImageIcon backBtnIcon = new ImageIcon("res/menubutton/arrow back.png");
 
     public Signup(GameStateManager gsm){
         this.gsm = gsm;
@@ -94,6 +90,13 @@ public class Signup extends JFrame implements ActionListener {
         loginBtn.setBorderPainted(false);
         loginBtn.addActionListener(this);
 
+        backBtn = new JButton();
+        backBtn.setIcon(backBtnIcon);
+        backBtn.setBounds(GamePanel.width - 100, GamePanel.height - 100, 100, 50);
+        backBtn.setContentAreaFilled(false);
+        backBtn.setBorderPainted(false);
+        backBtn.addActionListener(this);
+
         try{
             Font font = Font.createFont(Font.TRUETYPE_FONT, new File("res/font/pixelated.ttf"));
 
@@ -122,6 +125,7 @@ public class Signup extends JFrame implements ActionListener {
 
         add(signupBtn);
         add(loginBtn);
+        add(backBtn);
 
         input();
 
@@ -256,6 +260,11 @@ public class Signup extends JFrame implements ActionListener {
         if(e.getSource() == loginBtn){
             this.dispose();
             new Login(gsm).setVisible(true);
+        }
+        if(e.getSource() == backBtn){
+            gsm.add(GameStateManager.TITLE);
+            Window.window.setVisible(true);
+            this.dispose();
         }
     }
 
