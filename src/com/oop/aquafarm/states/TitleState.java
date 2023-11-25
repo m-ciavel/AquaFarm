@@ -53,7 +53,7 @@ public class TitleState extends GameState {
 
         btnPlay.addHoverImage(btnPlay.createButton(imgHoverPlay, newbtnWidth, newbtnHeight));
         btnSettings.addHoverImage(btnSettings.createButton(imgHoverSettings, newbtnWidth, newbtnHeight));
-        btnExit.addHoverImage(btnSettings.createButton(imgHoverExit, newbtnWidth, newbtnHeight));
+        btnExit.addHoverImage(btnExit.createButton(imgHoverExit, newbtnWidth, newbtnHeight));
 
         btnPlay.addEvent(e -> {
 //                gsm.add(GameStateManager.ACCOUNT);
