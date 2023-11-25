@@ -80,8 +80,8 @@ public class Login extends JFrame  implements ActionListener {
             unameLbl.setFont(font.deriveFont(Font.BOLD, 50));
             passLbl.setFont(font.deriveFont(Font.BOLD, 50));
 
-            unameTF.setFont(font.deriveFont(Font.BOLD, 40));
-            passPF.setFont(font.deriveFont(Font.BOLD, 40));
+//            unameTF.setFont(font.deriveFont(Font.BOLD, 40));
+//            passPF.setFont(font.deriveFont(Font.BOLD, 40));
 
 //            signupBtn.setFont(font.deriveFont(Font.BOLD, 40));
 //            loginBtn.setFont(font.deriveFont(Font.BOLD, 40));

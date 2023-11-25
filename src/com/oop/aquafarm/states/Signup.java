@@ -103,10 +103,10 @@ public class Signup extends JFrame implements ActionListener {
             confpassLbl.setFont(font.deriveFont(Font.BOLD, 50));
             ageLbl.setFont(font.deriveFont(Font.BOLD, 50));
 
-            unameTF.setFont(font.deriveFont(Font.BOLD, 40));
-            passPF.setFont(font.deriveFont(Font.BOLD, 40));
-            confpassPF.setFont(font.deriveFont(Font.BOLD, 40));
-            ageTF.setFont(font.deriveFont(Font.BOLD, 40));
+//            unameTF.setFont(font.deriveFont(Font.BOLD, 40));
+//            passPF.setFont(font.deriveFont(Font.BOLD, 40));
+//            confpassPF.setFont(font.deriveFont(Font.BOLD, 40));
+//            ageTF.setFont(font.deriveFont(Font.BOLD, 40));
 
 //            signupBtn.setFont(font.deriveFont(Font.BOLD, 40));
 //            loginBtn.setFont(font.deriveFont(Font.BOLD, 40));
