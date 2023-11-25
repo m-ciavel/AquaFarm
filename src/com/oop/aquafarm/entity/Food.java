@@ -1,7 +1,6 @@
 package com.oop.aquafarm.entity;
 
 import com.oop.aquafarm.GamePanel;
-import com.oop.aquafarm.Window;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.ScaledImage;

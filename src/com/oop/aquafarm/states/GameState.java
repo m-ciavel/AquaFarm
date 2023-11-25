@@ -17,9 +17,6 @@ public abstract class GameState {
     public abstract void input(MouseHandler mouseIn, KeyHandler keyh);
     public abstract void render(Graphics2D g);
 
-//    public boolean isIn(MouseEvent e, TitleButton tb){
-//        return tb.getBounds().contains(e.getX(), e.getY());
-//    }
 
 
 }
