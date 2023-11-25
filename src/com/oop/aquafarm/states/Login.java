@@ -20,6 +20,7 @@ import java.io.File;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.ResultSet;
+import java.util.Arrays;
 
 public class Login extends JFrame  implements ActionListener {
     private JLabel loginLbl;
@@ -137,9 +138,8 @@ public class Login extends JFrame  implements ActionListener {
                         passInDB =  iterations + ":" + pSalt + ":" + pHash;
                         System.out.println(passInDB);
 
-//                        boolean matched;
                         try {
-                            boolean matched = validatePassword(String.valueOf(passPF.getPassword()), passInDB);
+                            boolean matched = validatePassword(Arrays.toString(passPF.getPassword()), passInDB);
                             System.out.println(matched);
 
                             if (matched){
@@ -170,7 +170,6 @@ public class Login extends JFrame  implements ActionListener {
             }
 
 
-//            generatedSecuredPasswordHash =  iterations + ":" + pSalt + ":" + pHash + "1000:e7f7b64e917b923dd6231910b7ff1b3e:10d881cdc89ae8c48b001f7c49eb62db26221177b70f62b143badecb33f677c0f182c37c25f0127eeeeb42dcf5ad979656d4a7c1d2f8f100d8df80a1b958f033";
 //            generatedSecuredPasswordHash = "1000:e7f7b64e917b923dd6231910b7ff1b3e:10d881cdc89ae8c48b001f7c49eb62db26221177b70f62b143badecb33f677c0f182c37c25f0127eeeeb42dcf5ad979656d4a7c1d2f8f100d8df80a1b958f033";
 
 
