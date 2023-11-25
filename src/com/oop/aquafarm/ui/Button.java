@@ -1,13 +1,13 @@
 package com.oop.aquafarm.ui;
 
+import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.AABB;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.Vector2f;
 
-import java.awt.Graphics2D;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -16,6 +16,7 @@ public class Button {
     private BufferedImage image;
     private BufferedImage hoverImage;
     private BufferedImage pressedImage;
+
 
     private Vector2f iPos;
     private AABB bounds;
@@ -151,10 +152,11 @@ public class Button {
 
     // ******************************************** END ************************************************************
 
-    public void addHoverImage(BufferedImage image) {
-        this.hoverImage = image;
+    public void addHoverImage(BufferedImage hoverImage) {
+        this.hoverImage = hoverImage;
         this.canHover = true;
     }
+
 
     public void addPressedImage(BufferedImage image) {
         this.pressedImage = image;
@@ -220,7 +222,32 @@ public class Button {
         hovering = true;
     }
 
+
+
+    public void render(Graphics2D g) {
+        if (canHover && hoverImage != null && hovering) {
+            g.drawImage(hoverImage, (int) iPos.x, (int) iPos.y, (int) bounds.getWidth(), (int) bounds.getHeight(), null);
+        } else if (pressedImage != null && pressed) {
+            g.drawImage(pressedImage, (int) iPos.x, (int) iPos.y, (int) bounds.getWidth(), (int) bounds.getHeight(), null);
+        } else {
+            g.drawImage(image, (int) iPos.x, (int) iPos.y, (int) bounds.getWidth(), (int) bounds.getHeight(), null);
+        }
+    }
+
+
+
+
+    public interface ClickedEvent {
+        void action(int mouseButton);
+    }
+
+    public interface SlotEvent {
+        void action(Slots slot);
+    }
+
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
+
+
         if (bounds.inside(mouseIn.getX(), mouseIn.getY())) {
 
             if (canHover && !hovering) {
@@ -250,24 +277,8 @@ public class Button {
 
     }
 
-    public void render(Graphics2D g) {
-
-        if (canHover && hoverImage != null && hovering) {
-            g.drawImage(hoverImage, (int) iPos.x, (int) iPos.y, (int) bounds.getWidth(), (int) bounds.getHeight(), null);
-        } else if (pressedImage != null && pressed) {
-            g.drawImage(pressedImage, (int) iPos.x, (int) iPos.y, (int) bounds.getWidth(), (int) bounds.getHeight(), null);
-        } else {
-            g.drawImage(image, (int) iPos.x, (int) iPos.y, (int) bounds.getWidth(), (int) bounds.getHeight(), null);
-        }
-
-    }
 
 
-    public interface ClickedEvent {
-        void action(int mouseButton);
-    }
 
-    public interface SlotEvent {
-        void action(Slots slot);
-    }
+
 }

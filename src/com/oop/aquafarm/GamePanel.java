@@ -1,17 +1,17 @@
 package com.oop.aquafarm;
 
+import com.oop.aquafarm.entity.Entity;
 import com.oop.aquafarm.states.GameStateManager;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
+import com.oop.aquafarm.util.ScaledImage;
 
-
-import javax.swing.JPanel;
-import java.awt.Graphics2D;
-import java.awt.Graphics;
-import java.awt.Dimension;
-import java.awt.RenderingHints;
-import java.awt.image.BufferStrategy;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable{
 
@@ -28,21 +28,23 @@ public class GamePanel extends JPanel implements Runnable{
     private Thread thread;
     private boolean running = false;
 
-    private BufferStrategy bs;
     private BufferedImage img;
     private Graphics2D g;
 
     private MouseHandler mouseIn;
     private KeyHandler keyh;
+    private Entity entity;
 
     private GameStateManager gsm;
-    public GamePanel(BufferStrategy bs, int width, int height){
+    public GamePanel(int width, int height){
+
         GamePanel.width = width;
         GamePanel.height = height;
-        this.bs = bs;
         setPreferredSize(new Dimension(width,height));
         setFocusable(true);
         requestFocus();
+
+        System.out.println(GamePanel.height);
     }
 
     public void addNotify(){
@@ -76,17 +78,17 @@ public class GamePanel extends JPanel implements Runnable{
         init();
 
         final double GAME_HERTZ = 64.0;
-        final double TBU = 1000000000 / GAME_HERTZ; //time before update
+        final double TBU = 900000000 / GAME_HERTZ; //time before update
 
         final int MUBR = 3; //must update before render
 
         double lastUpdateT = System.nanoTime();
         double lastRenderTime;
 
-        final double TARGET_FPS = FPS;
-        final double TTBR = 1000000000 / TARGET_FPS; //total time before render
+        final double TARGET_FPS = 480;
+        final double TTBR = 900000000 / TARGET_FPS; //total time before render
 
-        int lastSecondTime = (int) (lastUpdateT / 1000000000);
+        int lastSecondTime = (int) (lastUpdateT / 900000000);
 
         int frameCount = 0;
         oldFrameCount = 0;
@@ -116,7 +118,7 @@ public class GamePanel extends JPanel implements Runnable{
             lastRenderTime = now;
             frameCount++;
 
-            int thisSecond = (int) (lastUpdateT / 1000000000);
+            int thisSecond = (int) (lastUpdateT / 900000000);
             if(thisSecond > lastSecondTime){
                 if(frameCount != oldFrameCount){
                     System.out.println("NEW SECOND "+ thisSecond + " " + frameCount);
@@ -162,12 +164,10 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void draw(){
-        do{
-            Graphics g2 = (Graphics) bs.getDrawGraphics();
-            g2.drawImage(img, 3,26, width+10, height+10, null);
-            g2.dispose();
-            bs.show();
-        } while(bs.contentsLost());
+
+        Graphics g2 = (Graphics) this.getGraphics();
+        g2.drawImage(img, 0,0, width, height, null);
+        g2.dispose();
     }
 
 

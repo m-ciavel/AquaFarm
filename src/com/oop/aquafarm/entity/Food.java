@@ -1,6 +1,7 @@
 package com.oop.aquafarm.entity;
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.Window;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.ScaledImage;
@@ -49,17 +50,17 @@ public class Food extends Entity {
             // Move the food down
             food.foodY += 1; // Adjust the value to control the speed of descent
 
-            // Check if the food is off the screen and remove it
             if (food.foodY > GamePanel.height) {
                 iterator.remove();
+
+
             }
         }
 
         // Update food locations
         updateFoodLocations();
 
-        // Print food locations
-        printFoodLocations();
+
     }
 
     public void setDefaultValues() {
@@ -71,9 +72,8 @@ public class Food extends Entity {
         foodImage = ScaledImage.scaledImage(foodImage, foodSize, foodSize);
     }
 
-
     private void initFoodSpawnTimer() {
-        foodSpawnTimer = new Timer(1000, new ActionListener() {
+        foodSpawnTimer = new Timer(1, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 canSpawnFood = true;
@@ -93,12 +93,6 @@ public class Food extends Entity {
         }
     }
 
-    public void printFoodLocations() {
-        System.out.println("Food Locations:");
-        for (FoodLocation location : foodLocations) {
-            System.out.println("X: " + location.getLocationX() + ", Y: " + location.getLocationY());
-        }
-    }
     @Override
     public void render(Graphics2D g2) {
         for (SummonedFood food : ExistingFoods) {
@@ -108,35 +102,37 @@ public class Food extends Entity {
 
     @Override
     public void input(MouseHandler mouseIn) {
-
         int mouseB = mouseIn.getButton();
 
-        if(mouseB == 1){
+        if (mouseB == 1) {
             clicked = true;
-        }else if(mouseB == -1){
+        } else if (mouseB == -1) {
             clicked = false;
         }
 
-
-
         // Check for collision with the fish (you need to implement this logic)
-        if (clicked && canSpawnFood && ExistingFoods.size() < 10) {
-            int x = mouseIn.getX()- foodSize / 2;
+        if (clicked && canSpawnFood && ExistingFoods.size() < 10 && Finance.money > 0) {
+            int x = mouseIn.getX() - foodSize / 2;
             int y = mouseIn.getY() - foodSize / 2;
+            Finance.money = Finance.money- 1;
 
-            ExistingFoods.add(new SummonedFood(x, y, x, y));
+            ExistingFoods.add(new SummonedFood(x, y));
             canSpawnFood = false;
-            foodSpawnTimer.start();
-        }
 
+
+            if (!foodSpawnTimer.isRunning()) {
+                foodSpawnTimer.start();
+            }
+        }
     }
+
 
     public static class SummonedFood {
         private int foodX;
         private int foodY;
         private double shakeAngle;
 
-        public SummonedFood(int x, int y, int foodX, int foodY) {
+        public SummonedFood(int foodX, int foodY) {
             this.foodX = foodX;
             this.foodY = foodY;
             this.shakeAngle = 0;
