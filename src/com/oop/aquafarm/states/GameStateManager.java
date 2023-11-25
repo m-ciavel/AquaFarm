@@ -38,7 +38,7 @@ public class GameStateManager {
 
         button = new SpriteSheet("menubutton/buttons.png", 144, 42);
 
-        buybutton = new SpriteSheet("menubutton/buy_button.png", 48,48);
+        buybutton = new SpriteSheet("menubutton/buy_button.png", 128,128);
 
 
 

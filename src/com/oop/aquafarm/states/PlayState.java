@@ -1,6 +1,6 @@
 package com.oop.aquafarm.states;
 
-import com.oop.aquafarm.GameLauncher;
+
 import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.entity.Finance;
 import com.oop.aquafarm.entity.Fish;
@@ -18,9 +18,9 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.List;
 
 public class PlayState extends GameState{
+
     GamePanel game;
     public static Vector2f map;
     public static Vector2f origin;
@@ -38,14 +38,15 @@ public class PlayState extends GameState{
     private BufferedImage Imgbuy_fish6;
     private BufferedImage Imgbuy_food;
     private BufferedImage Imgsell_fish;
-    private BufferedImage Hover_Imgbuy_fish1;
-    private BufferedImage Hover_Imgbuy_fish2;
-    private BufferedImage Hover_Imgbuy_fish3;
-    private BufferedImage Hover_Imgbuy_fish4;
-    private BufferedImage Hover_Imgbuy_fish5;
-    private BufferedImage Hover_Imgbuy_fish6;
-    private BufferedImage Hover_Imgbuy_food;
-    private BufferedImage Hover_Imgsell_fish;
+
+    private final BufferedImage Hover_Imgbuy_fish1;
+    private final BufferedImage Hover_Imgbuy_fish2;
+    private final BufferedImage Hover_Imgbuy_fish3;
+    private final BufferedImage Hover_Imgbuy_fish4;
+    private final BufferedImage Hover_Imgbuy_fish5;
+    private final BufferedImage Hover_Imgbuy_fish6;
+    private final BufferedImage Hover_Imgbuy_food;
+    private final BufferedImage Hover_Imgsell_fish;
 
     private Button btnFish1;
     private Button btnFish2;
@@ -57,10 +58,17 @@ public class PlayState extends GameState{
     private Button btnBuyFood;
     private Button btnSellFish;
 
-    private int fishBtnWidth = 128;
-    private int fishBtnHeight = 128;
-    private int fishBtnNewWidth = (int) (GamePanel.width / 10);
-    private int fishBtnNewHeight = fishBtnNewWidth * fishBtnHeight / fishBtnWidth;
+    private int fishBtnSize = 128;
+//    private int fishBtnNewSize = GamePanel.width / 10;
+//    private int buttonSpacing = 10;
+
+//    int smallFishBtnNewSize = GamePanel.width / 10 - 60;
+    private int smallFishBtnNewSize = GamePanel.width / 20;
+    private int btnHoverSize = smallFishBtnNewSize + 10;
+
+    private int middleX = (GamePanel.width - (7 * (btnHoverSize))) / 2;
+    private int bottomY = GamePanel.height - btnHoverSize;
+
 
     private boolean isBuyingFood = false;
 
@@ -78,69 +86,54 @@ public class PlayState extends GameState{
         hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2));
         sells = new Finance(new Vector2f(((float) GamePanel.width+100), (float) GamePanel.height+100));
         food = new Food(origin);
-        fishes = new Fish[100000];
-        System.out.println();
-
-
-//        fishes[0] = new Fish(origin, 100, 100, "ClownFish");
-//        fishes[1] = new Fish(origin, 100, 100, "AtlanticBass");
-//        fishes[2]= new Fish(origin, 100, 100, "BlueGill");
-//        fishes[3] = new Fish(origin, 100, 100, "GoldenTench");
-//        fishes[4] = new Fish(origin, 100, 100, "Guppy");
-//        fishes[5] = new Fish(origin, 100, 100, "HIghFinBandedShark");
-
-
-        Imgbuy_fish1 = GameStateManager.buybutton.getSubimage(0, 0, fishBtnWidth, fishBtnHeight);
-        Imgbuy_fish2 = GameStateManager.buybutton.getSubimage(fishBtnWidth, 0, fishBtnWidth, fishBtnHeight);
-        Imgbuy_fish3 = GameStateManager.buybutton.getSubimage(fishBtnWidth * 2, 0, fishBtnWidth, fishBtnHeight);
-        Imgbuy_fish4 = GameStateManager.buybutton.getSubimage(fishBtnWidth * 3, 0, fishBtnWidth, fishBtnHeight);
-        Imgbuy_fish5 = GameStateManager.buybutton.getSubimage(fishBtnWidth * 4, 0, fishBtnWidth, fishBtnHeight);
-        Imgbuy_fish6 = GameStateManager.buybutton.getSubimage(fishBtnWidth * 5, 0, fishBtnWidth, fishBtnHeight);
-        Imgbuy_food = GameStateManager.buybutton.getSubimage(fishBtnWidth * 6, 0, fishBtnWidth, fishBtnHeight);
-        Imgsell_fish = GameStateManager.buybutton.getSubimage(fishBtnWidth * 7, 0, fishBtnWidth, fishBtnHeight);
-
-        Hover_Imgbuy_fish1 = GameStateManager.buybutton.getSubimage(0, 0, fishBtnWidth, fishBtnHeight);
-
-
-        Hover_Imgbuy_fish2 = GameStateManager.buybutton.getSubimage(fishBtnWidth, 0, fishBtnWidth, fishBtnHeight);
-        Hover_Imgbuy_fish3 = GameStateManager.buybutton.getSubimage(fishBtnWidth * 2, 0, fishBtnWidth, fishBtnHeight);
-        Hover_Imgbuy_fish4 = GameStateManager.buybutton.getSubimage(fishBtnWidth * 3, 0, fishBtnWidth, fishBtnHeight);
-        Hover_Imgbuy_fish5 = GameStateManager.buybutton.getSubimage(fishBtnWidth * 4, 0, fishBtnWidth, fishBtnHeight);
-        Hover_Imgbuy_fish6 = GameStateManager.buybutton.getSubimage(fishBtnWidth * 5, 0, fishBtnWidth, fishBtnHeight);
-        Hover_Imgbuy_food = GameStateManager.buybutton.getSubimage(fishBtnWidth * 6, 0, fishBtnWidth, fishBtnHeight);
-        Hover_Imgsell_fish = GameStateManager.buybutton.getSubimage(fishBtnWidth * 7, 0, fishBtnWidth, fishBtnHeight);
+        fishes = new Fish[50];
 
 
 
+        Imgbuy_fish1 = GameStateManager.buybutton.getSubimage(0, 0, fishBtnSize, fishBtnSize);
+        Imgbuy_fish2 = GameStateManager.buybutton.getSubimage(fishBtnSize, 0, fishBtnSize, fishBtnSize);
+        Imgbuy_fish3 = GameStateManager.buybutton.getSubimage((fishBtnSize * 2), 0, fishBtnSize, fishBtnSize);
+        Imgbuy_fish4 = GameStateManager.buybutton.getSubimage((fishBtnSize * 3), 0, fishBtnSize, fishBtnSize);
+        Imgbuy_fish5 = GameStateManager.buybutton.getSubimage((fishBtnSize * 4), 0, fishBtnSize, fishBtnSize);
+        Imgbuy_fish6 = GameStateManager.buybutton.getSubimage((fishBtnSize * 5), 0, fishBtnSize, fishBtnSize);
+        Imgbuy_food = GameStateManager.buybutton.getSubimage((fishBtnSize * 6), 0, fishBtnSize, fishBtnSize);
+        Imgsell_fish = GameStateManager.buybutton.getSubimage((fishBtnSize * 7), 0, fishBtnSize, fishBtnSize);
 
-        int buttonSpacing = 10;
+        Hover_Imgbuy_fish1 = GameStateManager.buybutton.getSubimage(0, 0, fishBtnSize, fishBtnSize);
+        Hover_Imgbuy_fish2 = GameStateManager.buybutton.getSubimage(fishBtnSize, 0, fishBtnSize, fishBtnSize);
+        Hover_Imgbuy_fish3 = GameStateManager.buybutton.getSubimage(fishBtnSize * 2, 0, fishBtnSize, fishBtnSize);
+        Hover_Imgbuy_fish4 = GameStateManager.buybutton.getSubimage(fishBtnSize * 3, 0, fishBtnSize, fishBtnSize);
+        Hover_Imgbuy_fish5 = GameStateManager.buybutton.getSubimage(fishBtnSize * 4, 0, fishBtnSize, fishBtnSize);
+        Hover_Imgbuy_fish6 = GameStateManager.buybutton.getSubimage(fishBtnSize * 5, 0, fishBtnSize, fishBtnSize);
+        Hover_Imgbuy_food = GameStateManager.buybutton.getSubimage(fishBtnSize * 6, 0, fishBtnSize, fishBtnSize);
+        Hover_Imgsell_fish = GameStateManager.buybutton.getSubimage(fishBtnSize * 7, 0, fishBtnSize, fishBtnSize);
 
-        int smallFishBtnNewWidth = fishBtnNewWidth -50;
-        int smallFishBtnNewHeight = fishBtnNewHeight -50;
+        btnFish1 = new Button(Imgbuy_fish1, new Vector2f(middleX, bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
+        btnFish2 = new Button(Imgbuy_fish2, new Vector2f(middleX + btnHoverSize, bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
+        btnFish3 = new Button(Imgbuy_fish3, new Vector2f(middleX + (2 * btnHoverSize), bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
+        btnFish4 = new Button(Imgbuy_fish4, new Vector2f(middleX + (3 * btnHoverSize), bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
+        btnFish5 = new Button(Imgbuy_fish5, new Vector2f(middleX + (4 * btnHoverSize), bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
+        btnFish6 = new Button(Imgbuy_fish6, new Vector2f(middleX + (5 * btnHoverSize), bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
+        btnBuyFood = new Button(Imgbuy_food, new Vector2f(middleX + (6 * btnHoverSize), bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
+        btnSellFish = new Button(Imgsell_fish, new Vector2f(middleX + (7 * btnHoverSize), bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
 
-        int middleX = (GamePanel.width - (7 * (smallFishBtnNewWidth + buttonSpacing))) / 2;
-        int bottomY = GamePanel.height - smallFishBtnNewHeight + 10;
-        int hoverIncrease = 1000;
+        btnFish1.addHoverImage(btnFish1.createButton(Hover_Imgbuy_fish1, btnHoverSize , btnHoverSize));
+        btnFish2.addHoverImage(btnFish2.createButton(Hover_Imgbuy_fish2, btnHoverSize, btnHoverSize));
+        btnFish3.addHoverImage(btnFish3.createButton(Hover_Imgbuy_fish3, btnHoverSize, btnHoverSize));
+        btnFish4.addHoverImage(btnFish4.createButton(Hover_Imgbuy_fish4, btnHoverSize, btnHoverSize));
+        btnFish5.addHoverImage(btnFish5.createButton(Hover_Imgbuy_fish5, btnHoverSize, btnHoverSize));
+        btnFish6.addHoverImage(btnFish6.createButton(Hover_Imgbuy_fish6, btnHoverSize, btnHoverSize));
+        btnBuyFood.addHoverImage(btnBuyFood.createButton(Hover_Imgbuy_food, btnHoverSize, btnHoverSize));
+        btnSellFish.addHoverImage(btnSellFish.createButton(Hover_Imgsell_fish, btnHoverSize, btnHoverSize));
 
-
-
-        btnFish1 = new Button(Imgbuy_fish1, new Vector2f(middleX, bottomY), smallFishBtnNewWidth, smallFishBtnNewHeight);
-        btnFish2 = new Button(Imgbuy_fish2, new Vector2f(middleX + (smallFishBtnNewWidth + buttonSpacing), bottomY), smallFishBtnNewWidth, smallFishBtnNewHeight);
-        btnFish3 = new Button(Imgbuy_fish3, new Vector2f(middleX + 2 * (smallFishBtnNewWidth + buttonSpacing), bottomY), smallFishBtnNewWidth, smallFishBtnNewHeight);
-        btnFish4 = new Button(Imgbuy_fish4, new Vector2f(middleX + 3 * (smallFishBtnNewWidth + buttonSpacing), bottomY), smallFishBtnNewWidth, smallFishBtnNewHeight);
-        btnFish5 = new Button(Imgbuy_fish5, new Vector2f(middleX + 4 * (smallFishBtnNewWidth + buttonSpacing), bottomY), smallFishBtnNewWidth, smallFishBtnNewHeight);
-        btnFish6 = new Button(Imgbuy_fish6, new Vector2f(middleX + 5 * (smallFishBtnNewWidth + buttonSpacing), bottomY), smallFishBtnNewWidth, smallFishBtnNewHeight);
-        btnBuyFood = new Button(Imgbuy_food, new Vector2f(middleX + 6 * (smallFishBtnNewWidth + buttonSpacing), bottomY), smallFishBtnNewWidth, smallFishBtnNewHeight);
-        btnSellFish = new Button(Imgsell_fish, new Vector2f(middleX + 7 * (smallFishBtnNewWidth + buttonSpacing), bottomY), smallFishBtnNewWidth, smallFishBtnNewHeight);
-
-        btnFish1.addHoverImage(btnFish1.createButton(Hover_Imgbuy_fish1, smallFishBtnNewWidth + hoverIncrease, smallFishBtnNewHeight + hoverIncrease));
-        btnFish2.addHoverImage(btnFish2.createButton(Hover_Imgbuy_fish2, smallFishBtnNewWidth + hoverIncrease, smallFishBtnNewHeight + hoverIncrease));
-        btnFish3.addHoverImage(btnFish3.createButton(Hover_Imgbuy_fish3, smallFishBtnNewWidth + hoverIncrease, smallFishBtnNewHeight + hoverIncrease));
-        btnFish4.addHoverImage(btnFish4.createButton(Hover_Imgbuy_fish4, smallFishBtnNewWidth + hoverIncrease, smallFishBtnNewHeight + hoverIncrease));
-        btnFish5.addHoverImage(btnFish5.createButton(Hover_Imgbuy_fish5, smallFishBtnNewWidth + hoverIncrease, smallFishBtnNewHeight + hoverIncrease));
-        btnFish6.addHoverImage(btnFish6.createButton(Hover_Imgbuy_fish6, smallFishBtnNewWidth + hoverIncrease, smallFishBtnNewHeight + hoverIncrease));
-        btnBuyFood.addHoverImage(btnBuyFood.createButton(Hover_Imgbuy_food, smallFishBtnNewWidth + hoverIncrease, smallFishBtnNewHeight + hoverIncrease));
-        btnSellFish.addHoverImage(btnSellFish.createButton(Hover_Imgsell_fish, smallFishBtnNewWidth + hoverIncrease, smallFishBtnNewHeight + hoverIncrease));
+//        btnFish1.addHoverImage(btnFish1.createButton(Imgbuy_fish1, smallFishBtnNewSize + 5, smallFishBtnNewSize + 5));
+//        btnFish2.addHoverImage(btnFish2.createButton(Imgbuy_fish2, smallFishBtnNewSize + hoverIncrease, smallFishBtnNewSize + hoverIncrease));
+//        btnFish3.addHoverImage(btnFish3.createButton(Imgbuy_fish3, smallFishBtnNewSize + hoverIncrease, smallFishBtnNewSize + hoverIncrease));
+//        btnFish4.addHoverImage(btnFish4.createButton(Imgbuy_fish4, smallFishBtnNewSize + hoverIncrease, smallFishBtnNewSize + hoverIncrease));
+//        btnFish5.addHoverImage(btnFish5.createButton(Imgbuy_fish5, smallFishBtnNewSize + hoverIncrease, smallFishBtnNewSize + hoverIncrease));
+//        btnFish6.addHoverImage(btnFish6.createButton(Imgbuy_fish6, smallFishBtnNewSize + hoverIncrease, smallFishBtnNewSize + hoverIncrease));
+//        btnBuyFood.addHoverImage(btnBuyFood.createButton(Imgbuy_food, smallFishBtnNewSize + hoverIncrease, smallFishBtnNewSize + hoverIncrease));
+//        btnSellFish.addHoverImage(btnSellFish.createButton(Imgsell_fish, smallFishBtnNewSize + hoverIncrease, smallFishBtnNewSize + hoverIncrease));
 
 
 
@@ -203,7 +196,6 @@ public class PlayState extends GameState{
         hands.update(time);
         food.update(time);
         sells.update(time);
-
         for (Fish fish : fishes) {
 
             if (fish != null) {
@@ -224,16 +216,10 @@ public class PlayState extends GameState{
         }
 
         for (Fish fish : fishes) {
-
             if (fish != null) {
                 fish.input(mouseIn);
             }
-
         }
-            hands.input(mouseIn);
-            sells.input(mouseIn);
-
-
 
         btnFish1.input(mouseIn, keyh);
         btnFish2.input(mouseIn, keyh);
@@ -243,6 +229,10 @@ public class PlayState extends GameState{
         btnFish6.input(mouseIn, keyh);
         btnBuyFood.input(mouseIn, keyh);
         btnSellFish.input(mouseIn, keyh);
+
+            hands.input(mouseIn);
+            sells.input(mouseIn);
+
 
         keyh.escape.tick();
         if(keyh.escape.clicked){
@@ -322,11 +312,6 @@ public class PlayState extends GameState{
 
         food.render(g);
 
-        if (isSellingFish) {
-            sells.render(g);
-        } else {
-            hands.render(g);
-        }
         btnFish1.render(g);
         btnFish2.render(g);
         btnFish3.render(g);
@@ -335,6 +320,13 @@ public class PlayState extends GameState{
         btnFish6.render(g);
         btnBuyFood.render(g);
         btnSellFish.render(g);
+
+        if (isSellingFish) {
+            sells.render(g);
+        } else {
+            hands.render(g);
+        }
+
 
 
         for (Fish fish : fishes) {
