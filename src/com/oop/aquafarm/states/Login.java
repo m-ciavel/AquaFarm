@@ -7,7 +7,12 @@ import com.oop.aquafarm.util.dbConnection;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
 import java.awt.FlowLayout;
 import java.awt.Color;
@@ -80,8 +85,8 @@ public class Login extends JFrame  implements ActionListener {
             unameLbl.setFont(font.deriveFont(Font.BOLD, 50));
             passLbl.setFont(font.deriveFont(Font.BOLD, 50));
 
-            unameTF.setFont(font.deriveFont(Font.BOLD, 40));
-            passPF.setFont(font.deriveFont(Font.BOLD, 40));
+//            unameTF.setFont(font.deriveFont(Font.BOLD, 40));
+//            passPF.setFont(font.deriveFont(Font.BOLD, 40));
 
 //            signupBtn.setFont(font.deriveFont(Font.BOLD, 40));
 //            loginBtn.setFont(font.deriveFont(Font.BOLD, 40));
