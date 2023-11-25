@@ -2,6 +2,7 @@ package com.oop.aquafarm.states;
 
 import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.Window;
+import com.oop.aquafarm.audio.Music;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.ui.Button;
 import com.oop.aquafarm.util.KeyHandler;
@@ -36,6 +37,7 @@ public class TitleState extends GameState {
 
     public TitleState(GameStateManager gsm) {
         super(gsm);
+        Music.playMusic(Music.fpath);
 
         imgButtonPlay = GameStateManager.button.getSubimage(0, 0, btnWidth, btnHeight);
         imgButtonSettings = GameStateManager.button.getSubimage(btnWidth,0, btnWidth, btnHeight);
@@ -66,7 +68,8 @@ public class TitleState extends GameState {
         });
 
         btnExit.addEvent(e -> {
-            System.exit(0);
+            gsm.add(GameStateManager.QUIT);
+            gsm.pop(GameStateManager.TITLE);
         });
     }
 
