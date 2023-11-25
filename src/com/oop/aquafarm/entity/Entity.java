@@ -17,12 +17,14 @@ public abstract class Entity  {
     public boolean yCol = false;
 //    public int x , y, initialX, initialY;
     public int dragX, dragY;
-    public BufferedImage openhand, closehand, fish_left, fish_right, food_left, food_right ;
+    public BufferedImage openhand, closehand, fish_left, fish_right, sell, food_right ;
     public boolean clicked;
     public boolean dragged;
     public String direction;
     public String fish_type;
     public String add_fishes;
+    public int breedingcount;
+
 
     public Entity(Vector2f origin) {
         this.pos = origin;

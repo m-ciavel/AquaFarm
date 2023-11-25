@@ -5,40 +5,48 @@ import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.Vector2f;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
-public class Hand extends Entity{
+public class Finance extends Entity {
+    public static int money = 100000;
+
 
     private int imageX, imageY;
-    public Hand(Vector2f origin) {
+    public Finance(Vector2f origin) {
         super(origin);
         setDefaultValues();
-        loadGodHandImages();
+        loadSellImages();
 
     }
     public void setDefaultValues() {
         clicked = false;
     }
-    private void loadGodHandImages() {
+
+    private void loadSellImages() {
         String foldername = "hand";
-        openhand = SpriteSheet.setup(foldername, foldername + ".open");
-        closehand = SpriteSheet.setup(foldername,foldername + ".close");
+        sell = SpriteSheet.setup(foldername, "sell_fish");
     }
-    public void update(double time){
+
+
+    @Override
+    public void update(double time) {
 
     }
+
     @Override
     public void render(Graphics2D g) {
+
         BufferedImage image;
         if(!clicked){
-            image = openhand;
+            image = sell;
         }else {
-            image = closehand;
+            image = sell;
         }
         if (image != null) {
             g.drawImage(image, imageX, imageY, null);
         }
+
     }
 
     @Override
@@ -52,6 +60,4 @@ public class Hand extends Entity{
         }
 
     }
-
-
 }

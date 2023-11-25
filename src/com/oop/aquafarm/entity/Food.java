@@ -20,8 +20,6 @@ public class Food extends Entity {
     public final List<SummonedFood> ExistingFoods = new ArrayList<>();
     public final List<FoodLocation> foodLocations = new ArrayList<>();
     private static final int foodSize = 20;
-    private int x;
-    private int y;
     private Timer foodSpawnTimer;
     private boolean canSpawnFood = true;
     private double shakeAngle = 0; // Angle for shaking effect
@@ -35,14 +33,6 @@ public class Food extends Entity {
 
     @Override
     public void update(double time) {
-
-        if (clicked && canSpawnFood && ExistingFoods.size() < 10) {
-
-            ExistingFoods.add(new SummonedFood(x, y));
-            canSpawnFood = false;
-            foodSpawnTimer.start();
-        }
-
         // Calculate the shake angle
         double shakeAmplitude = 3;
         shakeAngle += 0.1;
@@ -59,17 +49,17 @@ public class Food extends Entity {
             // Move the food down
             food.foodY += 1; // Adjust the value to control the speed of descent
 
-            // Check if the food is off the screen and remove it
             if (food.foodY > GamePanel.height) {
                 iterator.remove();
+
+
             }
         }
 
         // Update food locations
         updateFoodLocations();
 
-        // Print food locations
-        printFoodLocations();
+
     }
 
     public void setDefaultValues() {
@@ -81,9 +71,8 @@ public class Food extends Entity {
         foodImage = ScaledImage.scaledImage(foodImage, foodSize, foodSize);
     }
 
-
     private void initFoodSpawnTimer() {
-        foodSpawnTimer = new Timer(100, new ActionListener() {
+        foodSpawnTimer = new Timer(1, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 canSpawnFood = true;
@@ -103,12 +92,6 @@ public class Food extends Entity {
         }
     }
 
-    public void printFoodLocations() {
-        System.out.println("Food Locations:");
-        for (FoodLocation location : foodLocations) {
-            System.out.println("X: " + location.getLocationX() + ", Y: " + location.getLocationY());
-        }
-    }
     @Override
     public void render(Graphics2D g2) {
         for (SummonedFood food : ExistingFoods) {
@@ -118,20 +101,30 @@ public class Food extends Entity {
 
     @Override
     public void input(MouseHandler mouseIn) {
-
         int mouseB = mouseIn.getButton();
 
-        if(mouseB == 1){
+        if (mouseB == 1) {
             clicked = true;
-        }else if(mouseB == -1){
+        } else if (mouseB == -1) {
             clicked = false;
         }
 
         // Check for collision with the fish (you need to implement this logic)
-        this.x = mouseIn.getX()- foodSize / 2;
-        this.y = mouseIn.getY() - foodSize / 2;
+        if (clicked && canSpawnFood && ExistingFoods.size() < 10 && Finance.money > 0) {
+            int x = mouseIn.getX() - foodSize / 2;
+            int y = mouseIn.getY() - foodSize / 2;
+            Finance.money = Finance.money- 1;
 
+            ExistingFoods.add(new SummonedFood(x, y));
+            canSpawnFood = false;
+
+
+            if (!foodSpawnTimer.isRunning()) {
+                foodSpawnTimer.start();
+            }
+        }
     }
+
 
     public static class SummonedFood {
         private int foodX;

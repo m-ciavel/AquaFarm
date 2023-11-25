@@ -17,7 +17,7 @@ public class GameStateManager {
 
     public static Vector2f map;
 
-    public static SpriteSheet button;
+    public static SpriteSheet button , buybutton;
 
     public static final int TITLE = 0;
     public static final int ACCOUNT = 1;
@@ -39,6 +39,11 @@ public class GameStateManager {
         states = new GameState[5];
 
         button = new SpriteSheet("menubutton/buttons.png", 144, 42);
+
+        buybutton = new SpriteSheet("menubutton/buy_button.png", 128,128);
+
+
+
 
         states[TITLE] = new TitleState(this);
     }
