@@ -19,20 +19,14 @@ import java.io.IOException;
 
 public class TitleState extends GameState {
 
-    private BufferedImage imgButtonPlay;
-    private BufferedImage imgButtonSettings;
-    private BufferedImage imgButtonExit;
-    private BufferedImage imgHoverPlay;
-    private BufferedImage imgHoverSettings;
-    private BufferedImage imgHoverExit;
+    private final BufferedImage imgButtonPlay, imgButtonSettings, imgButtonExit;
+    private final BufferedImage imgHoverPlay, imgHoverSettings, imgHoverExit;
     private int newWidth;
-    private int btnWidth = 144;
-    private int btnHeight = 42;
+    private final int btnWidth = 144;
+    private final int btnHeight = 42;
     private int newbtnWidth = (int) (GamePanel.width/3.5);
     private int newbtnHeight = newbtnWidth * btnHeight/btnWidth;
-    private Button btnPlay;
-    private Button btnSettings;
-    private Button btnExit;
+    private final Button btnPlay, btnSettings, btnExit;
 
 
     public TitleState(GameStateManager gsm) {
@@ -47,41 +41,46 @@ public class TitleState extends GameState {
         imgHoverSettings = GameStateManager.button.getSubimage(btnWidth, btnHeight, btnWidth, btnHeight);
         imgHoverExit = GameStateManager.button.getSubimage(btnWidth*2, btnHeight, btnWidth, btnHeight);
 
-        btnPlay = new Button(imgButtonPlay, new Vector2f(GamePanel.width/2, GamePanel.height/2 ), newbtnWidth, newbtnHeight);
-        btnSettings = new Button(imgButtonSettings, new Vector2f(GamePanel.width/2, GamePanel.height/2 + newbtnHeight), newbtnWidth, newbtnHeight);
-        btnExit = new Button(imgButtonExit, new Vector2f(GamePanel.width/2, GamePanel.height/2 + newbtnHeight * 2), newbtnWidth, newbtnHeight);
+        btnPlay = new Button(imgButtonPlay, new Vector2f((float) GamePanel.width /2, (float) GamePanel.height /2 ), newbtnWidth, newbtnHeight);
+        btnSettings = new Button(imgButtonSettings, new Vector2f((float) GamePanel.width /2, (float) GamePanel.height /2 + newbtnHeight), newbtnWidth, newbtnHeight);
+        btnExit = new Button(imgButtonExit, new Vector2f((float) GamePanel.width /2, (float) GamePanel.height /2 + newbtnHeight * 2), newbtnWidth, newbtnHeight);
 
         btnPlay.addHoverImage(btnPlay.createButton(imgHoverPlay, newbtnWidth, newbtnHeight));
         btnSettings.addHoverImage(btnSettings.createButton(imgHoverSettings, newbtnWidth, newbtnHeight));
         btnExit.addHoverImage(btnExit.createButton(imgHoverExit, newbtnWidth, newbtnHeight));
 
         btnPlay.addEvent(e -> {
-            gsm.pop(GameStateManager.TITLE);
+            GameStateManager.pop(GameStateManager.TITLE);
             Window.window.setVisible(false);
             new Login(gsm).setVisible(true);
         });
 
         btnSettings.addEvent(e -> {
             if (gsm.isStateActive(GameStateManager.SETTINGS)){
-                gsm.pop(GameStateManager.SETTINGS);
+                GameStateManager.pop(GameStateManager.SETTINGS);
             }else{
                 gsm.add(GameStateManager.SETTINGS);
-                gsm.pop(GameStateManager.TITLE);
+                GameStateManager.pop(GameStateManager.TITLE);
             }
         });
 
         btnExit.addEvent(e -> {
             if (gsm.isStateActive(GameStateManager.QUIT)){
-                gsm.pop(GameStateManager.QUIT);
+                GameStateManager.pop(GameStateManager.QUIT);
             }else{
                 gsm.add(GameStateManager.QUIT);
-                gsm.pop(GameStateManager.TITLE);
+                GameStateManager.pop(GameStateManager.TITLE);
             }
         });
     }
 
     @Override
     public void update(double time) {
+        System.out.println("clicked:" + Button.clicked);
+        System.out.println("pressed:" + Button.pressed);
+//        btnPlay.update(time);
+//        btnSettings.update(time);
+//        btnExit.update(time);
     }
 
     @Override
@@ -94,10 +93,10 @@ public class TitleState extends GameState {
         keyh.p.tick();
         if(keyh.p.clicked){
             if (gsm.isStateActive(GameStateManager.PLAY)){
-                gsm.pop(GameStateManager.PLAY);
+                GameStateManager.pop(GameStateManager.PLAY);
             }else{
                 gsm.add(GameStateManager.PLAY);
-                gsm.pop(GameStateManager.TITLE);
+                GameStateManager.pop(GameStateManager.TITLE);
             }
 
         }
@@ -121,12 +120,11 @@ public class TitleState extends GameState {
     }
 
     private BufferedImage painttitle(BufferedImage title){
-        ScaledImage uTool = new ScaledImage();
         File titlelogo = new File("res/background/logo.png");
         try {
             title = ImageIO.read(titlelogo);
             this.newWidth = GamePanel.width - (GamePanel.width/5);
-            title = uTool.scaledImage(title, newWidth, GamePanel.height/4);
+            title = ScaledImage.scaledImage(title, newWidth, GamePanel.height/4);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("ERROR: could not load file: " + titlelogo);

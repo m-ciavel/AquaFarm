@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 public class SettingsState extends GameState {
     public SettingsState(GameStateManager gsm) {
         super(gsm);
+        System.out.println("Settings state");
     }
 
     @Override

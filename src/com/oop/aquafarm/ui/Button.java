@@ -17,60 +17,20 @@ public class Button {
     private BufferedImage hoverImage;
     private BufferedImage pressedImage;
 
-
     private Vector2f iPos;
     private AABB bounds;
 
     private boolean hovering = false;
     private int hoverSize;
 
-    private ArrayList<ClickedEvent> events;
-    private ArrayList<SlotEvent> slotevents;
+    private final ArrayList<ClickedEvent> events;
 
-    private boolean clicked = false;
-    private boolean pressed = false;
+    public static boolean clicked = false;
+    public static boolean pressed = false;
     private boolean canHover = true;
 
     private float pressedtime;
-    private Slots slot; // temp fix
 
-    // ******************************************** ICON CUSTOM POS *******************************************
-
-//    public Button(BufferedImage icon, BufferedImage image, Vector2f pos, int width, int height, int iconsize) {
-//        this.image = createIconButton(icon, image, width + iconsize, height + iconsize, iconsize);
-//        this.iPos = pos;
-//        this.bounds = new AABB(iPos, this.image.getWidth(), this.image.getHeight());
-//
-//        events = new ArrayList<ClickedEvent>();
-//        slotevents = new ArrayList<SlotEvent>();
-//        this.canHover = false;
-//    }
-
-//    private BufferedImage createIconButton(BufferedImage icon, BufferedImage image, int width, int height, int iconsize) {
-//        BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-//
-//        if (image.getWidth() != width || image.getHeight() != height) {
-//            image = resizeImage(image, width, height);
-//        }
-//
-//        if (icon.getWidth() != width - iconsize || icon.getHeight() != height - iconsize) {
-//            icon = resizeImage(icon, width - iconsize, height - iconsize);
-//        }
-//
-//        Graphics g = result.getGraphics();
-//        g.drawImage(image, 0, 0, width, height, null);
-//
-//        g.drawImage(icon,
-//                image.getWidth() / 2 - icon.getWidth() / 2,
-//                image.getHeight() / 2 - icon.getHeight() / 2,
-//                icon.getWidth(), icon.getHeight(), null);
-//
-//        g.dispose();
-//
-//        return result;
-//    }
-
-    // ******************************************** LABEL TTF CUSTOM MIDDLE POS *******************************************
 
     public Button(BufferedImage image, Vector2f pos, int buttonSize) {
         this(image, pos, buttonSize, -1);
@@ -113,44 +73,6 @@ public class Button {
         return result;
     }
 
-    // ******************************************** LABEL PNG GAMEPANEL POS *******************************************
-//
-//    public Button(BufferedImage icon, BufferedImage image, int iWidth, int iHeight, Vector2f offset) {
-//        this(icon, image, iWidth, iHeight);
-//
-//        iPos = new Vector2f(((float) GamePanel.width / 2 - (float) iWidth / 2 + offset.x) , ((float) GamePanel.height / 2 - (float) iHeight / 2 + offset.y));
-//
-//        this.bounds = new AABB(iPos, iWidth, iHeight);
-//    }
-//
-//    public Button(BufferedImage image, int iWidth, int iHeight) {
-//        this.image = image;
-//        this.hoverSize = 20;
-//
-//        iPos = new Vector2f(((float) GamePanel.width / 2 - (float) iWidth / 2) , ((float) GamePanel.height / 2 - (float) iHeight / 2));
-//
-//        this.bounds = new AABB(iPos, iWidth, iHeight);
-//
-//        events = new ArrayList<ClickedEvent>();
-//    }
-//
-//    // ******************************************** LABEL PNG CUSTOM POS *******************************************
-//
-//    public Button(BufferedImage image, Vector2f iPos, int iWidth, int iHeight) {
-//        this(image, iPos, iWidth, iHeight);
-//    }
-//
-//    public Button(BufferedImage image, Vector2f iPos, int iWidth, int iHeight) {
-//        this(image, iWidth, iHeight);
-//        this.image = image;
-//
-//        this.iPos = iPos;
-//
-//        this.bounds = new AABB(iPos, iWidth, iHeight);
-//    }
-
-
-    // ******************************************** END ************************************************************
 
     public void addHoverImage(BufferedImage hoverImage) {
         this.hoverImage = hoverImage;
@@ -178,13 +100,6 @@ public class Button {
         events.add(e);
     }
 
-    public void addSlotEvent(SlotEvent e) {
-        slotevents.add(e);
-    }
-
-    public void setSlot(Slots slot) {
-        this.slot = slot;
-    } // temp fix
 
     public int getWidth() {
         return (int) bounds.getWidth();
@@ -241,9 +156,6 @@ public class Button {
         void action(int mouseButton);
     }
 
-    public interface SlotEvent {
-        void action(Slots slot);
-    }
 
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
 
@@ -262,12 +174,10 @@ public class Button {
                 for (int i = 0; i < events.size(); i++) {
                     events.get(i).action(1);
                 }
-                if (slotevents == null) return;
-                for (int i = 0; i < slotevents.size(); i++) {
-                    slotevents.get(i).action(slot);
-                }
+
             } else if (mouseIn.getButton() == -1) {
                 clicked = false;
+                pressed = false;
             }
         } else if (canHover && hovering) {
             hover(-hoverSize);
