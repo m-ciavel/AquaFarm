@@ -33,6 +33,33 @@ CONSTRAINT con_user_Name_PK PRIMARY KEY (user_Name),
 CONSTRAINT fk_users_user_ID FOREIGN KEY (user_ID) REFERENCES users(user_ID)
 );
 
+CREATE TABLE fishTbl(
+fish_ID int NOT NULL,
+fish_type varchar(255) NOT NULL,
+CONSTRAINT con_fish_ID_PK PRIMARY KEY (fish_ID)
+);
+
+CREATE TABLE userFishInvTbl(
+user_Name varchar(255) NOT NULL,
+userFishID int NOT NULL, 
+fish_type varchar(255) NOT NULL,
+fish_name varchar(255), 
+fish_gender varchar(255),
+added_date date,
+CONSTRAINT con_userFishID_PK PRIMARY KEY (userFishID),
+CONSTRAINT fk_userTable_user_Name FOREIGN KEY (user_Name) REFERENCES userTable(user_Name), 
+CONSTRAINT fk_fishTbl_fish_type FOREIGN KEY (fish_type) REFERENCES fishTbl(fish_type)
+);
+
+CREATE TABLE sessionTbl(
+user_Name varchar(255) NOT NULL,
+session_ID int NOT NULL, 
+login_date date,
+expire_date date,
+CONSTRAINT con_session_ID_PK PRIMARY KEY (session_ID),
+CONSTRAINT fk_userTable_user_Name FOREIGN KEY (user_Name) REFERENCES userTable(user_Name)
+);
+
 
 ALTER TABLE `userTable`
 DROP CONSTRAINT fk_users_user_ID;
@@ -54,6 +81,8 @@ SHOW FULL COLUMNS FROM users;
 SHOW TABLES;
 DESC users;
 DESC userTable; 
+DESC sessionTbl; 
+DESC fishTbl;
 
 
 INSERT INTO users VALUES (
@@ -77,12 +106,28 @@ SET user_Name = 'user'
 WHERE ID = 0;
 
 
-DELETE FROM userTable WHERE user_ID = 823497376;
-DELETE FROM users WHERE user_ID = 823497376;
+DELETE FROM userTable WHERE user_ID = 1008095481;
+DELETE FROM users WHERE user_ID = 631953536;
 DELETE FROM users WHERE ID = 0;
+
+UPDATE userTable 
+SET logged_in = FALSE
+WHERE user_Name = 'user0';
 
 SELECT * FROM users;
 SELECT * FROM userTable;
+SELECT * FROM sessionTbl;
+SELECT * FROM fishTbl;
+SELECT * FROM userFishInvTbl;
+
+INSERT INTO fishTbl VALUES 
+(0, 'AtlanticBass'), 
+(1, 'BlueGill'), 
+(2, 'Clownfish'), 
+(3, 'GoldenTench'), 
+(4, 'Guppy'), 
+(5, 'HIghFinBandedShark')
+;
 
 SELECT user_Name FROM userTable WHERE user_Name = 'user';
 SELECT pass_salt FROM userTable where user_name = 'user0';
@@ -97,3 +142,4 @@ LIMIT 1;
 
 DROP TABLE users;
 DROP TABLE userTable;
+DROP TABLE sessionTbl;

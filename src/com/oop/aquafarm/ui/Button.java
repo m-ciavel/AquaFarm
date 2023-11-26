@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Button {
+    public static Color borderdarkred = new Color(139, 0, 0);
 
     private BufferedImage image;
     private BufferedImage hoverImage;

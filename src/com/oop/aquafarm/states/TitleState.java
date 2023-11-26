@@ -76,11 +76,9 @@ public class TitleState extends GameState {
 
     @Override
     public void update(double time) {
-        System.out.println("clicked:" + Button.clicked);
-        System.out.println("pressed:" + Button.pressed);
-//        btnPlay.update(time);
-//        btnSettings.update(time);
-//        btnExit.update(time);
+//        System.out.println("clicked:" + Button.clicked);
+//        System.out.println("pressed:" + Button.pressed);
+
     }
 
     @Override

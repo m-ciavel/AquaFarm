@@ -1,13 +1,18 @@
 package com.oop.aquafarm.util;
 
+import com.oop.aquafarm.states.Login;
 import com.oop.aquafarm.states.Signup;
+import com.oop.aquafarm.ui.Button;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
@@ -22,20 +27,62 @@ public class CRUD {
         System.out.println(q0); System.out.println(q1);
         con1.s.executeUpdate(q0);
         con1.s.executeUpdate(q1);
-
         System.out.println("Successfully created account");
     }
 
-    public static long generate() {
+    public static void logIn(String uname, boolean loggedIn) throws SQLException {
+        dbConnection con1 = new dbConnection();
+        Date loggedInDate = new java.sql.Date(System.currentTimeMillis());
+        Date expireDate =  new java.sql.Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000);
+        long sessionID = generatesessionID();
+        boolean sidExists = false;
+        String qsid = "SELECT * FROM sessionTbl WHERE session_ID = '" + sessionID + "';";
+        ResultSet rssid = con1.s.executeQuery(qsid);
+        if (rssid.next()){
+            do{
+                sessionID = (int) generatesessionID();
+                rssid = con1.s.executeQuery(qsid);
+                sidExists = rssid.next();
+            }while(sidExists);
+            if(!sidExists){
+                String qLog = "UPDATE userTable SET logged_in = " + loggedIn + " WHERE user_Name = '" + uname + "';";
+                String qSession = "INSERT INTO sessionTbl(" + sessionID + "', '" + loggedInDate + "', '" + expireDate + "');";
+                System.out.println(qLog); System.out.println(qSession);
+        con1.s.executeUpdate(qLog);
+                System.out.println("logged in @ " + loggedInDate);
+                System.out.println("session expires at @ " + expireDate);
+            }
+        }else{
+            String qLog = "UPDATE userTable SET logged_in = " + loggedIn + " WHERE user_Name = '" + uname + "';";
+            String qSession = "INSERT INTO sessionTbl(" + sessionID + "', '" + loggedInDate + "', '" + expireDate + "');";
+            System.out.println(qLog); System.out.println(qSession);
+        con1.s.executeUpdate(qLog);
+            System.out.println("logged in @ " + loggedInDate);
+            System.out.println("session expires at @ " + expireDate);
+        }
+
+
+    }
+
+    public static long generateUID() {
         try {
             SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
             int l = secureRandom.nextInt();
-            int abs = Math.abs(1000000000 + l);
-            return abs;
+            return Math.abs(1000000000 + l);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
+    public static long generatesessionID() {
+        try {
+            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+            long l = secureRandom.nextLong();
+            return Math.abs(100000000000000L + l * 900000000000000L);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public static int getIterations(){
         return iterations;
