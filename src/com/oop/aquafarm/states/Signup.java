@@ -4,12 +4,11 @@ package com.oop.aquafarm.states;
 import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.Window;
 import com.oop.aquafarm.graphics.SpriteSheet;
+import com.oop.aquafarm.util.CRUD;
 import com.oop.aquafarm.util.dbConnection;
 
 
-//import javax.swing.*;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.Font;
@@ -21,9 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,19 +28,26 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class Signup extends JFrame implements ActionListener {
-    private GameStateManager gsm;
-    private JLabel signupLbl;
-    private JLabel unameLbl, passLbl, confpassLbl, ageLbl;
+    private final GameStateManager gsm;
+    dbConnection con1;
+    private final JLabel signupLbl;
+    private final JLabel unameLbl;
+    private final JLabel passLbl;
+    private final JLabel confpassLbl;
+    private final JLabel ageLbl;
+    private final JLabel notifLbl;
     private JTextField unameTF, ageTF;
     private JPasswordField passPF, confpassPF;
-    private JButton signupBtn, loginBtn, backBtn;
+    private final JButton signupBtn;
+    private final JButton loginBtn;
+    private final JButton backBtn;
 
-    private static int iterations = 1000; //  number of times that the password is hashed
-    private String uname, password;
+    private String uname;
     static String generatedSecuredPasswordHash = null;
     static String passSalt, passHash;
     private Date created_date;
     private int uid, age, dbID;
+    Color darkred = new Color(139, 0, 0);
 
     ImageIcon backBtnIcon = new ImageIcon("res/menubutton/arrow back.png");
 
@@ -75,6 +79,10 @@ public class Signup extends JFrame implements ActionListener {
         ageLbl = new JLabel("Age");
         ageLbl.setBounds((GamePanel.width - ageLbl.getWidth())/6,420, 1000,60);
 
+        notifLbl = new JLabel("",  SwingConstants.CENTER);
+        notifLbl.setBounds(0,480, 1000,30);
+        notifLbl.setForeground(new Color(139, 0, 0));
+
         signupBtn = new JButton("Sign up");
         signupBtn.setBounds((GamePanel.width / 2) - 100, 525, 200, 50);
         signupBtn.setBackground(new Color(67, 124, 23));
@@ -105,6 +113,7 @@ public class Signup extends JFrame implements ActionListener {
             passLbl.setFont(font.deriveFont(Font.BOLD, 50));
             confpassLbl.setFont(font.deriveFont(Font.BOLD, 50));
             ageLbl.setFont(font.deriveFont(Font.BOLD, 50));
+            notifLbl.setFont(font.deriveFont(Font.PLAIN, 30));
 
 //            unameTF.setFont(font.deriveFont(Font.BOLD, 40));
 //            passPF.setFont(font.deriveFont(Font.BOLD, 40));
@@ -122,6 +131,7 @@ public class Signup extends JFrame implements ActionListener {
         add(passLbl);
         add(confpassLbl);
         add(ageLbl);
+        add(notifLbl);
 
         add(signupBtn);
         add(loginBtn);
@@ -175,23 +185,32 @@ public class Signup extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==signupBtn) {
-            if(unameTF.getText().equals("") || passPF.getPassword().equals("") || confpassPF.getPassword().equals("") || ageTF.getText().equals("")){
-                JOptionPane.showMessageDialog(null, "Please fill all the required fields");
-                if(unameTF.getText().equals("")){
-                    unameTF.setBorder(new LineBorder(Color.red,3));
+            if(unameTF.getText().isEmpty() || passPF.getPassword().length == 0 || passPF.getPassword().length == 0 || ageTF.getText().isEmpty()){
+                notifLbl.setText("Please   fill   all   the   required   fields");
+                if(unameTF.getText().isEmpty()){
+                    unameTF.setBorder(new LineBorder(darkred,3));
+                }else {
+                    unameTF.setBorder(new LineBorder(Color.white,3));
                 }
-                if(passPF.getPassword().equals("")){
-                    passPF.setBorder(new LineBorder(Color.red,3));
+
+                if(passPF.getPassword().length == 0){
+                    passPF.setBorder(new LineBorder(darkred,3));
+                }else {
+                    passPF.setBorder(new LineBorder(Color.white,3));
                 }
-                if(confpassPF.getPassword().equals("")){
-                    confpassPF.setBorder(new LineBorder(Color.red,3));
+
+                if(confpassPF.getPassword().length == 0){
+                    confpassPF.setBorder(new LineBorder(darkred,3));
+                }else {
+                    confpassPF.setBorder(new LineBorder(Color.white,3));
                 }
-                if(passPF.getPassword().equals("")){
-                    unameTF.setBorder(new LineBorder(Color.red,3));
+
+                if(ageTF.getText().isEmpty()){
+                    ageTF.setBorder(new LineBorder(darkred,3));
+                }else {
+                    ageTF.setBorder(new LineBorder(Color.white,3));
                 }
-                if(ageTF.getText().equals("")){
-                    ageTF.setBorder(new LineBorder(Color.red,3));
-                }
+
             } else {
                 if (Arrays.equals(passPF.getPassword(), confpassPF.getPassword())) {
                     // create connection
@@ -201,45 +220,45 @@ public class Signup extends JFrame implements ActionListener {
                         ResultSet rs = con1.s.executeQuery(qID);
                         if(rs.next()){
                             dbID = Integer.parseInt(rs.getString("ID"));
+                            dbID++;
 //                            System.out.println(dbID);
                         }
-
 
                         // get values
                         try {
                             // password
                             try {
-
-                                generatedSecuredPasswordHash = doHashing(Arrays.toString(passPF.getPassword()));
+                                generatedSecuredPasswordHash = CRUD.doHashing(Arrays.toString(passPF.getPassword()));
 //                                String[] parts = doHashing(Arrays.toString(passPF.getPassword())).split(":");
                                 String[] parts = generatedSecuredPasswordHash.split(":");
                                 passSalt = parts[1];
                                 passHash = parts[2];
-                                System.out.println(generatedSecuredPasswordHash);
-                                System.out.println(passSalt);
-                                System.out.println(passHash);
+//                                System.out.println(generatedSecuredPasswordHash); System.out.println(passSalt); System.out.println(passHash);
                             } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
                                 throw new RuntimeException(ex);
                             }
-                            dbID++;
-                            age = Integer.parseInt(ageTF.getText());
                             uname = unameTF.getText();
-                            uid = (int) generate();
-                            created_date = new java.sql.Date(System.currentTimeMillis());
+                            String qUser = "SELECT * FROM userTable WHERE user_Name = '" + uname + "';";
+                            ResultSet rsUser = con1.s.executeQuery(qUser);
+                            if (rsUser.next()){
+                                notifLbl.setText("Username   already   taken");
+                                unameTF.setBorder(new LineBorder(darkred,3));
+                            }else{
+                                unameTF.setBorder(new LineBorder(Color.white,3));
+                                age = Integer.parseInt(ageTF.getText());
+                                created_date = new java.sql.Date(System.currentTimeMillis());
+                                uid = (int) CRUD.generate();
+                                CRUD.createUser(dbID, uid, uname, age, passSalt, passHash, created_date);
+                                this.dispose();
+                                new Login(gsm).setVisible(true);
+                            }
 
-                            String q0 = "INSERT INTO users VALUES ( " + dbID + ", '" + uid + "', TRUE );";
-                            String q1 = "INSERT INTO userTable VALUES (" + uid + ", '" + uname + "', " + age + ", '" + passSalt + "', '" + passHash + "', '" + created_date + "', NULL, FALSE" + ");" ;
-                            System.out.println(q0); System.out.println(q1);
-                            con1.s.executeUpdate(q0);
-                            con1.s.executeUpdate(q1);
-                            System.out.println("Succesfully created account");
 
-                            this.dispose();
-                            new Login(gsm).setVisible(true);
+
 
                         } catch (NumberFormatException nfe){
                             ageTF.setText("");
-                            JOptionPane.showMessageDialog(null, "Please enter a valid number for age");
+                            notifLbl.setText("Please   enter   a   valid   number   for   age");
                         }
 //                        catch (SQLException ex) {
 //                            throw new RuntimeException(ex);
@@ -252,8 +271,9 @@ public class Signup extends JFrame implements ActionListener {
 
                 } else if (!Arrays.equals(passPF.getPassword(), confpassPF.getPassword())){
                     System.out.println("Passwords do not match");
+                    notifLbl.setText("Passwords   do   not   match");
                 }
-            } // blank textfields
+            } // blank text fields
 
         }
 
@@ -262,61 +282,14 @@ public class Signup extends JFrame implements ActionListener {
             new Login(gsm).setVisible(true);
         }
         if(e.getSource() == backBtn){
-            gsm.add(GameStateManager.TITLE);
-            Window.window.setVisible(true);
-            this.dispose();
+            if (gsm.isStateActive(GameStateManager.TITLE)){
+                GameStateManager.pop(GameStateManager.TITLE);
+            }else{
+                gsm.add(GameStateManager.TITLE);
+                Window.window.setVisible(true);
+                this.dispose();
+            }
         }
-    }
-
-    public String doHashing(String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
-
-
-        char[] chars = password.toCharArray();
-        byte[] salt = getSalt();
-
-        PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
-        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-
-        byte[] hash = skf.generateSecret(spec).getEncoded();
-
-        return iterations + ":" + toHex(salt) + ":" + toHex(hash);
-//        return toHex(hash);
-    }
-    private static byte[] getSalt() throws NoSuchAlgorithmException
-    {
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-        byte[] salt = new byte[16];
-        sr.nextBytes(salt);
-        return salt;
-    }
-
-    private static String toHex(byte[] array) throws NoSuchAlgorithmException
-    {
-        BigInteger bi = new BigInteger(1, array);
-        String hex = bi.toString(16);
-
-        int paddingLength = (array.length * 2) - hex.length();
-        if(paddingLength > 0)
-        {
-            return String.format("%0"  +paddingLength + "d", 0) + hex;
-        }else{
-            return hex;
-        }
-    }
-
-    public static long generate() {
-        try {
-            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
-            int l = secureRandom.nextInt();
-            int abs = Math.abs(1000000000 + l);
-            return abs;
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static int getIterations(){
-        return iterations;
     }
 
 }

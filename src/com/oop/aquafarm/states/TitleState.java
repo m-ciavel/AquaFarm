@@ -56,20 +56,27 @@ public class TitleState extends GameState {
         btnExit.addHoverImage(btnExit.createButton(imgHoverExit, newbtnWidth, newbtnHeight));
 
         btnPlay.addEvent(e -> {
-//                gsm.add(GameStateManager.ACCOUNT);
-            new Login(gsm).setVisible(true);
-//            gsm.pop(GameStateManager.TITLE);
+            gsm.pop(GameStateManager.TITLE);
             Window.window.setVisible(false);
+            new Login(gsm).setVisible(true);
         });
 
         btnSettings.addEvent(e -> {
-            gsm.add(GameStateManager.SETTINGS);
-            gsm.pop(GameStateManager.TITLE);
+            if (gsm.isStateActive(GameStateManager.SETTINGS)){
+                gsm.pop(GameStateManager.SETTINGS);
+            }else{
+                gsm.add(GameStateManager.SETTINGS);
+                gsm.pop(GameStateManager.TITLE);
+            }
         });
 
         btnExit.addEvent(e -> {
-            gsm.add(GameStateManager.QUIT);
-            gsm.pop(GameStateManager.TITLE);
+            if (gsm.isStateActive(GameStateManager.QUIT)){
+                gsm.pop(GameStateManager.QUIT);
+            }else{
+                gsm.add(GameStateManager.QUIT);
+                gsm.pop(GameStateManager.TITLE);
+            }
         });
     }
 

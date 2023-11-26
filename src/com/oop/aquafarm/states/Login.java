@@ -3,6 +3,7 @@ package com.oop.aquafarm.states;
 import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.Window;
 import com.oop.aquafarm.graphics.SpriteSheet;
+import com.oop.aquafarm.util.CRUD;
 import com.oop.aquafarm.util.dbConnection;
 
 import javax.crypto.SecretKeyFactory;
@@ -22,16 +23,19 @@ import java.security.spec.InvalidKeySpecException;
 import java.sql.ResultSet;
 import java.util.Arrays;
 
+import static javax.swing.SwingConstants.CENTER;
+
 public class Login extends JFrame  implements ActionListener {
     private JLabel loginLbl;
-    private JLabel unameLbl, passLbl;
+    private JLabel unameLbl, passLbl, notifLbl;
     private JTextField unameTF;
     private JPasswordField passPF;
     private JButton signupBtn, loginBtn, backBtn;
 
     private String uname;
-    private int iterations = Signup.getIterations();
+    private int iterations = CRUD.getIterations();
     private static String passInDB;
+    Color darkred = new Color(139, 0, 0);
 
     ImageIcon backBtnIcon = new ImageIcon("res/menubutton/arrow back.png");
     GameStateManager gsm;
@@ -58,6 +62,10 @@ public class Login extends JFrame  implements ActionListener {
 
         passLbl = new JLabel("Password");
         passLbl.setBounds((GamePanel.width - passLbl.getWidth())/6,360, 1000,60);
+
+        notifLbl = new JLabel("",  SwingConstants.CENTER);
+        notifLbl.setBounds(0,480, 1000,30);
+        notifLbl.setForeground(new Color(139, 0, 0));
 
 
         loginBtn = new JButton("Login");
@@ -88,6 +96,7 @@ public class Login extends JFrame  implements ActionListener {
             loginLbl.setFont(font.deriveFont(Font.BOLD, 150));
             unameLbl.setFont(font.deriveFont(Font.BOLD, 50));
             passLbl.setFont(font.deriveFont(Font.BOLD, 50));
+            notifLbl.setFont(font.deriveFont(Font.PLAIN, 30));
 
 //            unameTF.setFont(font.deriveFont(Font.BOLD, 40));
 //            passPF.setFont(font.deriveFont(Font.BOLD, 40));
@@ -101,6 +110,7 @@ public class Login extends JFrame  implements ActionListener {
         add(loginLbl);
         add(unameLbl);
         add(passLbl);
+        add(notifLbl);
 
         add(loginBtn);
         add(signupBtn);
@@ -132,8 +142,20 @@ public class Login extends JFrame  implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==loginBtn) {
-            if(unameTF.getText().equals("") || passPF.getPassword().equals("")){
-                JOptionPane.showMessageDialog(null, "Please fill all the required fields");
+            if(unameTF.getText().isEmpty() || passPF.getPassword().length == 0 ){
+                notifLbl.setText("Please   fill   all   the   required   fields");
+                if(unameTF.getText().isEmpty()){
+                    unameTF.setBorder(new LineBorder(darkred,3));
+                }else {
+                    unameTF.setBorder(new LineBorder(Color.white,3));
+                }
+
+                if(passPF.getPassword().length == 0){
+                    passPF.setBorder(new LineBorder(darkred,3));
+                }else {
+                    passPF.setBorder(new LineBorder(Color.white,3));
+                }
+
             }else {
                 // create connection
                 try {
@@ -142,33 +164,37 @@ public class Login extends JFrame  implements ActionListener {
                     String qUser = "SELECT * FROM userTable WHERE user_Name = '" + uname + "';";
                     ResultSet rs = con1.s.executeQuery(qUser);
                     if (rs.next()) {
-
                         String pSalt = rs.getString("pass_salt");
                         String pHash = rs.getString("pass_hash");
-                        passInDB =  iterations + ":" + pSalt + ":" + pHash;
-                        System.out.println(passInDB);
+//                        passInDB =  iterations + ":" + pSalt + ":" + pHash;
+//                        System.out.println(passInDB);
 
                         try {
-                            boolean matched = validatePassword(Arrays.toString(passPF.getPassword()), passInDB);
+                            boolean matched = CRUD.validatePassword(Arrays.toString(passPF.getPassword()), iterations + ":" + pSalt + ":" + pHash);
                             System.out.println(matched);
 
                             if (matched){
-                                gsm.add(GameStateManager.PLAY);
-                                Window.window.setVisible(true);
+                                if (gsm.isStateActive(GameStateManager.PLAY)){
+                                    gsm.pop(GameStateManager.PLAY);
+                                }else{
+                                    gsm.add(GameStateManager.PLAY);
+                                    gsm.pop(GameStateManager.TITLE);
+                                }
                                 this.dispose();
+                                Window.window.setVisible(true);
                             }else if (!matched){
                                 System.out.println("Password does not match");
-                                unameTF.setBorder(new LineBorder(Color.red,3));
-                                passPF.setBorder(new LineBorder(Color.red,3));
+                                notifLbl.setText("Username   and   password   does   not   seem   to   match");
+                                unameTF.setBorder(new LineBorder(darkred,3));
+                                passPF.setBorder(new LineBorder(darkred,3));
                             }
                         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
                             throw new RuntimeException(ex);
                         }
 
-
                     } else{
-                        JOptionPane.showMessageDialog(null, "No such user in database");
-                        unameTF.setBorder(new LineBorder(Color.red,3));
+                        notifLbl.setText("No   such   user   in   database");
+                        unameTF.setBorder(new LineBorder(darkred,3));
                     }
 
                 } catch (Exception ex) {
@@ -177,50 +203,23 @@ public class Login extends JFrame  implements ActionListener {
 
             }
 
-//            generatedSecuredPasswordHash = "1000:e7f7b64e917b923dd6231910b7ff1b3e:10d881cdc89ae8c48b001f7c49eb62db26221177b70f62b143badecb33f677c0f182c37c25f0127eeeeb42dcf5ad979656d4a7c1d2f8f100d8df80a1b958f033";
-
         }
         if(e.getSource() == signupBtn){
             this.dispose();
             new Signup(gsm).setVisible(true);
         }
         if(e.getSource() == backBtn){
-            gsm.add(GameStateManager.TITLE);
-            Window.window.setVisible(true);
-            this.dispose();
+            if (gsm.isStateActive(GameStateManager.TITLE)){
+                GameStateManager.pop(GameStateManager.TITLE);
+            }else{
+                gsm.add(GameStateManager.TITLE);
+                Window.window.setVisible(true);
+                this.dispose();
+            }
         }
 
     }
 
 
-    private static boolean validatePassword(String originalPassword, String storedPassword)
-            throws NoSuchAlgorithmException, InvalidKeySpecException
-    {
-        String[] parts = storedPassword.split(":");
-        int iterations = Integer.parseInt(parts[0]);
-
-        byte[] salt = fromHex(parts[1]);
-        byte[] hash = fromHex(parts[2]);
-
-        PBEKeySpec spec = new PBEKeySpec(originalPassword.toCharArray(), salt, iterations, hash.length * 8);
-        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        byte[] testHash = skf.generateSecret(spec).getEncoded();
-
-        int diff = hash.length ^ testHash.length;
-        for(int i = 0; i < hash.length && i < testHash.length; i++)
-        {
-            diff |= hash[i] ^ testHash[i];
-        }
-        return diff == 0;
-    }
-    private static byte[] fromHex(String hex) throws NoSuchAlgorithmException
-    {
-        byte[] bytes = new byte[hex.length() / 2];
-        for(int i = 0; i < bytes.length ;i++)
-        {
-            bytes[i] = (byte)Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
-        }
-        return bytes;
-    }
 
 }

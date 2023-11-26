@@ -12,20 +12,20 @@ import java.awt.image.BufferedImage;
 
 public class QuitState extends GameState {
 
-    private BufferedImage imgButtonExit;
-    private BufferedImage imgHoverExit;
-    private int btnWidth = 144;
-    private int btnHeight = 42;
-    private int newbtnWidth = (int) (GamePanel.width/3.5);
-    private int newbtnHeight = newbtnWidth * btnHeight/btnWidth;
-    private Button btnExit;
+    private final BufferedImage imgButtonExit;
+    private final BufferedImage imgHoverExit;
+    private final int btnWidth = 144;
+    private final int btnHeight = 42;
+    private final int newbtnWidth = (int) (GamePanel.width/3.5);
+    private final int newbtnHeight = newbtnWidth * btnHeight/btnWidth;
+    private final Button btnExit;
 
     public QuitState(GameStateManager gsm) {
         super(gsm);
 
         imgButtonExit = GameStateManager.button.getSubimage(btnWidth*2, 0, btnWidth, btnHeight);
         imgHoverExit = GameStateManager.button.getSubimage(btnWidth*2, btnHeight, btnWidth, btnHeight);
-        btnExit = new Button(imgButtonExit, new Vector2f(GamePanel.width/2, GamePanel.height/2 + newbtnHeight), newbtnWidth, newbtnHeight);
+        btnExit = new Button(imgButtonExit, new Vector2f((float) GamePanel.width /2, (float) GamePanel.height /2 + newbtnHeight), newbtnWidth, newbtnHeight);
         btnExit.addHoverImage(btnExit.createButton(imgHoverExit, newbtnWidth, newbtnHeight));
         btnExit.addEvent(e -> {
             System.exit(0);
