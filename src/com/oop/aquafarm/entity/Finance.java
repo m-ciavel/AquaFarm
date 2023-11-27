@@ -11,14 +11,14 @@ import java.awt.image.BufferedImage;
 public class Finance extends Entity {
     public static int money = 100000;
 
-
     private int imageX, imageY;
+
     public Finance(Vector2f origin) {
         super(origin);
         setDefaultValues();
         loadSellImages();
-
     }
+
     public void setDefaultValues() {
         clicked = false;
     }
@@ -28,36 +28,33 @@ public class Finance extends Entity {
         sell = SpriteSheet.setup(foldername, "sell_fish");
     }
 
-
     @Override
     public void update(double time) {
-
+        // Update logic for Finance entity (if needed)
     }
 
     @Override
     public void render(Graphics2D g) {
-
         BufferedImage image;
-        if(!clicked){
+        if (!clicked) {
             image = sell;
-        }else {
+        } else {
             image = sell;
         }
         if (image != null) {
             g.drawImage(image, imageX, imageY, null);
         }
-
     }
 
     @Override
     public void input(MouseHandler mouseIn) {
-        this.imageX = mouseIn.getX() - GamePanel.tilesize / 2;
-        this.imageY = mouseIn.getY() - GamePanel.tilesize / 2;
-        if(mouseIn.getButton() == 1){
-            clicked = true;
-        }else if (mouseIn.getButton() == -1){
-            clicked = false;
-        }
-
+            this.imageX = mouseIn.getX() - GamePanel.tilesize / 2;
+            this.imageY = mouseIn.getY() - GamePanel.tilesize / 2;
+            if (mouseIn.getButton() == 1) {
+                clicked = true;
+            } else if (mouseIn.getButton() == -1) {
+                clicked = false;
+            }
     }
+
 }

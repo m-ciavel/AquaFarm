@@ -18,6 +18,7 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 public class PlayState extends GameState{
 
@@ -84,7 +85,7 @@ public class PlayState extends GameState{
         Vector2f.setWorldVar(map.x, map.y);
         origin = new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2);
         hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2));
-        sells = new Finance(new Vector2f(((float) GamePanel.width+100), (float) GamePanel.height+100));
+        sells = new Finance(new Vector2f((float) GamePanel.width / 2, (float) GamePanel.height / 2));
         food = new Food(origin);
         fishes = new Fish[50];
 
@@ -138,33 +139,33 @@ public class PlayState extends GameState{
 
 
         btnFish1.addEvent(e -> {
-            Fish fish = new Fish(origin, "AtlanticBass", null, null);
+            Fish fish = new Fish(origin, "AtlanticBass", null, null,0);
             addFishToArray(fish);
         });
 
 
         btnFish2.addEvent(e -> {
-            Fish fish = new Fish(origin, "BlueGill", null, null);
+            Fish fish = new Fish(origin, "BlueGill", null, null, 0);
             addFishToArray(fish);
         });
         btnFish3.addEvent(e -> {
-            Fish fish = new Fish(origin, "Clownfish", null, null);
+            Fish fish = new Fish(origin, "Clownfish", null, null, 0);
             addFishToArray(fish);
         });
 
         btnFish4.addEvent(e -> {
-            Fish fish = new Fish(origin, "GoldenTench", null, null);
+            Fish fish = new Fish(origin, "GoldenTench", null, null, 0);
             addFishToArray(fish);
         });
 
         btnFish5.addEvent(e -> {
-            Fish fish = new Fish(origin, "Guppy", null, null);
+            Fish fish = new Fish(origin, "Guppy", null, null, 0);
             addFishToArray(fish);
         });
 
 
         btnFish6.addEvent(e -> {
-            Fish fish = new Fish(origin, "HIghFinBandedShark", null, null);
+            Fish fish = new Fish(origin, "HIghFinBandedShark", null, null, 0);
             addFishToArray(fish);
         });
 
@@ -208,9 +209,85 @@ public class PlayState extends GameState{
 
     }
 
-    @Override
-    public void input(MouseHandler mouseIn, KeyHandler keyh){
+//    @Override
+//    public void input(MouseHandler mouseIn, KeyHandler keyh){
+//
+//        if (isBuyingFood) {
+//            food.input(mouseIn);
+//        }
+//
+//        for (Fish fish : fishes) {
+//            if (fish != null) {
+//                fish.input(mouseIn);
+//            }
+//        }
+//
+//        btnFish1.input(mouseIn, keyh);
+//        btnFish2.input(mouseIn, keyh);
+//        btnFish3.input(mouseIn, keyh);
+//        btnFish4.input(mouseIn, keyh);
+//        btnFish5.input(mouseIn, keyh);
+//        btnFish6.input(mouseIn, keyh);
+//        btnBuyFood.input(mouseIn, keyh);
+//        btnSellFish.input(mouseIn, keyh);
+//
+//            hands.input(mouseIn);
+//            sells.input(mouseIn);
+//
+//
+//        keyh.escape.tick();
+//        if(keyh.escape.clicked){
+//            if (gsm.isStateActive(GameStateManager.TITLE)){
+//                gsm.pop(GameStateManager.TITLE);
+//            }else{
+//                gsm.add(GameStateManager.TITLE);
+//                gsm.pop(GameStateManager.PLAY);
+//            }
+//
+//        }
+//
+////        keyh.key1.tick();
+////        keyh.key2.tick();
+////        keyh.key3.tick();
+////        keyh.key4.tick();
+////        keyh.key5.tick();
+////        keyh.key6.tick();
+////
+////        if (Finance.money > 10) {
+////
+////            if (keyh.key1.clicked) {
+////                Fish AtlanticBass = new Fish(origin, "AtlanticBass", null , null);
+////                addFishToArray(AtlanticBass);
+////            }
+////            if (keyh.key2.clicked) {
+////
+////                Fish BlueGill = new Fish(origin, "BlueGill", null , null);
+////                addFishToArray(BlueGill);
+////            }
+////            if (keyh.key3.clicked) {
+////                Fish ClownFish = new Fish(origin, "ClownFish", null , null);
+////                addFishToArray(ClownFish);
+////            }
+////            if (keyh.key4.clicked) {
+////                Fish GoldenTench = new Fish(origin, "GoldenTench", null , null);
+////                addFishToArray(GoldenTench);
+////            }
+////            if (keyh.key5.clicked) {
+////                Fish Guppy = new Fish(origin, "Guppy", null , null);
+////                addFishToArray(Guppy);
+////            }
+////            if (keyh.key6.clicked) {
+////                Fish HIghFinBandedShark = new Fish(origin, "HIghFinBandedShark", null , null);
+////                addFishToArray(HIghFinBandedShark);
+////            }
+////
+////        }
+//
+//
+//    }
 
+    @Override
+    public void input(MouseHandler mouseIn, KeyHandler keyh) {
         if (isBuyingFood) {
             food.input(mouseIn);
         }
@@ -230,60 +307,28 @@ public class PlayState extends GameState{
         btnBuyFood.input(mouseIn, keyh);
         btnSellFish.input(mouseIn, keyh);
 
-            hands.input(mouseIn);
-            sells.input(mouseIn);
+        hands.input(mouseIn);
+        sells.input(mouseIn);
 
+        if (isSellingFish && mouseIn.getButton() == 1) {
 
-        keyh.escape.tick();
-        if(keyh.escape.clicked){
-            if (gsm.isStateActive(GameStateManager.TITLE)){
-                gsm.pop(GameStateManager.TITLE);
-            }else{
-                gsm.add(GameStateManager.TITLE);
-                gsm.pop(GameStateManager.PLAY);
+            for (Fish fish : fishes) {
+                if (fish != null) {
+
+                    if (mouseIn.getX() >= fish.getFishX() &&
+                            mouseIn.getX() <= fish.getFishX() + fish.getFishWidth() &&
+                            mouseIn.getY() >= fish.getFishY() &&
+                            mouseIn.getY() <= fish.getFishY() + fish.getFishHeight()) {
+
+                        removeFishFromArray(fish);
+                        break;
+                    }
+                }
             }
-
         }
-
-//        keyh.key1.tick();
-//        keyh.key2.tick();
-//        keyh.key3.tick();
-//        keyh.key4.tick();
-//        keyh.key5.tick();
-//        keyh.key6.tick();
-//
-//        if (Finance.money > 10) {
-//
-//            if (keyh.key1.clicked) {
-//                Fish AtlanticBass = new Fish(origin, "AtlanticBass", null , null);
-//                addFishToArray(AtlanticBass);
-//            }
-//            if (keyh.key2.clicked) {
-//
-//                Fish BlueGill = new Fish(origin, "BlueGill", null , null);
-//                addFishToArray(BlueGill);
-//            }
-//            if (keyh.key3.clicked) {
-//                Fish ClownFish = new Fish(origin, "ClownFish", null , null);
-//                addFishToArray(ClownFish);
-//            }
-//            if (keyh.key4.clicked) {
-//                Fish GoldenTench = new Fish(origin, "GoldenTench", null , null);
-//                addFishToArray(GoldenTench);
-//            }
-//            if (keyh.key5.clicked) {
-//                Fish Guppy = new Fish(origin, "Guppy", null , null);
-//                addFishToArray(Guppy);
-//            }
-//            if (keyh.key6.clicked) {
-//                Fish HIghFinBandedShark = new Fish(origin, "HIghFinBandedShark", null , null);
-//                addFishToArray(HIghFinBandedShark);
-//            }
-//
-//        }
-
-
     }
+
+
 
     public void addFishToArray(Fish fish) {
         for (int i = 0; i < fishes.length; i++) {
@@ -294,6 +339,15 @@ public class PlayState extends GameState{
                 break;
             }
         }
+    }
+    private void removeFishFromArray(Fish fishToRemove) {
+        for (int i = 0; i < fishes.length; i++) {
+            if (fishes[i] == fishToRemove) {
+                fishes[i] = null;
+                break;
+            }
+        }
+
     }
 
     @Override
@@ -349,6 +403,7 @@ public class PlayState extends GameState{
                 }
             }
         }
+
 
 
 

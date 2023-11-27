@@ -45,7 +45,7 @@ public class Fish extends Entity {
 
     private String gender;
 
-    public Fish(Vector2f origin, String fish_type, String fish_name, String gender) {
+    public Fish(Vector2f origin, String fish_type, String fish_name, String gender, int fish_size) {
         super(origin);
 
 
@@ -79,7 +79,7 @@ public class Fish extends Entity {
                 isHungry = true;
 
             }
-        }, 60000);
+        }, 2000);
 
         addGender(gender);
 
@@ -106,7 +106,7 @@ public class Fish extends Entity {
             public void run() {
                 isHungry = true;
             }
-        }, 60000);
+        }, 2000);
     }
 
     private void getFishImages() {
@@ -116,10 +116,8 @@ public class Fish extends Entity {
 
     protected void updateFishImages(String fish_type) {
         fish_left = SpriteSheet.setup("fish", fish_type + "_left");
-        fish_right = SpriteSheet.setup("fish",fish_type + "_right");
+        fish_right = SpriteSheet.setup("fish", fish_type + "_right");
     }
-
-
 
 
     public int getFishX() {
@@ -147,26 +145,21 @@ public class Fish extends Entity {
             fishImage = fish_right;
         }
 
+        int fishX = fishMovement.getFishX();
+        int fishY = fishMovement.getFishY();
 
-        g2.drawImage(fishImage, fishMovement.getFishX(), fishMovement.getFishY(), null);
-
+        g2.drawImage(fishImage, fishX, fishY, null);
 
         if (isHungry) {
-            int dotX = fishMovement.getFishX() + fishImage.getWidth() / 2 - 5; // Adjust the position of the dot
-            int dotY = fishMovement.getFishY() - 10; // Adjust the position of the dot above the fish
+            int dotX = fishX + fishImage.getWidth() / 2 - 5;
+            int dotY = fishY - 10;
 
             g2.setColor(Color.RED);
             g2.fillOval(dotX, dotY, 10, 10);
         }
 
-        if (isBreedable) {
-            int dotX = fishMovement.getFishX() + fishImage.getWidth() / 2 - 10; // Adjust the position of the dot
-            int dotY = fishMovement.getFishY() - 10; // Adjust the position of the dot above the fish
-
-            g2.setColor(Color.GREEN);
-            g2.fillOval(dotX, dotY, 10, 10);
-        }
-
+        g2.setColor(Color.BLACK);
+        g2.drawString("Size: " + fish_size, fishX, fishY - 20);
     }
 
 
@@ -177,18 +170,16 @@ public class Fish extends Entity {
         this.mouseB = mouseIn.getButton();
 
 
-        // Check if the mouse click is on the fish
-        if(mouseB == 1){
+        if (mouseB == 1) {
             if (mouseX >= fishMovement.getFishX() && mouseX <= fishMovement.getFishX() + fish_left.getWidth() &&
                     mouseY >= fishMovement.getFishY() && mouseY <= fishMovement.getFishY() + fish_left.getHeight()) {
                 offsetX = mouseX - fishMovement.getFishX();
                 offsetY = mouseY - fishMovement.getFishY();
                 isDragging = true;
-                isMoving = false; // Pause fish movement while dragging
+                isMoving = false;
 
             }
-        }
-        else if(mouseB == -1){
+        } else if (mouseB == -1) {
             if (isDragging) {
                 isDragging = false;
                 isMoving = true; // Resume fish movement when released
@@ -208,18 +199,14 @@ public class Fish extends Entity {
                 }
             }
         }
-        if(MouseHandler.mouseDragged){
-            if (isDragging) {
-                fishMovement.setInitialPosition(new Vector2f(mouseX - offsetX, mouseY - offsetY));
-            }
-        }
+
 
     }
 
 
     public void increaseSize() {
 
-        if (isHungry && sizeIncreaseCounter < 2 && eatCounter >= 2) {
+        if (isHungry && sizeIncreaseCounter < 2 && eatCounter >= 10) {
             int newWidth = (int) (fish_right.getWidth() * 1.125);
             int newHeight = (int) (fish_left.getHeight() * 1.125);
 
@@ -228,8 +215,10 @@ public class Fish extends Entity {
             fish_right = ScaledImage.scaledImage(fish_right, newWidth, newHeight);
 
             sizeIncreaseCounter++;
+            fish_size ++;
+
             eatCounter = 0;
-            if(sizeIncreaseCounter == 2){
+            if (sizeIncreaseCounter == 2) {
                 isBreedable = true;
             }
         }
@@ -267,10 +256,10 @@ public class Fish extends Entity {
     }
 
 
-
     public int getFishWidth() {
         return fish_right.getWidth();
     }
+
     public int getFishHeight() {
         return fish_left.getHeight();
     }
@@ -278,7 +267,5 @@ public class Fish extends Entity {
 
 
 
-
-
-
 }
+
