@@ -8,10 +8,7 @@ import com.oop.aquafarm.entity.Food;
 import com.oop.aquafarm.entity.Hand;
 import com.oop.aquafarm.graphics.CFont;
 import com.oop.aquafarm.ui.Button;
-import com.oop.aquafarm.util.CRUD;
-import com.oop.aquafarm.util.KeyHandler;
-import com.oop.aquafarm.util.MouseHandler;
-import com.oop.aquafarm.util.Vector2f;
+import com.oop.aquafarm.util.*;
 
 import javax.swing.Timer;
 import java.awt.Graphics2D;
@@ -23,6 +20,7 @@ import java.sql.SQLException;
 public class PlayState extends GameState{
 
     GamePanel game;
+    public static dbConnection con1 = new dbConnection();
     public static Vector2f map, origin;
     Hand hands;
     static Fish[] fishes;
@@ -113,39 +111,38 @@ public class PlayState extends GameState{
 
         btnFish1.addEvent(e -> {
             Fish fish = new Fish(origin, "AtlanticBass", null, null,0);
-            CRUD.addFish(fish);
-            addFishToArray(fish);
+            CRUD.addFish(con1, fish);
+//            addFishToArray(fish);
         });
 
 
         btnFish2.addEvent(e -> {
             Fish fish = new Fish(origin, "BlueGill", null, null, 0);
-            CRUD.addFish(fish);
-            addFishToArray(fish);
+            CRUD.addFish(con1, fish);
+//            addFishToArray(fish);
         });
         btnFish3.addEvent(e -> {
             Fish fish = new Fish(origin, "Clownfish", null, null, 0);
-            CRUD.addFish(fish);
-            addFishToArray(fish);
+            CRUD.addFish(con1, fish);
+//            addFishToArray(fish);
         });
 
         btnFish4.addEvent(e -> {
             Fish fish = new Fish(origin, "GoldenTench", null, null, 0);
-            CRUD.addFish(fish);
-            addFishToArray(fish);
+            CRUD.addFish(con1, fish);
+//            addFishToArray(fish);
         });
 
         btnFish5.addEvent(e -> {
             Fish fish = new Fish(origin, "Guppy", null, null, 0);
-            CRUD.addFish(fish);
-            addFishToArray(fish);
+            CRUD.addFish(con1, fish);
+//            addFishToArray(fish);
         });
 
 
         btnFish6.addEvent(e -> {
             Fish fish = new Fish(origin, "HIghFinBandedShark", null, null, 0);
-            CRUD.addFish(fish);
-            addFishToArray(fish);
+            CRUD.addFish(con1, fish);
         });
 
         btnBuyFood.addEvent(e -> {
@@ -219,8 +216,22 @@ public class PlayState extends GameState{
                             mouseIn.getX() <= fish.getFishX() + fish.getFishWidth() &&
                             mouseIn.getY() >= fish.getFishY() &&
                             mouseIn.getY() <= fish.getFishY() + fish.getFishHeight()) {
-
-                        removeFishFromArray(fish);
+                        switch (fish.getFishsize()){
+                            case 0:
+                                Finance.money +=5;
+                                break;
+                            case 1:
+                                Finance.money +=10;
+                                break;
+                            case 2:
+                                Finance.money += 15;
+                                break;
+                        }
+                        try {
+                            CRUD.removeFish(con1, fish);
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
                         break;
                     }
                 }
@@ -240,7 +251,7 @@ public class PlayState extends GameState{
             }
         }
     }
-    private void removeFishFromArray(Fish fishToRemove) {
+    public static void removeFishFromArray(Fish fishToRemove) {
         for (int i = 0; i < fishes.length; i++) {
             if (fishes[i] == fishToRemove) {
                 fishes[i] = null;
@@ -265,7 +276,13 @@ public class PlayState extends GameState{
 //        tps.drawString(g,GamePanel.oldTickCount + " TPS");
 
         CFont money = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 1100, 32);
-        money.drawString(g, "$" + Finance.money );
+        int userMoney;
+        try {
+            userMoney = CRUD.getMoney(con1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        money.drawString(g, "$" + userMoney);
 
         food.render(g);
 

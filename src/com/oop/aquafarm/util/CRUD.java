@@ -1,5 +1,6 @@
 package com.oop.aquafarm.util;
 
+import com.oop.aquafarm.entity.Finance;
 import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.states.Login;
 import com.oop.aquafarm.states.PlayState;
@@ -18,18 +19,25 @@ public class CRUD {
 
     private static final int iterations = 1000; //  number of times that the password is hashed
 
-    public static void createUser(int dbID, int uid, String uname, int age, String passSalt, String passHash, Date created_date) throws SQLException {
-        dbConnection con1 = new dbConnection();
+    public static void createUser(dbConnection con1, int dbID, int uid, String uname, int age, String passSalt, String passHash, Date created_date) throws SQLException {
         String q0 = "INSERT INTO users VALUES ( " + dbID + ", '" + uid + "', TRUE );";
         String q1 = "INSERT INTO userTable VALUES (" + uid + ", '" + uname + "', " + age + ", '" + passSalt + "', '" + passHash + "', '" + created_date + "', NULL, FALSE" + ");" ;
-        System.out.println(q0); System.out.println(q1);
+        String qInvID = "SELECT * FROM userInvTbl WHERE itemID=(SELECT max(itemID) FROM userInvTbl);";
+        int invID = 0;
+        ResultSet rsInvID = con1.s.executeQuery(qInvID);
+        if(rsInvID.next()){
+            invID = rsInvID.getInt("itemID");
+            invID++;
+        }
+        String q2 = "INSERT INTO userInvTbl VALUES (" + invID + ", '" + uname + "', " + Finance.money + ");";
+//        System.out.println(q0); System.out.println(q1);
         con1.s.executeUpdate(q0);
         con1.s.executeUpdate(q1);
+        con1.s.executeUpdate(q2);
         System.out.println("Successfully created account");
     }
 
-    public static void logIn(String uname, boolean loggedIn) throws SQLException {
-        dbConnection con1 = new dbConnection();
+    public static void logIn(dbConnection con1, String uname, boolean loggedIn) throws SQLException {
         String log;
         if(loggedIn){
             log = "in";
@@ -44,8 +52,7 @@ public class CRUD {
     }
 
 
-    public static void addFish(Fish fish) throws SQLException {
-        dbConnection con1 = new dbConnection();
+    public static void addFish(dbConnection con1, Fish fish) throws SQLException {
         int fishID = 0;
         int fishType = 0;
         Date fishDay = new java.sql.Date(System.currentTimeMillis());
@@ -66,10 +73,22 @@ public class CRUD {
 
         String qFishInv = "INSERT INTO userFishInvTbl VALUES (" + fishID + ", '" + Login.getUname() + "', " + fishType + ", '" + fishDay + "');";
         String qFishStat = "INSERT INTO userFishStatusTbl VALUES (" + fishID + ", '" + fishname + "', '" + fish.getFishGender() + "', " + fish.getFishsize() + ");";
-        System.out.println(qFishInv);  System.out.println(qFishStat);
+        PlayState.addFishToArray(fish);
+        String qInvMoney = "UPDATE userInvTbl SET money =" + Finance.money + " WHERE user_Name = '" + Login.getUname() + "';";
+        //        System.out.println(qFishInv);  System.out.println(qFishStat);
         con1.s.executeUpdate(qFishInv);
         con1.s.executeUpdate(qFishStat);
+        con1.s.executeUpdate(qInvMoney);
+
         System.out.println("Added new fish in inv");
+    }
+    public static void removeFish(dbConnection con1, Fish fish) throws SQLException {
+        String qdFish = "DELETE tinv FROM userfishinvtbl tinv INNER JOIN userFishstatusTbl tstat ON tinv.userFishid = tstat.userFishid WHERE fish_name = '" + fish.getFishName() + "';";
+        String qInvMoney = "UPDATE userInvTbl SET money =" + Finance.money + " WHERE user_Name = '" + Login.getUname() + "';";
+        con1.s.executeUpdate(qdFish);
+        con1.s.executeUpdate(qInvMoney);
+        PlayState.removeFishFromArray(fish);
+        System.out.println("Sold the fish for grandeur");
     }
 
     public static void getFish() throws SQLException {
@@ -88,6 +107,21 @@ public class CRUD {
             PlayState.addFishToArray(fish);
         }
 
+    }
+
+    public static void spendMoney(dbConnection con1) throws SQLException {
+        String qInvMoney = "UPDATE userInvTbl SET money =" + Finance.money + " WHERE user_Name = '" + Login.getUname() + "';";
+        con1.s.executeUpdate(qInvMoney);
+    }
+
+
+    public static int getMoney(dbConnection con1) throws SQLException {
+        String qMoney = "SELECT money FROM userInvTbl WHERE user_Name = '" + Login.getUname() + "';";
+        ResultSet rsMoney = con1.s.executeQuery(qMoney);
+        if (rsMoney.next()){
+            Finance.money = rsMoney.getInt("money");
+        }
+        return Finance.money;
     }
 
 

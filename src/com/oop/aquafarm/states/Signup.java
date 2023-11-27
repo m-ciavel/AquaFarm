@@ -258,13 +258,13 @@ public class Signup extends JFrame implements ActionListener {
                                         unameTF.setBorder(new LineBorder(Color.white,3));
                                         age = Integer.parseInt(ageTF.getText());
                                         created_date = new java.sql.Date(System.currentTimeMillis());
-                                        CRUD.createUser(dbID, uid, uname, age, passSalt, passHash, created_date);
+                                        CRUD.createUser(con1, dbID, uid, uname, age, passSalt, passHash, created_date);
                                     }
                                 }else{
                                     unameTF.setBorder(new LineBorder(Color.white,3));
                                     age = Integer.parseInt(ageTF.getText());
                                     created_date = new java.sql.Date(System.currentTimeMillis());
-                                    CRUD.createUser(dbID, uid, uname, age, passSalt, passHash, created_date);
+                                    CRUD.createUser(con1, dbID, uid, uname, age, passSalt, passHash, created_date);
                                     this.dispose();
                                     new Login(gsm).setVisible(true);
                                 }

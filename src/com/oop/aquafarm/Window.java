@@ -3,6 +3,7 @@ package com.oop.aquafarm;
 
 import com.oop.aquafarm.states.Login;
 import com.oop.aquafarm.util.CRUD;
+import com.oop.aquafarm.util.dbConnection;
 
 import javax.swing.JFrame;
 import java.awt.event.WindowEvent;
@@ -16,6 +17,8 @@ public class Window extends JFrame implements WindowListener {
     private BufferStrategy bs;
     private GamePanel gp;
     public static Window window;
+    dbConnection con1 = new dbConnection();
+
     public Window(){
         window = this;
         setTitle("AquaFarm");
@@ -53,7 +56,7 @@ public class Window extends JFrame implements WindowListener {
     @Override
     public void windowClosing(WindowEvent e) {
         try {
-            CRUD.logIn(Login.getUname(), false);
+            CRUD.logIn(con1, Login.getUname(), false);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }

@@ -35,6 +35,7 @@ public class Login extends JFrame  implements ActionListener {
 
     private static String uname;
     private int iterations = CRUD.getIterations();
+    dbConnection con1 = new dbConnection();
 
 
     ImageIcon backBtnIcon = new ImageIcon("res/menubutton/arrow back.png");
@@ -159,7 +160,7 @@ public class Login extends JFrame  implements ActionListener {
             }else {
                 // create connection
                 try {
-                    dbConnection con1 = new dbConnection();
+
                     uname = unameTF.getText();
                     String qUser = "SELECT * FROM userTable WHERE user_Name = '" + uname + "';";
                     ResultSet rs = con1.s.executeQuery(qUser);
@@ -178,7 +179,7 @@ public class Login extends JFrame  implements ActionListener {
                                     gsm.add(GameStateManager.PLAY);
                                     gsm.pop(GameStateManager.TITLE);
                                 }
-                                CRUD.logIn(uname, true);
+                                CRUD.logIn(con1, uname, true);
                                 this.dispose();
                                 Window.window.setVisible(true);
                             }else if (!matched){

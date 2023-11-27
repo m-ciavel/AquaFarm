@@ -57,15 +57,23 @@ fish_name varchar(255),
 fish_gender varchar(255),
 fish_size int NOT NULL, 
 CONSTRAINT con_fish_name_PK PRIMARY KEY (fish_name),
-CONSTRAINT fk_userFishInvTbl_userFishID FOREIGN KEY (userFishID) REFERENCES userFishInvTbl(userFishID) ON UPDATE CASCADE
+CONSTRAINT fk_userFishInvTbl_userFishID FOREIGN KEY (userFishID) REFERENCES userFishInvTbl(userFishID) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE userInvTbl(
+itemID int NOT NULL, 
+user_Name varchar(255) NOT NULL,
+money int NOT NULL,
+CONSTRAINT con_itemIDe_PK PRIMARY KEY (itemID),
+CONSTRAINT fk_userTable_userInvTbl FOREIGN KEY (user_Name) REFERENCES userTable(user_Name) ON UPDATE CASCADE 
+);
 
 SHOW FULL COLUMNS FROM users;
 
 SHOW TABLES;
 DESC users;
 DESC userTable; 
+DESC userInvTbl; 
 DESC fishTbl; 
 DESC userFishInvTbl; 
 DESC userFishStatusTbl; 
@@ -73,6 +81,7 @@ DESC userFishStatusTbl;
 
 SELECT * FROM users;
 SELECT * FROM userTable;
+SELECT * FROM userInvTbl;
 SELECT * FROM fishTbl;
 SELECT * FROM userFishInvTbl;
 SELECT * FROM userFishStatusTbl;

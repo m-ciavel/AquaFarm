@@ -55,8 +55,28 @@ fish_name varchar(255),
 fish_gender varchar(255),
 fish_size int NOT NULL, 
 CONSTRAINT con_fish_name_PK PRIMARY KEY (fish_name),
-CONSTRAINT fk_userFishInvTbl_userFishID FOREIGN KEY (userFishID) REFERENCES userFishInvTbl(userFishID) ON UPDATE CASCADE
+CONSTRAINT fk_userFishInvTbl_userFishID FOREIGN KEY (userFishID) REFERENCES userFishInvTbl(userFishID) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+CREATE TABLE userInvTbl(
+itemID int NOT NULL, 
+user_Name varchar(255) NOT NULL,
+money int NOT NULL,
+CONSTRAINT con_itemIDe_PK PRIMARY KEY (itemID),
+CONSTRAINT fk_userTable_userInvTbl FOREIGN KEY (user_Name) REFERENCES userTable(user_Name) ON UPDATE CASCADE 
+);
+
+INSERT INTO userInvTbl VALUES(
+1, 'userdel', 100
+);
+
+UPDATE userInvTbl
+SET money = 150
+WHERE user_Name = 'user0';
+
+SELECT  money FROM userInvTbl WHERE user_Name = 'userdel';
+
+SELECT * FROM userInvTbl WHERE itemID=(SELECT max(itemID) FROM userInvTbl);
 
 SELECT * FROM userFishInvTbl WHERE userFishID=(SELECT max(userFishID) FROM userFishInvTbl);
 SELECT fish_ID AS fishType FROM fishtbl WHERE fish_type = 'Guppy';
@@ -111,6 +131,14 @@ ADD CONSTRAINT `fk_users_user_ID`
 FOREIGN KEY (`user_ID`) REFERENCES `users` (`user_ID`)
 ON UPDATE CASCADE;
 
+ALTER TABLE `userFishStatusTbl`
+DROP CONSTRAINT fk_userFishInvTbl_userFishID;
+
+ALTER TABLE `userFishStatusTbl`
+ADD CONSTRAINT `fk_userFishInvTbl_userFishID`
+FOREIGN KEY (userFishID) REFERENCES userFishInvTbl(userFishID)
+ON UPDATE CASCADE ON DELETE CASCADE;
+
 
 ALTER TABLE userTable
 ADD pass_salt varchar(255);
@@ -125,6 +153,7 @@ DESC users;
 DESC userTable; 
 DESC sessionTbl; 
 DESC fishTbl;
+DESC userInvTbl;
 
 
 INSERT INTO users VALUES (
@@ -155,12 +184,16 @@ DELETE FROM users WHERE user_ID = 631953536;
 DELETE FROM users WHERE ID = 0;
 DELETE FROM  userFishInvTbl WHERE userFishID = 6;
 
+
+DELETE tinv FROM userfishinvtbl tinv INNER JOIN userFishstatusTbl tstat ON tinv.userFishid = tstat.userFishid WHERE fish_name = 'Guppy Russel';
+
 UPDATE userFishstatusTbl 
 SET fish_gender = 'they'
 WHERE userFishID = 0;
 
 SELECT * FROM users;
 SELECT * FROM userTable;
+SELECT * FROM userInvTbl;
 SELECT * FROM sessionTbl;
 SELECT * FROM fishTbl;
 SELECT * FROM userFishInvTbl;

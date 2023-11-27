@@ -2,12 +2,12 @@ package com.oop.aquafarm.entity;
 
 import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.graphics.SpriteSheet;
-import com.oop.aquafarm.util.MouseHandler;
-import com.oop.aquafarm.util.ScaledImage;
-import com.oop.aquafarm.util.Vector2f;
+import com.oop.aquafarm.states.PlayState;
+import com.oop.aquafarm.util.*;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -114,7 +114,11 @@ public class Food extends Entity {
             int x = mouseIn.getX() - foodSize / 2;
             int y = mouseIn.getY() - foodSize / 2;
             Finance.money = Finance.money- 1;
-
+            try {
+                CRUD.spendMoney(PlayState.con1);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             ExistingFoods.add(new SummonedFood(x, y));
             canSpawnFood = false;
 
