@@ -88,16 +88,16 @@ public class TitleState extends GameState {
         btnSettings.input(mouseIn, keyh);
         btnExit.input(mouseIn, keyh);
 
-        keyh.p.tick();
-        if(keyh.p.clicked){
-            if (gsm.isStateActive(GameStateManager.PLAY)){
-                GameStateManager.pop(GameStateManager.PLAY);
-            }else{
-                gsm.add(GameStateManager.PLAY);
-                GameStateManager.pop(GameStateManager.TITLE);
-            }
-
-        }
+//        keyh.p.tick();
+//        if(keyh.p.clicked){
+//            if (gsm.isStateActive(GameStateManager.PLAY)){
+//                GameStateManager.pop(GameStateManager.PLAY);
+//            }else{
+//                gsm.add(GameStateManager.PLAY);
+//                GameStateManager.pop(GameStateManager.TITLE);
+//            }
+//
+//        }
 
     }
 

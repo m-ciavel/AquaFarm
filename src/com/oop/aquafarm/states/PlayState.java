@@ -108,6 +108,7 @@ public class PlayState extends GameState{
 
         btnFish1.addEvent(e -> {
             Fish fish = new Fish(origin, "AtlanticBass", null, null,0);
+//            CRUD.addFish()
             addFishToArray(fish);
         });
 
@@ -226,7 +227,7 @@ public class PlayState extends GameState{
             if (fishes[i] == null) {
                 fishes[i] = fish;
                 System.out.println(fishes[i]);
-                Finance.money = Finance.money- 10;
+                Finance.money = Finance.money - 10;
                 break;
             }
         }
@@ -246,11 +247,14 @@ public class PlayState extends GameState{
         g.setColor(new Color(14, 135, 204));
         g.fillRect(0,0, GamePanel.width, GamePanel.height);
 
-        CFont fps = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 32, 32);
+        CFont user = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 32, 32);
+        user.drawString(g, uname);
+
+        CFont fps = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, GamePanel.width - 100, GamePanel.height - 32);
         fps.drawString(g, GamePanel.oldFrameCount +" FPS");
 
-        CFont tps = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 32, 32*2);
-        tps.drawString(g,GamePanel.oldTickCount + " TPS");
+//        CFont tps = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 32, GamePanel.height - 32);
+//        tps.drawString(g,GamePanel.oldTickCount + " TPS");
 
         CFont money = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 1100, 32);
         money.drawString(g, "$" + Finance.money );

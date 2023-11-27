@@ -32,37 +32,60 @@ public class CRUD {
 
     public static void logIn(String uname, boolean loggedIn) throws SQLException {
         dbConnection con1 = new dbConnection();
-        Date loggedInDate = new java.sql.Date(System.currentTimeMillis());
-        Date expireDate =  new java.sql.Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000);
-        long sessionID = generatesessionID();
-        boolean sidExists = false;
-        String qsid = "SELECT * FROM sessionTbl WHERE session_ID = '" + sessionID + "';";
-        ResultSet rssid = con1.s.executeQuery(qsid);
-        if (rssid.next()){
-            do{
-                sessionID = (int) generatesessionID();
-                rssid = con1.s.executeQuery(qsid);
-                sidExists = rssid.next();
-            }while(sidExists);
-            if(!sidExists){
-                String qLog = "UPDATE userTable SET logged_in = " + loggedIn + " WHERE user_Name = '" + uname + "';";
-                String qSession = "INSERT INTO sessionTbl(" + sessionID + "', '" + loggedInDate + "', '" + expireDate + "');";
-                System.out.println(qLog); System.out.println(qSession);
-        con1.s.executeUpdate(qLog);
-                System.out.println("logged in @ " + loggedInDate);
-                System.out.println("session expires at @ " + expireDate);
-            }
-        }else{
-            String qLog = "UPDATE userTable SET logged_in = " + loggedIn + " WHERE user_Name = '" + uname + "';";
-            String qSession = "INSERT INTO sessionTbl(" + sessionID + "', '" + loggedInDate + "', '" + expireDate + "');";
-            System.out.println(qLog); System.out.println(qSession);
-        con1.s.executeUpdate(qLog);
-            System.out.println("logged in @ " + loggedInDate);
-            System.out.println("session expires at @ " + expireDate);
+        String log;
+        if(loggedIn){
+            log = "in";
+        }else {
+            log = "out";
         }
+        Date loggedInDate = new java.sql.Date(System.currentTimeMillis());
+            String qLog = "UPDATE userTable SET logged_in = " + loggedIn + " WHERE user_Name = '" + uname + "';";
+//            System.out.println(qLog);
+            con1.s.executeUpdate(qLog);
+            System.out.println("logged " + log + " @ " + loggedInDate);
+    }
 
+
+    public static void addFish(){
+        dbConnection con1 = new dbConnection();
 
     }
+
+//    public static void logIn(String uname, boolean loggedIn) throws SQLException {
+//        dbConnection con1 = new dbConnection();
+//        Date loggedInDate = new java.sql.Date(System.currentTimeMillis());
+//        Date expireDate =  new java.sql.Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000);
+//        long sessionID = generatesessionID();
+//        boolean sidExists = false;
+//        String qsid = "SELECT * FROM sessionTbl WHERE session_ID = '" + sessionID + "';";
+//        ResultSet rssid = con1.s.executeQuery(qsid);
+//        if (rssid.next()){
+//            do{
+//                sessionID = (int) generatesessionID();
+//                rssid = con1.s.executeQuery(qsid);
+//                sidExists = rssid.next();
+//            }while(sidExists);
+//            if(!sidExists){
+//                String qLog = "UPDATE userTable SET logged_in = " + loggedIn + " WHERE user_Name = '" + uname + "';";
+////                String qSession = "INSERT INTO sessionTbl(" + sessionID + "', '" + loggedInDate + "', '" + expireDate + "');";
+////                System.out.println(qLog); System.out.println(qSession);
+//        con1.s.executeUpdate(qLog);
+//                System.out.println("logged in @ " + loggedInDate);
+//                System.out.println("session expires at @ " + expireDate);
+//            }
+//        }else{
+//            String qLog = "UPDATE userTable SET logged_in = " + loggedIn + " WHERE user_Name = '" + uname + "';";
+//            String qSession = "INSERT INTO sessionTbl(" + sessionID + "', '" + loggedInDate + "', '" + expireDate + "');";
+//            System.out.println(qLog); System.out.println(qSession);
+//        con1.s.executeUpdate(qLog);
+//            System.out.println("logged in @ " + loggedInDate);
+//            System.out.println("session expires at @ " + expireDate);
+//        }
+//
+//
+//    }
+
+
 
     public static long generateUID() {
         try {
