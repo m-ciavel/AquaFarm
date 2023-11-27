@@ -18,6 +18,88 @@ USE `aquafarm`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `fishtbl`
+--
+
+DROP TABLE IF EXISTS `fishtbl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `fishtbl` (
+  `fish_ID` int NOT NULL,
+  `fish_type` varchar(255) NOT NULL,
+  PRIMARY KEY (`fish_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `fishtbl`
+--
+
+LOCK TABLES `fishtbl` WRITE;
+/*!40000 ALTER TABLE `fishtbl` DISABLE KEYS */;
+INSERT INTO `fishtbl` VALUES (0,'AtlanticBass'),(1,'BlueGill'),(2,'Clownfish'),(3,'GoldenTench'),(4,'Guppy'),(5,'HIghFinBandedShark');
+/*!40000 ALTER TABLE `fishtbl` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `userfishinvtbl`
+--
+
+DROP TABLE IF EXISTS `userfishinvtbl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `userfishinvtbl` (
+  `userFishID` int NOT NULL,
+  `user_Name` varchar(255) NOT NULL,
+  `fish_ID` int NOT NULL,
+  `added_date` date DEFAULT NULL,
+  PRIMARY KEY (`userFishID`),
+  KEY `fk_userTable_user_Name` (`user_Name`),
+  KEY `fk_fishTbl_fish_ID` (`fish_ID`),
+  CONSTRAINT `fk_fishTbl_fish_ID` FOREIGN KEY (`fish_ID`) REFERENCES `fishtbl` (`fish_ID`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_userTable_user_Name` FOREIGN KEY (`user_Name`) REFERENCES `usertable` (`user_Name`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `userfishinvtbl`
+--
+
+LOCK TABLES `userfishinvtbl` WRITE;
+/*!40000 ALTER TABLE `userfishinvtbl` DISABLE KEYS */;
+INSERT INTO `userfishinvtbl` VALUES (0,'user0',4,'2023-11-27'),(1,'user0',2,'2023-11-27'),(2,'user0',4,'2023-11-27'),(3,'user0',5,'2023-11-27'),(4,'userdel',2,'2023-11-27'),(5,'userdel',1,'2023-11-27'),(6,'userdel',0,'2023-11-27'),(7,'userdel',2,'2023-11-27'),(8,'userdel',4,'2023-11-27'),(9,'userdel',3,'2023-11-27'),(10,'userdel',3,'2023-11-27'),(11,'user0',5,'2023-11-27'),(12,'user0',0,'2023-11-27'),(13,'user0',1,'2023-11-27');
+/*!40000 ALTER TABLE `userfishinvtbl` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `userfishstatustbl`
+--
+
+DROP TABLE IF EXISTS `userfishstatustbl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `userfishstatustbl` (
+  `userFishID` int NOT NULL,
+  `fish_name` varchar(255) NOT NULL,
+  `fish_gender` varchar(255) DEFAULT NULL,
+  `fish_size` int NOT NULL,
+  PRIMARY KEY (`fish_name`),
+  KEY `fk_userFishInvTbl_userFishID` (`userFishID`),
+  CONSTRAINT `fk_userFishInvTbl_userFishID` FOREIGN KEY (`userFishID`) REFERENCES `userfishinvtbl` (`userFishID`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `userfishstatustbl`
+--
+
+LOCK TABLES `userfishstatustbl` WRITE;
+/*!40000 ALTER TABLE `userfishstatustbl` DISABLE KEYS */;
+INSERT INTO `userfishstatustbl` VALUES (1,'Clown Leclerc','male',2),(10,'null10','they',0),(11,'null11','female',0),(12,'null12','male',0),(13,'null13','male',0),(2,'null2','female',0),(3,'null3','they',0),(4,'null4','they',0),(5,'null5','female',0),(6,'null6','they',0),(7,'null7','female',0),(8,'null8','female',0),(9,'null9','male',0),(0,'Pierre Guppy','they',0);
+/*!40000 ALTER TABLE `userfishstatustbl` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -39,7 +121,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,1385075492,1);
+INSERT INTO `users` VALUES (0,1555464681,1),(1,530566672,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -55,7 +137,7 @@ CREATE TABLE `usertable` (
   `user_Name` varchar(255) NOT NULL,
   `age` tinyint NOT NULL,
   `pass_salt` varchar(255) NOT NULL,
-  `pass_hash` varchar(1024) NOT NULL,
+  `pass_hash` varchar(255) NOT NULL,
   `created_date` date DEFAULT NULL,
   `updated_date` date DEFAULT NULL,
   `logged_in` tinyint(1) DEFAULT NULL,
@@ -71,7 +153,7 @@ CREATE TABLE `usertable` (
 
 LOCK TABLES `usertable` WRITE;
 /*!40000 ALTER TABLE `usertable` DISABLE KEYS */;
-INSERT INTO `usertable` VALUES (1385075492,'user0',18,'be456180b0de30594915f7b0b5ea5e27','f226ecccdb45c3000d8ac335a34f2ccd27b12eb8350d68768eec727d9ff670520493a97504d6cab797845e476ad61555cdf1364a7e7fe5adde344abfd9150107','2023-11-24',NULL,0);
+INSERT INTO `usertable` VALUES (1555464681,'user0',18,'d0a064b583aedb4fc113ee9599f8618a','bc4dbe76e720591863dd267c3a0883a4bb14dda989dabe797e14aa90efa20bc393f5dc9ce4bcf893bc7cb6309b01745a0181d69bd28dd4a4d20d2de997d2e3b7','2023-11-26',NULL,0),(530566672,'userdel',18,'4f1652de3572caaf001067861ab5444b','640d9680bfe68f03b509cc750e78e5f4d94018b97a2e8971d223fc128dcdc312eea35f2600d06aedee4f6bbfe7d4e8ab21b0f2a11fcac1b397ee4cf4a12a2674','2023-11-26',NULL,0);
 /*!40000 ALTER TABLE `usertable` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -84,4 +166,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-25 12:12:01
+-- Dump completed on 2023-11-27 22:11:21

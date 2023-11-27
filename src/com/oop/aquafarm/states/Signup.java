@@ -80,7 +80,7 @@ public class Signup extends JFrame implements ActionListener {
         ageLbl.setBounds((GamePanel.width - ageLbl.getWidth())/6,420, 1000,60);
 
         notifLbl = new JLabel("",  SwingConstants.CENTER);
-        notifLbl.setBounds(0,480, 1000,30);
+        notifLbl.setBounds(0,480, GamePanel.width,30);
         notifLbl.setForeground(Button.borderdarkred);
 
         signupBtn = new JButton("Sign up");
@@ -219,7 +219,7 @@ public class Signup extends JFrame implements ActionListener {
                         String qID = "SELECT * FROM users WHERE id=(SELECT max(ID) FROM users)";
                         ResultSet rs = con1.s.executeQuery(qID);
                         if(rs.next()){
-                            dbID = Integer.parseInt(rs.getString("ID"));
+                            dbID = rs.getInt("ID");
                             dbID++;
 //                            System.out.println(dbID);
                         }

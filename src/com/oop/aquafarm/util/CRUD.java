@@ -1,13 +1,11 @@
 package com.oop.aquafarm.util;
 
+import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.states.Login;
-import com.oop.aquafarm.states.Signup;
-import com.oop.aquafarm.ui.Button;
+import com.oop.aquafarm.states.PlayState;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.swing.border.LineBorder;
-import java.awt.*;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -46,10 +44,51 @@ public class CRUD {
     }
 
 
-    public static void addFish(){
+    public static void addFish(Fish fish) throws SQLException {
         dbConnection con1 = new dbConnection();
+        int fishID = 0;
+        int fishType = 0;
+        Date fishDay = new java.sql.Date(System.currentTimeMillis());
+        String qfID = "SELECT * FROM userFishInvTbl WHERE userFishID=(SELECT max(userFishID) FROM userFishInvTbl);";
+        String qfishtype = "SELECT fish_ID AS fishType FROM fishtbl WHERE fish_type = '" + fish.getFishtype() + "';";
+        ResultSet rsfID = con1.s.executeQuery(qfID);
+        String fishname = fish.getFishName();
+        if(rsfID.next()){
+            fishID = rsfID.getInt("userFishID");
+            fishID++;
+            fishname = fish.getFishName() + fishID;
+        }
 
+        ResultSet rsFtype = con1.s.executeQuery(qfishtype);
+        if(rsFtype.next()){
+            fishType = rsFtype.getInt("fishType");
+        }
+
+        String qFishInv = "INSERT INTO userFishInvTbl VALUES (" + fishID + ", '" + Login.getUname() + "', " + fishType + ", '" + fishDay + "');";
+        String qFishStat = "INSERT INTO userFishStatusTbl VALUES (" + fishID + ", '" + fishname + "', '" + fish.getFishGender() + "', " + fish.getFishsize() + ");";
+        System.out.println(qFishInv);  System.out.println(qFishStat);
+        con1.s.executeUpdate(qFishInv);
+        con1.s.executeUpdate(qFishStat);
+        System.out.println("Added new fish in inv");
     }
+
+    public static void getFish() throws SQLException {
+        dbConnection con1 = new dbConnection();
+        String qUFishes = "SELECT userFishInvTbl.userFishID, fishTbl.fish_type, userFishStatusTbl.fish_name, userFishStatusTbl.fish_gender, userFishStatusTbl.fish_size FROM userfishinvtbl JOIN fishtbl ON userfishinvtbl.fish_ID = fishtbl.fish_ID LEFT JOIN userFishStatusTbl ON userFishInvTbl.userFishID = userFishStatusTbl.userFishID WHERE user_Name = '" + Login.getUname() + "' ORDER BY userFishID;";
+        ResultSet rsUFishes = con1.s.executeQuery(qUFishes);
+
+        while (rsUFishes.next()) {
+            String fish_type = rsUFishes.getString("fish_type");
+            String fish_name = rsUFishes.getString("fish_name");
+            String gender = rsUFishes.getString("fish_gender");
+            int fish_size = rsUFishes.getInt("fish_size");
+//            System.out.println("Fish fish = new Fish(origin, \"" + fish_type + "\", " + fish_name + ", " + gender + ", " + fish_size + ");");
+
+            Fish fish = new Fish(PlayState.origin, fish_type, fish_name, gender, fish_size);
+            PlayState.addFishToArray(fish);
+        }
+    }
+
 
 //    public static void logIn(String uname, boolean loggedIn) throws SQLException {
 //        dbConnection con1 = new dbConnection();

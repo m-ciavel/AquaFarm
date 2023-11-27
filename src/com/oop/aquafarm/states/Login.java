@@ -64,7 +64,7 @@ public class Login extends JFrame  implements ActionListener {
         passLbl.setBounds((GamePanel.width - passLbl.getWidth())/6,360, 1000,60);
 
         notifLbl = new JLabel("",  SwingConstants.CENTER);
-        notifLbl.setBounds(0,480, 1000,30);
+        notifLbl.setBounds(0,480, GamePanel.width,30);
         notifLbl.setForeground(Button.borderdarkred);
 
 

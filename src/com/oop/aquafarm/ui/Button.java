@@ -9,6 +9,7 @@ import com.oop.aquafarm.util.Vector2f;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Button {
@@ -154,7 +155,7 @@ public class Button {
 
 
     public interface ClickedEvent {
-        void action(int mouseButton);
+        void action(int mouseButton) throws SQLException;
     }
 
 
@@ -173,7 +174,11 @@ public class Button {
                 pressedtime = (float) System.nanoTime() / 1000000;
 
                 for (int i = 0; i < events.size(); i++) {
-                    events.get(i).action(1);
+                    try {
+                        events.get(i).action(1);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
 
             } else if (mouseIn.getButton() == -1) {

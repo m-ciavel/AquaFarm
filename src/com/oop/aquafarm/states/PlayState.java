@@ -1,15 +1,14 @@
 package com.oop.aquafarm.states;
 
 
-import com.mysql.cj.log.Log;
 import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.entity.Finance;
 import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.entity.Food;
 import com.oop.aquafarm.entity.Hand;
 import com.oop.aquafarm.graphics.CFont;
-import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.ui.Button;
+import com.oop.aquafarm.util.CRUD;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.Vector2f;
@@ -19,14 +18,14 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.List;
+import java.sql.SQLException;
 
 public class PlayState extends GameState{
 
     GamePanel game;
     public static Vector2f map, origin;
     Hand hands;
-    Fish[] fishes;
+    static Fish[] fishes;
     Food food;
 
     Finance sells;
@@ -81,10 +80,16 @@ public class PlayState extends GameState{
 
         uname = Login.getUname();
 
+
         sells = new Finance(new Vector2f((float) GamePanel.width / 2, (float) GamePanel.height / 2));
         food = new Food(origin);
         fishes = new Fish[50];
 
+        try {
+            CRUD.getFish();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         initbtnImage();
 
         btnFish1 = new Button(Imgbuy_fish1, new Vector2f(middleX, bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
@@ -108,33 +113,38 @@ public class PlayState extends GameState{
 
         btnFish1.addEvent(e -> {
             Fish fish = new Fish(origin, "AtlanticBass", null, null,0);
-//            CRUD.addFish()
+            CRUD.addFish(fish);
             addFishToArray(fish);
         });
 
 
         btnFish2.addEvent(e -> {
             Fish fish = new Fish(origin, "BlueGill", null, null, 0);
+            CRUD.addFish(fish);
             addFishToArray(fish);
         });
         btnFish3.addEvent(e -> {
             Fish fish = new Fish(origin, "Clownfish", null, null, 0);
+            CRUD.addFish(fish);
             addFishToArray(fish);
         });
 
         btnFish4.addEvent(e -> {
             Fish fish = new Fish(origin, "GoldenTench", null, null, 0);
+            CRUD.addFish(fish);
             addFishToArray(fish);
         });
 
         btnFish5.addEvent(e -> {
             Fish fish = new Fish(origin, "Guppy", null, null, 0);
+            CRUD.addFish(fish);
             addFishToArray(fish);
         });
 
 
         btnFish6.addEvent(e -> {
             Fish fish = new Fish(origin, "HIghFinBandedShark", null, null, 0);
+            CRUD.addFish(fish);
             addFishToArray(fish);
         });
 
@@ -146,8 +156,6 @@ public class PlayState extends GameState{
         btnSellFish.addEvent(e -> {
             isSellingFish = !isSellingFish;
         });
-
-
 
 
 
@@ -166,12 +174,12 @@ public class PlayState extends GameState{
         hands.update(time);
         food.update(time);
         sells.update(time);
+
         for (Fish fish : fishes) {
 
             if (fish != null) {
                 fish.callEatingLogic(food);
                 fish.seek_food(food.foodLocations);
-
             }
 
         }
@@ -220,9 +228,12 @@ public class PlayState extends GameState{
         }
     }
 
+    public static Fish[] getFishArray(){
+        return fishes;
+    }
 
 
-    public void addFishToArray(Fish fish) {
+    public static void addFishToArray(Fish fish) {
         for (int i = 0; i < fishes.length; i++) {
             if (fishes[i] == null) {
                 fishes[i] = fish;
@@ -276,32 +287,11 @@ public class PlayState extends GameState{
             hands.render(g);
         }
 
-
-
         for (Fish fish : fishes) {
             if (fish != null) {
                 fish.render(g);
-
-                String gender = fish.getGender();
-                if (gender != null) {
-                    BufferedImage genderImg = SpriteSheet.setup("genders", gender);
-
-                    double scale = 0.4;
-
-                    int scaledWidth = (int) (genderImg.getWidth() * scale);
-                    int scaledHeight = (int) (genderImg.getHeight() * scale);
-
-                    int genderX = fish.getFishX() + (fish.getFishWidth() - scaledWidth) / 2;
-                    int genderY = fish.getFishY() - 10;
-
-                    g.drawImage(genderImg, genderX + 30, genderY, scaledWidth, scaledHeight, null);
-                }
             }
         }
-
-
-
-
 
     }
 }

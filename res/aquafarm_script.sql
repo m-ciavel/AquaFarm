@@ -40,24 +40,66 @@ CONSTRAINT con_fish_ID_PK PRIMARY KEY (fish_ID)
 );
 
 CREATE TABLE userFishInvTbl(
+userFishID int NOT NULL,
 user_Name varchar(255) NOT NULL,
-userFishID int NOT NULL, 
-fish_type varchar(255) NOT NULL,
-fish_name varchar(255), 
-fish_gender varchar(255),
+fish_ID int NOT NULL,
 added_date date,
 CONSTRAINT con_userFishID_PK PRIMARY KEY (userFishID),
-CONSTRAINT fk_userTable_user_Name FOREIGN KEY (user_Name) REFERENCES userTable(user_Name), 
-CONSTRAINT fk_fishTbl_fish_type FOREIGN KEY (fish_type) REFERENCES fishTbl(fish_type)
+CONSTRAINT fk_userTable_user_Name FOREIGN KEY (user_Name) REFERENCES userTable(user_Name) ON UPDATE CASCADE, 
+CONSTRAINT fk_fishTbl_fish_ID FOREIGN KEY (fish_ID) REFERENCES fishTbl(fish_ID) ON UPDATE CASCADE
 );
+
+CREATE TABLE userFishStatusTbl(
+userFishID int NOT NULL,
+fish_name varchar(255), 
+fish_gender varchar(255),
+fish_size int NOT NULL, 
+CONSTRAINT con_fish_name_PK PRIMARY KEY (fish_name),
+CONSTRAINT fk_userFishInvTbl_userFishID FOREIGN KEY (userFishID) REFERENCES userFishInvTbl(userFishID) ON UPDATE CASCADE
+);
+
+SELECT * FROM userFishInvTbl WHERE userFishID=(SELECT max(userFishID) FROM userFishInvTbl);
+SELECT fish_ID AS fishType FROM fishtbl WHERE fish_type = 'Guppy';
+
+SELECT userFishInvTbl.userFishID, fishTbl.fish_type, userFishStatusTbl.fish_name, userFishStatusTbl.fish_gender, userFishStatusTbl.fish_size
+FROM userfishinvtbl 
+JOIN fishtbl
+ON userfishinvtbl.fish_ID = fishtbl.fish_ID
+LEFT JOIN userFishStatusTbl 
+ON userFishInvTbl.userFishID = userFishStatusTbl.userFishID
+WHERE user_Name = 'user0'
+ORDER BY userFishID;
+
+INSERT INTO userFishInvTbl VALUES (
+0, 'user0', 4, '2023-11-27'
+);
+INSERT INTO userFishStatusTbl VALUES (
+0, 'Pierre Guppy', 'they', 0	
+);
+INSERT INTO userFishInvTbl VALUES (
+1, 'user0', 2, '2023-11-27'
+);
+INSERT INTO userFishStatusTbl VALUES (
+1, 'Clown Leclerc', 'male', 2	
+);
+INSERT INTO userFishInvTbl VALUES (
+2, 'user0', 2, '2023-11-27'
+);
+INSERT INTO userFishStatusTbl VALUES (
+2, 'Guppy Russel', 'they', 0	
+);
+
+UPDATE userFishInvTbl 
+SET fish_ID = 2
+WHERE userFishID = 1;
 
 CREATE TABLE sessionTbl(
 user_Name varchar(255) NOT NULL,
 session_ID int NOT NULL, 
 login_date date,
-expire_date date,
+logout_date date,
 CONSTRAINT con_session_ID_PK PRIMARY KEY (session_ID),
-CONSTRAINT fk_userTable_user_Name FOREIGN KEY (user_Name) REFERENCES userTable(user_Name)
+CONSTRAINT fk_userTable_user_Name FOREIGN KEY (user_Name) REFERENCES userTable(user_Name) ON UPDATE CASCADE
 );
 
 
@@ -74,7 +116,7 @@ ALTER TABLE userTable
 ADD pass_salt varchar(255);
 
 ALTER TABLE userTable
-MODIFY COLUMN pass_hash varchar(1024) NOT NULL;
+MODIFY COLUMN pass_hash varchar(255) NOT NULL;
 
 SHOW FULL COLUMNS FROM users;
 
@@ -101,6 +143,8 @@ INSERT INTO userTable VALUES (
 1234567890, 'user0', 81, 'salt', 'hash', '2023-10-26', NULL, FALSE
 );
 
+
+
 UPDATE users 
 SET user_Name = 'user'
 WHERE ID = 0;
@@ -109,16 +153,19 @@ WHERE ID = 0;
 DELETE FROM userTable WHERE user_ID = 1008095481;
 DELETE FROM users WHERE user_ID = 631953536;
 DELETE FROM users WHERE ID = 0;
+DELETE FROM  userFishInvTbl WHERE userFishID = 6;
 
-UPDATE userTable 
-SET logged_in = FALSE
-WHERE user_Name = 'user0';
+UPDATE userFishstatusTbl 
+SET fish_gender = 'they'
+WHERE userFishID = 0;
 
 SELECT * FROM users;
 SELECT * FROM userTable;
 SELECT * FROM sessionTbl;
 SELECT * FROM fishTbl;
 SELECT * FROM userFishInvTbl;
+SELECT * FROM userFishstatusTbl;
+SELECT * FROM userFishInvTbl WHERE userFishID = 2;
 
 INSERT INTO fishTbl VALUES 
 (0, 'AtlanticBass'), 
@@ -142,4 +189,4 @@ LIMIT 1;
 
 DROP TABLE users;
 DROP TABLE userTable;
-DROP TABLE sessionTbl;
+DROP TABLE sessusersionTbl;
