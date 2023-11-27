@@ -220,7 +220,9 @@ public class Login extends JFrame  implements ActionListener {
 
     }
 
-
+    public static String getUname(){
+        return uname;
+    }
 
 
 }
