@@ -24,8 +24,7 @@ import java.util.List;
 public class PlayState extends GameState{
 
     GamePanel game;
-    public static Vector2f map;
-    public static Vector2f origin;
+    public static Vector2f map, origin;
     Hand hands;
     Fish[] fishes;
     Food food;
@@ -33,39 +32,13 @@ public class PlayState extends GameState{
     Finance sells;
     private String uname;
 
-    private BufferedImage Imgbuy_fish1;
-    private BufferedImage Imgbuy_fish2;
-    private BufferedImage Imgbuy_fish3;
-    private BufferedImage Imgbuy_fish4;
-    private BufferedImage Imgbuy_fish5;
-    private BufferedImage Imgbuy_fish6;
-    private BufferedImage Imgbuy_food;
-    private BufferedImage Imgsell_fish;
+    private BufferedImage Imgbuy_fish1, Imgbuy_fish2, Imgbuy_fish3, Imgbuy_fish4, Imgbuy_fish5, Imgbuy_fish6, Imgbuy_food, Imgsell_fish;
 
-    private final BufferedImage Hover_Imgbuy_fish1;
-    private final BufferedImage Hover_Imgbuy_fish2;
-    private final BufferedImage Hover_Imgbuy_fish3;
-    private final BufferedImage Hover_Imgbuy_fish4;
-    private final BufferedImage Hover_Imgbuy_fish5;
-    private final BufferedImage Hover_Imgbuy_fish6;
-    private final BufferedImage Hover_Imgbuy_food;
-    private final BufferedImage Hover_Imgsell_fish;
+    private BufferedImage Hover_Imgbuy_fish1, Hover_Imgbuy_fish2, Hover_Imgbuy_fish3, Hover_Imgbuy_fish4, Hover_Imgbuy_fish5, Hover_Imgbuy_fish6, Hover_Imgbuy_food, Hover_Imgsell_fish;
 
-    private Button btnFish1;
-    private Button btnFish2;
-    private Button btnFish3;
-    private Button btnFish4;
-    private Button btnFish5;
-    private Button btnFish6;
-
-    private Button btnBuyFood;
-    private Button btnSellFish;
+    private final Button btnFish1, btnFish2, btnFish3, btnFish4, btnFish5, btnFish6, btnBuyFood, btnSellFish;
 
     private int fishBtnSize = 128;
-//    private int fishBtnNewSize = GamePanel.width / 10;
-//    private int buttonSpacing = 10;
-
-//    int smallFishBtnNewSize = GamePanel.width / 10 - 60;
     private int smallFishBtnNewSize = GamePanel.width / 20;
     private int btnHoverSize = smallFishBtnNewSize + 10;
 
@@ -74,28 +47,10 @@ public class PlayState extends GameState{
 
 
     private boolean isBuyingFood = false;
-
-
     private boolean isSellingFish = false;
 
 
-
-
-
-
-    public PlayState(GameStateManager gsm){
-        super(gsm);
-        map = new Vector2f();
-        Vector2f.setWorldVar(map.x, map.y);
-        origin = new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2);
-        hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2));
-
-        uname = Login.getUname();
-
-        sells = new Finance(new Vector2f((float) GamePanel.width / 2, (float) GamePanel.height / 2));
-        food = new Food(origin);
-        fishes = new Fish[50];
-
+    void initbtnImage(){
         Imgbuy_fish1 = GameStateManager.buybutton.getSubimage(0, 0, fishBtnSize, fishBtnSize);
         Imgbuy_fish2 = GameStateManager.buybutton.getSubimage(fishBtnSize, 0, fishBtnSize, fishBtnSize);
         Imgbuy_fish3 = GameStateManager.buybutton.getSubimage((fishBtnSize * 2), 0, fishBtnSize, fishBtnSize);
@@ -113,6 +68,23 @@ public class PlayState extends GameState{
         Hover_Imgbuy_fish6 = GameStateManager.buybutton.getSubimage(fishBtnSize * 5, fishBtnSize, fishBtnSize, fishBtnSize);
         Hover_Imgbuy_food = GameStateManager.buybutton.getSubimage(fishBtnSize * 6, fishBtnSize, fishBtnSize, fishBtnSize);
         Hover_Imgsell_fish = GameStateManager.buybutton.getSubimage(fishBtnSize * 7, fishBtnSize, fishBtnSize, fishBtnSize);
+    }
+
+
+    public PlayState(GameStateManager gsm){
+        super(gsm);
+        map = new Vector2f();
+        Vector2f.setWorldVar(map.x, map.y);
+        origin = new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2);
+        hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2));
+
+        uname = Login.getUname();
+
+        sells = new Finance(new Vector2f((float) GamePanel.width / 2, (float) GamePanel.height / 2));
+        food = new Food(origin);
+        fishes = new Fish[50];
+
+        initbtnImage();
 
         btnFish1 = new Button(Imgbuy_fish1, new Vector2f(middleX, bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
         btnFish2 = new Button(Imgbuy_fish2, new Vector2f(middleX + btnHoverSize, bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
@@ -203,83 +175,6 @@ public class PlayState extends GameState{
         }
 
     }
-
-//    @Override
-//    public void input(MouseHandler mouseIn, KeyHandler keyh){
-//
-//        if (isBuyingFood) {
-//            food.input(mouseIn);
-//        }
-//
-//        for (Fish fish : fishes) {
-//            if (fish != null) {
-//                fish.input(mouseIn);
-//            }
-//        }
-//
-//        btnFish1.input(mouseIn, keyh);
-//        btnFish2.input(mouseIn, keyh);
-//        btnFish3.input(mouseIn, keyh);
-//        btnFish4.input(mouseIn, keyh);
-//        btnFish5.input(mouseIn, keyh);
-//        btnFish6.input(mouseIn, keyh);
-//        btnBuyFood.input(mouseIn, keyh);
-//        btnSellFish.input(mouseIn, keyh);
-//
-//            hands.input(mouseIn);
-//            sells.input(mouseIn);
-//
-//
-//        keyh.escape.tick();
-//        if(keyh.escape.clicked){
-//            if (gsm.isStateActive(GameStateManager.TITLE)){
-//                gsm.pop(GameStateManager.TITLE);
-//            }else{
-//                gsm.add(GameStateManager.TITLE);
-//                gsm.pop(GameStateManager.PLAY);
-//            }
-//
-//        }
-//
-////        keyh.key1.tick();
-////        keyh.key2.tick();
-////        keyh.key3.tick();
-////        keyh.key4.tick();
-////        keyh.key5.tick();
-////        keyh.key6.tick();
-////
-////        if (Finance.money > 10) {
-////
-////            if (keyh.key1.clicked) {
-////                Fish AtlanticBass = new Fish(origin, "AtlanticBass", null , null);
-////                addFishToArray(AtlanticBass);
-////            }
-////            if (keyh.key2.clicked) {
-////
-////                Fish BlueGill = new Fish(origin, "BlueGill", null , null);
-////                addFishToArray(BlueGill);
-////            }
-////            if (keyh.key3.clicked) {
-////                Fish ClownFish = new Fish(origin, "ClownFish", null , null);
-////                addFishToArray(ClownFish);
-////            }
-////            if (keyh.key4.clicked) {
-////                Fish GoldenTench = new Fish(origin, "GoldenTench", null , null);
-////                addFishToArray(GoldenTench);
-////            }
-////            if (keyh.key5.clicked) {
-////                Fish Guppy = new Fish(origin, "Guppy", null , null);
-////                addFishToArray(Guppy);
-////            }
-////            if (keyh.key6.clicked) {
-////                Fish HIghFinBandedShark = new Fish(origin, "HIghFinBandedShark", null , null);
-////                addFishToArray(HIghFinBandedShark);
-////            }
-////
-////        }
-//
-//
-//    }
 
     @Override
     public void input(MouseHandler mouseIn, KeyHandler keyh) {

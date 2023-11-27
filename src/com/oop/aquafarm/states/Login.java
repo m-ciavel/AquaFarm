@@ -33,7 +33,7 @@ public class Login extends JFrame  implements ActionListener {
     private JPasswordField passPF;
     private JButton signupBtn, loginBtn, backBtn;
 
-    private String uname;
+    private static String uname;
     private int iterations = CRUD.getIterations();
 
 
