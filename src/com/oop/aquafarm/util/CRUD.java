@@ -87,6 +87,7 @@ public class CRUD {
             Fish fish = new Fish(PlayState.origin, fish_type, fish_name, gender, fish_size);
             PlayState.addFishToArray(fish);
         }
+
     }
 
 

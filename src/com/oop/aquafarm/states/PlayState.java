@@ -228,9 +228,6 @@ public class PlayState extends GameState{
         }
     }
 
-    public static Fish[] getFishArray(){
-        return fishes;
-    }
 
 
     public static void addFishToArray(Fish fish) {
