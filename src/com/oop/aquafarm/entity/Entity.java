@@ -17,7 +17,12 @@ public abstract class Entity  {
     public boolean yCol = false;
 //    public int x , y, initialX, initialY;
     public int dragX, dragY;
-    public BufferedImage openhand, closehand, fish_left, fish_right, sell, food_right ;
+    public BufferedImage openhand;
+    public BufferedImage closehand;
+    public BufferedImage fish_left;
+    public BufferedImage fish_right;
+    public BufferedImage sell;
+    public int fish_size ;
     public boolean clicked;
     public boolean dragged;
     public String direction;
