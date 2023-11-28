@@ -75,7 +75,7 @@ public class PlayState extends GameState{
         map = new Vector2f();
         Vector2f.setWorldVar(map.x, map.y);
         origin = new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2);
-        hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2));
+        hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2), "hand");
 
         uname = Login.getUname();
 
@@ -113,31 +113,26 @@ public class PlayState extends GameState{
         btnFish1.addEvent(e -> {
             Fish fish = new Fish(origin, "AtlanticBass", null, null,0);
             CRUD.addFish(con1, fish);
-//            addFishToArray(fish);
         });
 
 
         btnFish2.addEvent(e -> {
             Fish fish = new Fish(origin, "BlueGill", null, null, 0);
             CRUD.addFish(con1, fish);
-//            addFishToArray(fish);
         });
         btnFish3.addEvent(e -> {
             Fish fish = new Fish(origin, "Clownfish", null, null, 0);
             CRUD.addFish(con1, fish);
-//            addFishToArray(fish);
         });
 
         btnFish4.addEvent(e -> {
             Fish fish = new Fish(origin, "GoldenTench", null, null, 0);
             CRUD.addFish(con1, fish);
-//            addFishToArray(fish);
         });
 
         btnFish5.addEvent(e -> {
             Fish fish = new Fish(origin, "Guppy", null, null, 0);
             CRUD.addFish(con1, fish);
-//            addFishToArray(fish);
         });
 
 
@@ -204,8 +199,15 @@ public class PlayState extends GameState{
         for (Fish fish : fishes) {
             if (fish != null) {
                 fish.input(mouseIn);
+                try {
+                    CRUD.updateFish(PlayState.con1, fish);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
+
+
 
         btnFish1.input(mouseIn, keyh);
         btnFish2.input(mouseIn, keyh);

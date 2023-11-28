@@ -91,6 +91,11 @@ public class CRUD {
         System.out.println("Sold the fish for grandeur");
     }
 
+    public static void updateFish(dbConnection con1, Fish fish) throws SQLException {
+        String qudFish = "UPDATE userFishstatusTbl tstat INNER JOIN userfishinvtbl tinv ON tstat.userFishid = tinv.userFishid SET fish_size = " + fish.getFishsize() + " WHERE tinv.user_Name = '" + Login.getUname() + "' AND tstat.fish_name = '" + fish.getFishName() + "';";
+        con1.s.executeUpdate(qudFish);
+    }
+
     public static void getFish() throws SQLException {
         dbConnection con1 = new dbConnection();
         String qUFishes = "SELECT userFishInvTbl.userFishID, fishTbl.fish_type, userFishStatusTbl.fish_name, userFishStatusTbl.fish_gender, userFishStatusTbl.fish_size FROM userfishinvtbl JOIN fishtbl ON userfishinvtbl.fish_ID = fishtbl.fish_ID LEFT JOIN userFishStatusTbl ON userFishInvTbl.userFishID = userFishStatusTbl.userFishID WHERE user_Name = '" + Login.getUname() + "' ORDER BY userFishID;";

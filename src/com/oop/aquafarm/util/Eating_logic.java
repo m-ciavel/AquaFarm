@@ -3,7 +3,9 @@ package com.oop.aquafarm.util;
 import com.oop.aquafarm.audio.Music;
 import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.entity.Food;
+import com.oop.aquafarm.states.PlayState;
 
+import java.sql.SQLException;
 import java.util.Iterator;
 
 public class Eating_logic {
