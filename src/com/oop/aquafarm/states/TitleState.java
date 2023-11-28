@@ -29,6 +29,8 @@ public class TitleState extends GameState {
     private final Button btnPlay, btnSettings, btnExit;
 
 
+
+
     public TitleState(GameStateManager gsm) {
         super(gsm);
         Music.playMusic(Music.fpath);
@@ -51,8 +53,18 @@ public class TitleState extends GameState {
 
         btnPlay.addEvent(e -> {
             GameStateManager.pop(GameStateManager.TITLE);
-            Window.window.setVisible(false);
-            new Login(gsm).setVisible(true);
+            if(Login.loggedIn){
+                if (gsm.isStateActive(GameStateManager.PLAY)){
+                    GameStateManager.pop(GameStateManager.PLAY);
+                }else{
+                    gsm.add(GameStateManager.PLAY);
+                    GameStateManager.pop(GameStateManager.TITLE);
+                }
+            }else{
+                Window.window.setVisible(false);
+                new Login(gsm).setVisible(true);
+            }
+
         });
 
         btnSettings.addEvent(e -> {
@@ -76,11 +88,9 @@ public class TitleState extends GameState {
 
     @Override
     public void update(double time) {
-        System.out.println("clicked:" + Button.clicked);
-        System.out.println("pressed:" + Button.pressed);
-//        btnPlay.update(time);
-//        btnSettings.update(time);
-//        btnExit.update(time);
+//        System.out.println("clicked:" + Button.clicked);
+//        System.out.println("pressed:" + Button.pressed);
+
     }
 
     @Override
@@ -89,17 +99,6 @@ public class TitleState extends GameState {
         btnPlay.input(mouseIn, keyh);
         btnSettings.input(mouseIn, keyh);
         btnExit.input(mouseIn, keyh);
-
-        keyh.p.tick();
-        if(keyh.p.clicked){
-            if (gsm.isStateActive(GameStateManager.PLAY)){
-                GameStateManager.pop(GameStateManager.PLAY);
-            }else{
-                gsm.add(GameStateManager.PLAY);
-                GameStateManager.pop(GameStateManager.TITLE);
-            }
-
-        }
 
     }
 

@@ -4,6 +4,7 @@ package com.oop.aquafarm.states;
 import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.Window;
 import com.oop.aquafarm.graphics.SpriteSheet;
+import com.oop.aquafarm.ui.Button;
 import com.oop.aquafarm.util.CRUD;
 import com.oop.aquafarm.util.dbConnection;
 
@@ -47,7 +48,6 @@ public class Signup extends JFrame implements ActionListener {
     static String passSalt, passHash;
     private Date created_date;
     private int uid, age, dbID;
-    Color darkred = new Color(139, 0, 0);
 
     ImageIcon backBtnIcon = new ImageIcon("res/menubutton/arrow back.png");
 
@@ -80,8 +80,8 @@ public class Signup extends JFrame implements ActionListener {
         ageLbl.setBounds((GamePanel.width - ageLbl.getWidth())/6,420, 1000,60);
 
         notifLbl = new JLabel("",  SwingConstants.CENTER);
-        notifLbl.setBounds(0,480, 1000,30);
-        notifLbl.setForeground(new Color(139, 0, 0));
+        notifLbl.setBounds(0,480, GamePanel.width,30);
+        notifLbl.setForeground(Button.borderdarkred);
 
         signupBtn = new JButton("Sign up");
         signupBtn.setBounds((GamePanel.width / 2) - 100, 525, 200, 50);
@@ -188,25 +188,25 @@ public class Signup extends JFrame implements ActionListener {
             if(unameTF.getText().isEmpty() || passPF.getPassword().length == 0 || passPF.getPassword().length == 0 || ageTF.getText().isEmpty()){
                 notifLbl.setText("Please   fill   all   the   required   fields");
                 if(unameTF.getText().isEmpty()){
-                    unameTF.setBorder(new LineBorder(darkred,3));
+                    unameTF.setBorder(new LineBorder(Button.borderdarkred,3));
                 }else {
                     unameTF.setBorder(new LineBorder(Color.white,3));
                 }
 
                 if(passPF.getPassword().length == 0){
-                    passPF.setBorder(new LineBorder(darkred,3));
+                    passPF.setBorder(new LineBorder(Button.borderdarkred,3));
                 }else {
                     passPF.setBorder(new LineBorder(Color.white,3));
                 }
 
                 if(confpassPF.getPassword().length == 0){
-                    confpassPF.setBorder(new LineBorder(darkred,3));
+                    confpassPF.setBorder(new LineBorder(Button.borderdarkred,3));
                 }else {
                     confpassPF.setBorder(new LineBorder(Color.white,3));
                 }
 
                 if(ageTF.getText().isEmpty()){
-                    ageTF.setBorder(new LineBorder(darkred,3));
+                    ageTF.setBorder(new LineBorder(Button.borderdarkred,3));
                 }else {
                     ageTF.setBorder(new LineBorder(Color.white,3));
                 }
@@ -219,7 +219,7 @@ public class Signup extends JFrame implements ActionListener {
                         String qID = "SELECT * FROM users WHERE id=(SELECT max(ID) FROM users)";
                         ResultSet rs = con1.s.executeQuery(qID);
                         if(rs.next()){
-                            dbID = Integer.parseInt(rs.getString("ID"));
+                            dbID = rs.getInt("ID");
                             dbID++;
 //                            System.out.println(dbID);
                         }
@@ -242,15 +242,33 @@ public class Signup extends JFrame implements ActionListener {
                             ResultSet rsUser = con1.s.executeQuery(qUser);
                             if (rsUser.next()){
                                 notifLbl.setText("Username   already   taken");
-                                unameTF.setBorder(new LineBorder(darkred,3));
+                                unameTF.setBorder(new LineBorder(Button.borderdarkred,3));
                             }else{
-                                unameTF.setBorder(new LineBorder(Color.white,3));
-                                age = Integer.parseInt(ageTF.getText());
-                                created_date = new java.sql.Date(System.currentTimeMillis());
-                                uid = (int) CRUD.generate();
-                                CRUD.createUser(dbID, uid, uname, age, passSalt, passHash, created_date);
-                                this.dispose();
-                                new Login(gsm).setVisible(true);
+                                uid = (int) CRUD.generateUID();
+                                boolean uidExists = false;
+                                String quid = "SELECT * FROM users WHERE user_ID = '" + uid + "';";
+                                ResultSet rsuid = con1.s.executeQuery(quid);
+                                if (rsuid.next()){
+                                    do{
+                                        uid = (int) CRUD.generateUID();
+                                        rsuid = con1.s.executeQuery(quid);
+                                        uidExists = rsuid.next();
+                                    }while(uidExists);
+                                    if(!uidExists){
+                                        unameTF.setBorder(new LineBorder(Color.white,3));
+                                        age = Integer.parseInt(ageTF.getText());
+                                        created_date = new java.sql.Date(System.currentTimeMillis());
+                                        CRUD.createUser(con1, dbID, uid, uname, age, passSalt, passHash, created_date);
+                                    }
+                                }else{
+                                    unameTF.setBorder(new LineBorder(Color.white,3));
+                                    age = Integer.parseInt(ageTF.getText());
+                                    created_date = new java.sql.Date(System.currentTimeMillis());
+                                    CRUD.createUser(con1, dbID, uid, uname, age, passSalt, passHash, created_date);
+                                    this.dispose();
+                                    new Login(gsm).setVisible(true);
+                                }
+
                             }
 
 
@@ -282,7 +300,6 @@ public class Signup extends JFrame implements ActionListener {
         if(e.getSource() == backBtn){
             if (gsm.isStateActive(GameStateManager.TITLE)){
                 GameStateManager.pop(GameStateManager.TITLE);
-
             }else{
                 gsm.add(GameStateManager.TITLE);
                 Window.window.setVisible(true);

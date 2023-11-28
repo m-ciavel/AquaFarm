@@ -3,6 +3,7 @@ package com.oop.aquafarm.states;
 import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.Window;
 import com.oop.aquafarm.graphics.SpriteSheet;
+import com.oop.aquafarm.ui.Button;
 import com.oop.aquafarm.util.CRUD;
 import com.oop.aquafarm.util.dbConnection;
 
@@ -32,10 +33,11 @@ public class Login extends JFrame  implements ActionListener {
     private JPasswordField passPF;
     private JButton signupBtn, loginBtn, backBtn;
 
-    private String uname;
+    private static String uname;
     private int iterations = CRUD.getIterations();
-    private static String passInDB;
-    Color darkred = new Color(139, 0, 0);
+    dbConnection con1 = new dbConnection();
+    public static boolean loggedIn;
+
 
     ImageIcon backBtnIcon = new ImageIcon("res/menubutton/arrow back.png");
     GameStateManager gsm;
@@ -52,6 +54,7 @@ public class Login extends JFrame  implements ActionListener {
         background = SpriteSheet.paintbg(background);
         setContentPane(new SpriteSheet.ImagePanel(background));
 
+        loggedIn = false;
 
 
         loginLbl = new JLabel("LOGIN");
@@ -64,8 +67,8 @@ public class Login extends JFrame  implements ActionListener {
         passLbl.setBounds((GamePanel.width - passLbl.getWidth())/6,360, 1000,60);
 
         notifLbl = new JLabel("",  SwingConstants.CENTER);
-        notifLbl.setBounds(0,480, 1000,30);
-        notifLbl.setForeground(new Color(139, 0, 0));
+        notifLbl.setBounds(0,480, GamePanel.width,30);
+        notifLbl.setForeground(Button.borderdarkred);
 
 
         loginBtn = new JButton("Login");
@@ -145,13 +148,13 @@ public class Login extends JFrame  implements ActionListener {
             if(unameTF.getText().isEmpty() || passPF.getPassword().length == 0 ){
                 notifLbl.setText("Please   fill   all   the   required   fields");
                 if(unameTF.getText().isEmpty()){
-                    unameTF.setBorder(new LineBorder(darkred,3));
+                    unameTF.setBorder(new LineBorder(Button.borderdarkred,3));
                 }else {
                     unameTF.setBorder(new LineBorder(Color.white,3));
                 }
 
                 if(passPF.getPassword().length == 0){
-                    passPF.setBorder(new LineBorder(darkred,3));
+                    passPF.setBorder(new LineBorder(Button.borderdarkred,3));
                 }else {
                     passPF.setBorder(new LineBorder(Color.white,3));
                 }
@@ -159,15 +162,13 @@ public class Login extends JFrame  implements ActionListener {
             }else {
                 // create connection
                 try {
-                    dbConnection con1 = new dbConnection();
+
                     uname = unameTF.getText();
                     String qUser = "SELECT * FROM userTable WHERE user_Name = '" + uname + "';";
                     ResultSet rs = con1.s.executeQuery(qUser);
                     if (rs.next()) {
                         String pSalt = rs.getString("pass_salt");
                         String pHash = rs.getString("pass_hash");
-//                        passInDB =  iterations + ":" + pSalt + ":" + pHash;
-//                        System.out.println(passInDB);
 
                         try {
                             boolean matched = CRUD.validatePassword(Arrays.toString(passPF.getPassword()), iterations + ":" + pSalt + ":" + pHash);
@@ -180,13 +181,15 @@ public class Login extends JFrame  implements ActionListener {
                                     gsm.add(GameStateManager.PLAY);
                                     gsm.pop(GameStateManager.TITLE);
                                 }
+                                loggedIn = true;
+                                CRUD.logIn(con1, uname, true);
                                 this.dispose();
                                 Window.window.setVisible(true);
                             }else if (!matched){
                                 System.out.println("Password does not match");
                                 notifLbl.setText("Username   and   password   does   not   seem   to   match");
-                                unameTF.setBorder(new LineBorder(darkred,3));
-                                passPF.setBorder(new LineBorder(darkred,3));
+                                unameTF.setBorder(new LineBorder(Button.borderdarkred,3));
+                                passPF.setBorder(new LineBorder(Button.borderdarkred,3));
                             }
                         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
                             throw new RuntimeException(ex);
@@ -194,7 +197,7 @@ public class Login extends JFrame  implements ActionListener {
 
                     } else{
                         notifLbl.setText("No   such   user   in   database");
-                        unameTF.setBorder(new LineBorder(darkred,3));
+                        unameTF.setBorder(new LineBorder(Button.borderdarkred,3));
                     }
 
                 } catch (Exception ex) {
@@ -221,6 +224,9 @@ public class Login extends JFrame  implements ActionListener {
 
     }
 
+    public static String getUname(){
+        return uname;
+    }
 
 
 }

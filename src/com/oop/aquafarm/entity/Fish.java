@@ -2,9 +2,7 @@ package com.oop.aquafarm.entity;
 
 import com.oop.aquafarm.graphics.Fish_movement;
 import com.oop.aquafarm.graphics.SpriteSheet;
-import com.oop.aquafarm.states.PlayState;
 import com.oop.aquafarm.util.*;
-import com.oop.aquafarm.util.AABB;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,8 +10,6 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static com.oop.aquafarm.states.PlayState.origin;
 
 public class Fish extends Entity {
     private final Fish_movement fishMovement;
@@ -33,21 +29,22 @@ public class Fish extends Entity {
 
     public boolean isBreedable;
 
-    private int mouseX;
-    private int mouseY;
-    private int mouseB;
-
     private final int originalSpeed;
     private final int increasedSpeed;
     private final Timer speedIncreaseTimer;
 
     private Timer hungerTime;
 
-    private String gender;
+    private String fish_type, fish_name, gender;
+    private int fish_size;
 
     public Fish(Vector2f origin, String fish_type, String fish_name, String gender, int fish_size) {
         super(origin);
 
+        this.fish_type = fish_type;
+        this.fish_name = fish_name;
+        this.gender = gender;
+        this.fish_size = fish_size;
 
         fishMovement = new Fish_movement(1280, 700);
         fishMovement.setInitialPosition(origin);
@@ -81,9 +78,14 @@ public class Fish extends Entity {
             }
         }, 2000);
 
-        addGender(gender);
+
+        if (gender == null){
+            addGender(gender);
+        }
+
 
     }
+
 
 
     public void seek_food(java.util.List<Food.FoodLocation> foodLocations) {
@@ -160,14 +162,29 @@ public class Fish extends Entity {
 
         g2.setColor(Color.BLACK);
         g2.drawString("Size: " + fish_size, fishX, fishY - 20);
+
+        String gender = getFishGender();
+        if (gender != null) {
+            BufferedImage genderImg = SpriteSheet.setup("genders", gender);
+
+            double scale = 0.4;
+
+            int scaledWidth = (int) (genderImg.getWidth() * scale);
+            int scaledHeight = (int) (genderImg.getHeight() * scale);
+
+            int genderX = getFishX() + (getFishWidth() - scaledWidth) / 2;
+            int genderY = getFishY() - 10;
+
+            g2.drawImage(genderImg, genderX + 30, genderY, scaledWidth, scaledHeight, null);
+        }
     }
 
 
     @Override
     public void input(MouseHandler mouseIn) {
-        this.mouseX = mouseIn.getX();
-        this.mouseY = mouseIn.getY();
-        this.mouseB = mouseIn.getButton();
+        int mouseX = mouseIn.getX();
+        int mouseY = mouseIn.getY();
+        int mouseB = mouseIn.getButton();
 
 
         if (mouseB == 1) {
@@ -251,9 +268,24 @@ public class Fish extends Entity {
         }
     }
 
-    public String getGender() {
+
+    public String getFishtype(){
+        return fish_type;
+    }
+    public String getFishName(){
+        return fish_name;
+    }
+    public String getFishGender() {
         return gender;
     }
+    public int getFishsize(){
+        return fish_size;
+    }
+
+//    public void getFish(){
+//
+//        System.out.println(getFishtype() + ", " + getFishName() + ", " + getFishGender() + ", " + getFish_size());
+//    }
 
 
     public int getFishWidth() {
