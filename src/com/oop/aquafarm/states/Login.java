@@ -11,10 +11,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import java.awt.FlowLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -48,6 +45,9 @@ public class Login extends JFrame  implements ActionListener {
         setLayout(new FlowLayout());
         setSize(GamePanel.width, GamePanel.height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("res/hand/cursor.open.png").getImage(), new Point(0,0),"custom"));
+
         setResizable(false);
         setLocationRelativeTo(null);
         BufferedImage background  = null;
