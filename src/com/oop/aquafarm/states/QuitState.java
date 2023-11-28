@@ -1,6 +1,7 @@
 package com.oop.aquafarm.states;
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.entity.Hand;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.ui.Button;
 import com.oop.aquafarm.util.KeyHandler;
@@ -12,6 +13,7 @@ import java.awt.image.BufferedImage;
 
 public class QuitState extends GameState {
 
+    Hand hands;
     private final BufferedImage imgButtonExit;
     private final BufferedImage imgHoverExit;
     private final int btnWidth = 144;
@@ -22,6 +24,7 @@ public class QuitState extends GameState {
 
     public QuitState(GameStateManager gsm) {
         super(gsm);
+        hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2), "cursor");
 
         imgButtonExit = GameStateManager.button.getSubimage(btnWidth*2, 0, btnWidth, btnHeight);
         imgHoverExit = GameStateManager.button.getSubimage(btnWidth*2, btnHeight, btnWidth, btnHeight);
@@ -34,12 +37,13 @@ public class QuitState extends GameState {
 
     @Override
     public void update(double time) {
-
+        hands.update(time);
     }
 
     @Override
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
         btnExit.input(mouseIn, keyh);
+        hands.input(mouseIn);
     }
 
     @Override
@@ -49,5 +53,6 @@ public class QuitState extends GameState {
         g.drawImage(background, 0, 0, null);
 
         btnExit.render(g);
+        hands.render(g);
     }
 }
