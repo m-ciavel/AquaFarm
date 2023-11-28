@@ -36,6 +36,7 @@ public class Login extends JFrame  implements ActionListener {
     private static String uname;
     private int iterations = CRUD.getIterations();
     dbConnection con1 = new dbConnection();
+    public static boolean loggedIn;
 
 
     ImageIcon backBtnIcon = new ImageIcon("res/menubutton/arrow back.png");
@@ -53,6 +54,7 @@ public class Login extends JFrame  implements ActionListener {
         background = SpriteSheet.paintbg(background);
         setContentPane(new SpriteSheet.ImagePanel(background));
 
+        loggedIn = false;
 
 
         loginLbl = new JLabel("LOGIN");
@@ -179,6 +181,7 @@ public class Login extends JFrame  implements ActionListener {
                                     gsm.add(GameStateManager.PLAY);
                                     gsm.pop(GameStateManager.TITLE);
                                 }
+                                loggedIn = true;
                                 CRUD.logIn(con1, uname, true);
                                 this.dispose();
                                 Window.window.setVisible(true);

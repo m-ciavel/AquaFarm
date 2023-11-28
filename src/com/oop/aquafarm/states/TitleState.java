@@ -53,8 +53,18 @@ public class TitleState extends GameState {
 
         btnPlay.addEvent(e -> {
             GameStateManager.pop(GameStateManager.TITLE);
-            Window.window.setVisible(false);
-            new Login(gsm).setVisible(true);
+            if(Login.loggedIn){
+                if (gsm.isStateActive(GameStateManager.PLAY)){
+                    GameStateManager.pop(GameStateManager.PLAY);
+                }else{
+                    gsm.add(GameStateManager.PLAY);
+                    GameStateManager.pop(GameStateManager.TITLE);
+                }
+            }else{
+                Window.window.setVisible(false);
+                new Login(gsm).setVisible(true);
+            }
+
         });
 
         btnSettings.addEvent(e -> {
@@ -89,17 +99,6 @@ public class TitleState extends GameState {
         btnPlay.input(mouseIn, keyh);
         btnSettings.input(mouseIn, keyh);
         btnExit.input(mouseIn, keyh);
-
-//        keyh.p.tick();
-//        if(keyh.p.clicked){
-//            if (gsm.isStateActive(GameStateManager.PLAY)){
-//                GameStateManager.pop(GameStateManager.PLAY);
-//            }else{
-//                gsm.add(GameStateManager.PLAY);
-//                GameStateManager.pop(GameStateManager.TITLE);
-//            }
-//
-//        }
 
     }
 

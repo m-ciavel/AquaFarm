@@ -185,6 +185,17 @@ public class PlayState extends GameState{
 
     @Override
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
+        keyh.escape.tick();
+        if(keyh.escape.clicked){
+            if (gsm.isStateActive(GameStateManager.TITLE)){
+                GameStateManager.pop(GameStateManager.TITLE);
+            }else{
+                gsm.add(GameStateManager.TITLE);
+                GameStateManager.pop(GameStateManager.PLAY);
+            }
+            System.out.println(Login.loggedIn);
+        }
+
         if (isBuyingFood) {
             food.input(mouseIn);
         }

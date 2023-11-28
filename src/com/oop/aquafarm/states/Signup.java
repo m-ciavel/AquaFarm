@@ -300,7 +300,6 @@ public class Signup extends JFrame implements ActionListener {
         if(e.getSource() == backBtn){
             if (gsm.isStateActive(GameStateManager.TITLE)){
                 GameStateManager.pop(GameStateManager.TITLE);
-
             }else{
                 gsm.add(GameStateManager.TITLE);
                 Window.window.setVisible(true);
