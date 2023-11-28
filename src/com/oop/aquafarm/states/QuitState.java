@@ -6,10 +6,14 @@ import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.ui.Button;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
+import com.oop.aquafarm.util.ScaledImage;
 import com.oop.aquafarm.util.Vector2f;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class QuitState extends GameState {
 
@@ -51,6 +55,25 @@ public class QuitState extends GameState {
         BufferedImage background  = null;
         background = SpriteSheet.paintbg(background);
         g.drawImage(background, 0, 0, null);
+
+//        BufferedImage octopus = SpriteSheet.setup("background", "octo");
+//        octopus = ScaledImage.scaledImage(octopus, (GamePanel.width / 3) * 2, ((GamePanel.width/2) * (octopus.getHeight()/octopus.getWidth())));
+
+
+
+//        File octo = new File("res/background/octo.png");
+//        try {
+//            BufferedImage octopus = ImageIO.read(octo);
+//            int octwidth = (GamePanel.width / 3) * 2;
+//            int octheight = (GamePanel.width/2) * (octopus.getHeight()/octopus.getWidth());
+//            octopus = ScaledImage.scaledImage(octopus, octwidth, octheight);
+//            g.drawImage(octopus, GamePanel.width - octopus.getWidth(), GamePanel.height - octopus.getHeight(), null);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            System.out.println("ERROR: could not load file: " + octo);
+//        }
+
+
 
         btnExit.render(g);
         hands.render(g);
