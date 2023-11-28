@@ -1,6 +1,7 @@
 package com.oop.aquafarm.ui;
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.audio.Music;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.AABB;
 import com.oop.aquafarm.util.KeyHandler;
@@ -30,6 +31,8 @@ public class Button {
     public static boolean clicked = false;
     public static boolean pressed = false;
     private boolean canHover = true;
+
+    private boolean hoverSoundPlayed = false;
 
     private float pressedtime;
 
@@ -166,6 +169,7 @@ public class Button {
 
             if (canHover && !hovering) {
                 hover(hoverSize);
+                Music.playHoverSound();
             }
             if (mouseIn.getButton() == 1 && !clicked) {
                 clicked = true;
@@ -189,6 +193,7 @@ public class Button {
             hover(-hoverSize);
             hovering = false;
         }
+
 
 
     }

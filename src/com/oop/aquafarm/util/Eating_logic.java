@@ -1,5 +1,6 @@
 package com.oop.aquafarm.util;
 
+import com.oop.aquafarm.audio.Music;
 import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.entity.Food;
 
@@ -21,6 +22,7 @@ public class Eating_logic {
                     fish.eatCounter++;
                     fish.increaseSize();
                     fish.isHungry = false;
+                    Music.playEatSound();
 
                     return;
                 }

@@ -2,6 +2,7 @@ package com.oop.aquafarm.states;
 
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.audio.Music;
 import com.oop.aquafarm.entity.Finance;
 import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.entity.Food;
@@ -74,7 +75,7 @@ public class PlayState extends GameState{
         map = new Vector2f();
         Vector2f.setWorldVar(map.x, map.y);
         origin = new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2);
-        hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2), "hand");
+        hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2));
 
         uname = Login.getUname();
 
