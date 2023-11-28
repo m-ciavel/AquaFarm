@@ -74,7 +74,7 @@ public class PlayState extends GameState{
         map = new Vector2f();
         Vector2f.setWorldVar(map.x, map.y);
         origin = new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2);
-        hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2));
+        hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2), "hand");
 
         uname = Login.getUname();
 

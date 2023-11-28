@@ -11,19 +11,19 @@ import java.awt.image.BufferedImage;;
 public class Hand extends Entity{
 
     private int imageX, imageY;
-    public Hand(Vector2f origin) {
+    public Hand(Vector2f origin, String image) {
         super(origin);
         setDefaultValues();
-        loadGodHandImages();
+        loadGodHandImages(image);
 
     }
     public void setDefaultValues() {
         clicked = false;
     }
-    private void loadGodHandImages() {
+    private void loadGodHandImages(String image) {
         String foldername = "hand";
-        openhand = SpriteSheet.setup(foldername, foldername + ".open");
-        closehand = SpriteSheet.setup(foldername,foldername + ".close");
+        openhand = SpriteSheet.setup(foldername, image + ".open");
+        closehand = SpriteSheet.setup(foldername,image + ".close");
     }
     public void update(double time){
 
