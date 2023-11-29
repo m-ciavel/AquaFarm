@@ -8,8 +8,11 @@ import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
 import com.oop.aquafarm.util.Vector2f;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -158,7 +161,7 @@ public class Button {
 
 
     public interface ClickedEvent {
-        void action(int mouseButton) throws SQLException;
+        void action(int mouseButton) throws SQLException, UnsupportedAudioFileException, LineUnavailableException, IOException;
     }
 
 
@@ -180,7 +183,7 @@ public class Button {
                 for (int i = 0; i < events.size(); i++) {
                     try {
                         events.get(i).action(1);
-                    } catch (SQLException e) {
+                    } catch (SQLException | UnsupportedAudioFileException | LineUnavailableException | IOException e) {
                         throw new RuntimeException(e);
                     }
                 }

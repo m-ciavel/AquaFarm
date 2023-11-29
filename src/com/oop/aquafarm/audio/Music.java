@@ -1,16 +1,16 @@
 package com.oop.aquafarm.audio;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
+import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
 public class Music {
 
     private static Clip clip;
-
+    private static String location;
+    static Long currentFrame;
     public static String fpath = "res/audio/Les Petits Poissons Dans l'Eau Instrumental.wav";
+    public static String quitfpath = "res/audio/Poor Unfortunate Souls  Film Versions Instrumental 1.wav";
 
     private static FloatControl musicVolumeControl;
 
@@ -22,6 +22,7 @@ public class Music {
         File audioFile = new File(location);
         try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile)) {
             Clip clip = AudioSystem.getClip();
+//            Music.clip = clip;
             clip.open(audioInputStream);
             return clip;
         }
@@ -41,10 +42,12 @@ public class Music {
 
     public static void playMusic(String location) {
         try {
+            Music.location = location;
             Clip clip = createClip(location);
             musicVolumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            clip.start();
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
+            Music.clip = clip;
+            startMusic(clip);
+            System.out.println("Playing: " + location);
         } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
         }
@@ -55,12 +58,18 @@ public class Music {
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
-    public static void stopMusic(Clip clip){
-        clip.close();
+    public static void stopMusic(){
+        Music.getClip().stop();
+        Music.getClip().close();
+        System.out.println("Stopped playing: " + location);
+    }
+
+    public static String getLocation(){
+        return Music.location;
     }
 
     public static Clip getClip(){
-        return clip;
+        return Music.clip;
     }
 
     public static void playsound(String location) {

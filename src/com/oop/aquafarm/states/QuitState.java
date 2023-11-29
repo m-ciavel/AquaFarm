@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class QuitState extends GameState {
 
@@ -31,8 +32,8 @@ public class QuitState extends GameState {
         super(gsm);
         hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2), "cursor");
 
-        Music.stopMusic(Music.getClip());
-
+        Music.stopMusic();
+        Music.playMusic(Music.quitfpath);
 
         imgButtonExit = GameStateManager.button.getSubimage(btnWidth*2, 0, btnWidth, btnHeight);
         imgHoverExit = GameStateManager.button.getSubimage(btnWidth*2, btnHeight, btnWidth, btnHeight);
@@ -51,6 +52,7 @@ public class QuitState extends GameState {
         btnLogout.addHoverImage(btnLogout.createButton(imgHoverLogout, newbtnWidth, newbtnHeight));
         btnExit.addHoverImage(btnExit.createButton(imgHoverExit, newbtnWidth, newbtnHeight));
 
+
         btnBack.addEvent(e -> {
             if (gsm.isStateActive(GameStateManager.TITLE)){
                 GameStateManager.pop(GameStateManager.TITLE);
@@ -58,6 +60,7 @@ public class QuitState extends GameState {
                 gsm.add(GameStateManager.TITLE);
                 GameStateManager.pop(GameStateManager.QUIT);
             }
+            Music.stopMusic();
         });
 
         btnLogout.addEvent(e -> {
@@ -69,11 +72,13 @@ public class QuitState extends GameState {
                 gsm.add(GameStateManager.TITLE);
                 GameStateManager.pop(GameStateManager.QUIT);
             }
+            Music.stopMusic();
         });
 
         btnExit.addEvent(e -> {
             System.exit(0);
         });
+
     }
 
     @Override
