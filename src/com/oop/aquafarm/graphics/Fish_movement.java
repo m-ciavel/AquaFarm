@@ -20,11 +20,15 @@ public class Fish_movement {
     private String currentDirection;
 
     public Fish_movement(int screenWidth, int screenHeight) {
-
         this.maxX = screenWidth;
         this.maxY = screenHeight;
-        setRandomDestination();
-        speed = 3; // Default speed
+        setRandomInitialPosition();
+        speed = 3;
+    }
+
+    public void setRandomInitialPosition() {
+        fishX = random.nextInt(maxX);
+        fishY = random.nextInt(maxY+20);
     }
 
     public void setRandomDestination() {
@@ -43,6 +47,7 @@ public class Fish_movement {
     public void setInitialPosition(Vector2f origin) {
         this.origin = origin;
         setRandomDestination();
+        setRandomInitialPosition();
     }
 
     public void move() {
@@ -50,29 +55,28 @@ public class Fish_movement {
                 (destinationY - fishY) * (destinationY - fishY));
 
         if (distance < 3.0) {
-            // Fish is very close to the destination, set new random destination
             setRandomDestination();
         } else {
             double ratio = speed / distance;
             int deltaX = (int) ((destinationX - fishX) * ratio);
             int deltaY = (int) ((destinationY - fishY) * ratio);
 
-            if (fishX + deltaX < 0 || fishX + deltaX > maxX || fishY + deltaY < 0 || fishY + deltaY > maxY) {
-
+            if (fishX + deltaX < 0 || fishX + deltaX > maxX || fishY + deltaY < 20 || fishY + deltaY > 700) {
                 setRandomDestination();
                 updateDirection();
-
             } else {
                 int waddleOffsetX = (int) (2 * Math.sin(System.currentTimeMillis() * 0.002));
                 int waddleOffsetY = (int) (2 * Math.cos(System.currentTimeMillis() * 0.002));
 
                 fishX += deltaX + waddleOffsetX;
-                fishY += deltaY + waddleOffsetY;
+                fishY = Math.min(700, Math.max(20, fishY + deltaY + waddleOffsetY));
             }
 
             updateDirection();
         }
     }
+
+
 
     private void updateDirection() {
         if (destinationX < fishX) {

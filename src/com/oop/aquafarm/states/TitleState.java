@@ -35,6 +35,7 @@ public class TitleState extends GameState {
 
 
     public TitleState(GameStateManager gsm) {
+
         super(gsm);
         hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2), "cursor");
 

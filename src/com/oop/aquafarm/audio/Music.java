@@ -4,6 +4,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.File;
+import java.io.IOException;
 
 public class Music {
 
@@ -11,8 +12,19 @@ public class Music {
 
     public static String fpath = "res/audio/Les Petits Poissons Dans l'Eau Instrumental.wav";
 
-    public Music() {
-        // Default constructor
+    private static FloatControl musicVolumeControl;
+
+    private Music() {
+        // Private constructor to prevent instantiation
+    }
+
+    private static Clip createClip(String location) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        File audioFile = new File(location);
+        try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile)) {
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            return clip;
+        }
     }
 
     public static void playEatSound() {
@@ -28,18 +40,12 @@ public class Music {
     }
 
     public static void playMusic(String location) {
-        File musicPath = new File(location);
         try {
-            if (musicPath.exists()) {
-                AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
-                Clip clip = AudioSystem.getClip();
-                clip.open(audioInput);
-                startMusic(clip);
-                Music.clip = clip;
-            } else {
-                System.out.println("ERROR: could not load file: " + musicPath);
-            }
-        } catch (Exception e) {
+            Clip clip = createClip(location);
+            musicVolumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            clip.start();
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -58,18 +64,22 @@ public class Music {
     }
 
     public static void playsound(String location) {
-        File soundPath = new File(location);
         try {
-            if (soundPath.exists()) {
-                AudioInputStream audioInput = AudioSystem.getAudioInputStream(soundPath);
-                Clip clip = AudioSystem.getClip();
-                clip.open(audioInput);
-                clip.start();
-            } else {
-                System.out.println("ERROR: could not load file: " + soundPath);
-            }
-        } catch (Exception e) {
+            Clip clip = createClip(location);
+            clip.start();
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
         }
     }
+
+
+        public static void setVolume(int percent) {
+            if (musicVolumeControl != null) {
+
+                float volumeValue = (float) (Math.log10(percent / 100.0) * 20);
+                volumeValue = Math.max(volumeValue, -100);
+
+                musicVolumeControl.setValue(volumeValue);
+            }
+        }
 }
