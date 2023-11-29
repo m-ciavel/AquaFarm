@@ -8,6 +8,7 @@ import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.entity.Food;
 import com.oop.aquafarm.entity.Hand;
 import com.oop.aquafarm.graphics.CFont;
+import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.ui.Button;
 import com.oop.aquafarm.util.*;
 
@@ -30,11 +31,11 @@ public class PlayState extends GameState{
     Finance sells;
     private String uname;
 
-    private BufferedImage Imgbuy_fish1, Imgbuy_fish2, Imgbuy_fish3, Imgbuy_fish4, Imgbuy_fish5, Imgbuy_fish6, Imgbuy_food, Imgsell_fish;
+    private BufferedImage Img_mainmenu, Imgbuy_fish1, Imgbuy_fish2, Imgbuy_fish3, Imgbuy_fish4, Imgbuy_fish5, Imgbuy_fish6, Imgbuy_food, Imgsell_fish;
 
-    private BufferedImage Hover_Imgbuy_fish1, Hover_Imgbuy_fish2, Hover_Imgbuy_fish3, Hover_Imgbuy_fish4, Hover_Imgbuy_fish5, Hover_Imgbuy_fish6, Hover_Imgbuy_food, Hover_Imgsell_fish;
+    private BufferedImage Hover_Img_mainmenu, Hover_Imgbuy_fish1, Hover_Imgbuy_fish2, Hover_Imgbuy_fish3, Hover_Imgbuy_fish4, Hover_Imgbuy_fish5, Hover_Imgbuy_fish6, Hover_Imgbuy_food, Hover_Imgsell_fish;
 
-    private final Button btnFish1, btnFish2, btnFish3, btnFish4, btnFish5, btnFish6, btnBuyFood, btnSellFish;
+    private final Button btnmainmenu, btnFish1, btnFish2, btnFish3, btnFish4, btnFish5, btnFish6, btnBuyFood, btnSellFish;
 
     private int fishBtnSize = 128;
 //    private int fishBtnNewSize = GamePanel.width / 10;
@@ -51,6 +52,7 @@ public class PlayState extends GameState{
     private boolean isSellingFish = false;
 
     private void initbtnImage(){
+        Img_mainmenu = GameStateManager.mainmenubtn.getSubimage(0, 0, 50, 50);
         Imgbuy_fish1 = GameStateManager.buybutton.getSubimage(0, 0, fishBtnSize, fishBtnSize);
         Imgbuy_fish2 = GameStateManager.buybutton.getSubimage(fishBtnSize, 0, fishBtnSize, fishBtnSize);
         Imgbuy_fish3 = GameStateManager.buybutton.getSubimage((fishBtnSize * 2), 0, fishBtnSize, fishBtnSize);
@@ -60,6 +62,7 @@ public class PlayState extends GameState{
         Imgbuy_food = GameStateManager.buybutton.getSubimage((fishBtnSize * 6), 0, fishBtnSize, fishBtnSize);
         Imgsell_fish = GameStateManager.buybutton.getSubimage((fishBtnSize * 7), 0, fishBtnSize, fishBtnSize);
 
+        Hover_Img_mainmenu = GameStateManager.mainmenubtn.getSubimage(0, 0, 50, 50);
         Hover_Imgbuy_fish1 = GameStateManager.buybutton.getSubimage(0, fishBtnSize, fishBtnSize, fishBtnSize);
         Hover_Imgbuy_fish2 = GameStateManager.buybutton.getSubimage(fishBtnSize, fishBtnSize, fishBtnSize, fishBtnSize);
         Hover_Imgbuy_fish3 = GameStateManager.buybutton.getSubimage(fishBtnSize * 2, fishBtnSize, fishBtnSize, fishBtnSize);
@@ -91,6 +94,7 @@ public class PlayState extends GameState{
         }
         initbtnImage();
 
+        btnmainmenu = new Button(Img_mainmenu, new Vector2f(GamePanel.width - 32, 28), 30, 30);
         btnFish1 = new Button(Imgbuy_fish1, new Vector2f(middleX, bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
         btnFish2 = new Button(Imgbuy_fish2, new Vector2f(middleX + btnSpacing, bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
         btnFish3 = new Button(Imgbuy_fish3, new Vector2f(middleX + (btnSpacing*2), bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
@@ -100,6 +104,7 @@ public class PlayState extends GameState{
         btnBuyFood = new Button(Imgbuy_food, new Vector2f(middleX + (btnSpacing*6), bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
         btnSellFish = new Button(Imgsell_fish, new Vector2f(middleX + (btnSpacing*7), bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
 
+        btnmainmenu.addHoverImage(btnFish1.createButton(Hover_Img_mainmenu, 45 , 45));
         btnFish1.addHoverImage(btnFish1.createButton(Hover_Imgbuy_fish1, smallFishBtnNewSize , smallFishBtnNewSize));
         btnFish2.addHoverImage(btnFish2.createButton(Hover_Imgbuy_fish2, smallFishBtnNewSize, smallFishBtnNewSize));
         btnFish3.addHoverImage(btnFish3.createButton(Hover_Imgbuy_fish3, smallFishBtnNewSize, smallFishBtnNewSize));
@@ -110,9 +115,13 @@ public class PlayState extends GameState{
         btnSellFish.addHoverImage(btnSellFish.createButton(Hover_Imgsell_fish, smallFishBtnNewSize, smallFishBtnNewSize));
 
 
-        btnFish1.addEvent(e -> {
-            Fish fish = new Fish(origin, "AtlanticBass", null, null,0);
-            CRUD.addFish(con1, fish);
+        btnmainmenu.addEvent(e -> {
+//            if (gsm.isStateActive(GameStateManager.SETTINGS)){
+//                GameStateManager.pop(GameStateManager.SETTINGS);
+//            }else{
+//                gsm.add(GameStateManager.SETTINGS);
+//                GameStateManager.pop(GameStateManager.PLAY);
+//            }
         });
 
 
@@ -120,6 +129,7 @@ public class PlayState extends GameState{
             Fish fish = new Fish(origin, "BlueGill", null, null, 0);
             CRUD.addFish(con1, fish);
         });
+
         btnFish3.addEvent(e -> {
             Fish fish = new Fish(origin, "Clownfish", null, null, 0);
             CRUD.addFish(con1, fish);
@@ -209,6 +219,7 @@ public class PlayState extends GameState{
 
 
 
+        btnmainmenu.input(mouseIn, keyh);
         btnFish1.input(mouseIn, keyh);
         btnFish2.input(mouseIn, keyh);
         btnFish3.input(mouseIn, keyh);
@@ -277,10 +288,13 @@ public class PlayState extends GameState{
 
     @Override
     public void render(Graphics2D g) {
-        g.setColor(new Color(14, 135, 204));
-        g.fillRect(0,0, GamePanel.width, GamePanel.height);
+        BufferedImage background  = null;
+        background = SpriteSheet.paintbg(background);
+        g.drawImage(background, 0, 0, null);
+        g.setColor(new Color(1, 19, 50));
+        g.fillRect(0,0, GamePanel.width, 50);
 
-        CFont user = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 32, 32);
+        CFont user = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 32, 35);
         user.drawString(g, uname);
 
         CFont fps = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, GamePanel.width - 100, GamePanel.height - 32);
@@ -289,7 +303,7 @@ public class PlayState extends GameState{
 //        CFont tps = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 32, GamePanel.height - 32);
 //        tps.drawString(g,GamePanel.oldTickCount + " TPS");
 
-        CFont money = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 1100, 32);
+        CFont money = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 1100, 35);
         int userMoney;
         try {
             userMoney = CRUD.getMoney(con1);
@@ -300,6 +314,7 @@ public class PlayState extends GameState{
 
         food.render(g);
 
+        btnmainmenu.render(g);
         btnFish1.render(g);
         btnFish2.render(g);
         btnFish3.render(g);
@@ -309,16 +324,17 @@ public class PlayState extends GameState{
         btnBuyFood.render(g);
         btnSellFish.render(g);
 
-        if (isSellingFish) {
-            sells.render(g);
-        } else {
-            hands.render(g);
-        }
 
         for (Fish fish : fishes) {
             if (fish != null) {
                 fish.render(g);
             }
+        }
+
+        if (isSellingFish) {
+            sells.render(g);
+        } else {
+            hands.render(g);
         }
 
     }

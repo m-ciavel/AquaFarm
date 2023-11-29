@@ -37,7 +37,6 @@ public class TitleState extends GameState {
     public TitleState(GameStateManager gsm) {
         super(gsm);
         hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2), "cursor");
-        Music.playMusic(Music.fpath);
 
         imgButtonPlay = GameStateManager.button.getSubimage(0, 0, btnWidth, btnHeight);
         imgButtonSettings = GameStateManager.button.getSubimage(btnWidth,0, btnWidth, btnHeight);
@@ -88,6 +87,8 @@ public class TitleState extends GameState {
                 GameStateManager.pop(GameStateManager.TITLE);
             }
         });
+
+        Music.playMusic(Music.fpath);
     }
 
     @Override

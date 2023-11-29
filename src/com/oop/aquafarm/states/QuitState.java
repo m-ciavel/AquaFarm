@@ -19,13 +19,13 @@ import java.io.IOException;
 public class QuitState extends GameState {
 
     Hand hands;
-    private final BufferedImage imgButtonExit;
-    private final BufferedImage imgHoverExit;
+    private final BufferedImage imgButtonBack, imgButtonExit, imgButtonLogout;
+    private final BufferedImage imgHoverBack, imgHoverExit, imgHoverLogout;
     private final int btnWidth = 144;
     private final int btnHeight = 42;
     private final int newbtnWidth = (int) (GamePanel.width/3.5);
     private final int newbtnHeight = newbtnWidth * btnHeight/btnWidth;
-    private final Button btnExit;
+    private final Button btnBack, btnExit, btnLogout;
 
     public QuitState(GameStateManager gsm) {
         super(gsm);
@@ -33,10 +33,44 @@ public class QuitState extends GameState {
 
         Music.stopMusic(Music.getClip());
 
+
         imgButtonExit = GameStateManager.button.getSubimage(btnWidth*2, 0, btnWidth, btnHeight);
         imgHoverExit = GameStateManager.button.getSubimage(btnWidth*2, btnHeight, btnWidth, btnHeight);
-        btnExit = new Button(imgButtonExit, new Vector2f((float) GamePanel.width /2, (float) GamePanel.height /2 + newbtnHeight), newbtnWidth, newbtnHeight);
+
+        imgButtonLogout = GameStateManager.button.getSubimage(btnWidth*3, 0, btnWidth, btnHeight);
+        imgHoverLogout = GameStateManager.button.getSubimage(btnWidth*3, btnHeight, btnWidth, btnHeight);
+
+        imgButtonBack = GameStateManager.button.getSubimage(btnWidth*4, 0, btnWidth, btnHeight);
+        imgHoverBack = GameStateManager.button.getSubimage(btnWidth*4, btnHeight, btnWidth, btnHeight);
+
+        btnBack = new Button(imgButtonBack, new Vector2f(200, (float) GamePanel.height /2 - newbtnHeight), newbtnWidth, newbtnHeight);
+        btnLogout = new Button(imgButtonLogout, new Vector2f(200, (float) GamePanel.height /2), newbtnWidth, newbtnHeight);
+        btnExit = new Button(imgButtonExit, new Vector2f(200, (float) GamePanel.height /2 + newbtnHeight), newbtnWidth, newbtnHeight);
+
+        btnBack.addHoverImage(btnBack.createButton(imgHoverBack, newbtnWidth, newbtnHeight));
+        btnLogout.addHoverImage(btnLogout.createButton(imgHoverLogout, newbtnWidth, newbtnHeight));
         btnExit.addHoverImage(btnExit.createButton(imgHoverExit, newbtnWidth, newbtnHeight));
+
+        btnBack.addEvent(e -> {
+            if (gsm.isStateActive(GameStateManager.TITLE)){
+                GameStateManager.pop(GameStateManager.TITLE);
+            }else{
+                gsm.add(GameStateManager.TITLE);
+                GameStateManager.pop(GameStateManager.QUIT);
+            }
+        });
+
+        btnLogout.addEvent(e -> {
+            Login.setUname(null);
+            Login.loggedIn = false;
+            if (gsm.isStateActive(GameStateManager.TITLE)){
+                GameStateManager.pop(GameStateManager.TITLE);
+            }else{
+                gsm.add(GameStateManager.TITLE);
+                GameStateManager.pop(GameStateManager.QUIT);
+            }
+        });
+
         btnExit.addEvent(e -> {
             System.exit(0);
         });
@@ -49,6 +83,8 @@ public class QuitState extends GameState {
 
     @Override
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
+        btnBack.input(mouseIn, keyh);
+        btnLogout.input(mouseIn, keyh);
         btnExit.input(mouseIn, keyh);
         hands.input(mouseIn);
     }
@@ -58,10 +94,6 @@ public class QuitState extends GameState {
         BufferedImage background  = null;
         background = SpriteSheet.paintbg(background);
         g.drawImage(background, 0, 0, null);
-
-//        BufferedImage octopus = SpriteSheet.setup("background", "octo");
-//        octopus = ScaledImage.scaledImage(octopus, (GamePanel.width / 3) * 2, ((GamePanel.width/2) * (octopus.getHeight()/octopus.getWidth())));
-
 
 
         File octo = new File("res/background/octo.png");
@@ -77,7 +109,8 @@ public class QuitState extends GameState {
         }
 
 
-
+        btnBack.render(g);
+        btnLogout.render(g);
         btnExit.render(g);
         hands.render(g);
     }

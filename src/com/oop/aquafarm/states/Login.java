@@ -7,8 +7,6 @@ import com.oop.aquafarm.ui.Button;
 import com.oop.aquafarm.util.CRUD;
 import com.oop.aquafarm.util.dbConnection;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -20,8 +18,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.ResultSet;
 import java.util.Arrays;
-
-import static javax.swing.SwingConstants.CENTER;
 
 public class Login extends JFrame  implements ActionListener {
     private JLabel loginLbl;
@@ -224,6 +220,9 @@ public class Login extends JFrame  implements ActionListener {
 
     }
 
+    public static void setUname(String uname){
+        Login.uname = uname;
+    }
     public static String getUname(){
         return uname;
     }
