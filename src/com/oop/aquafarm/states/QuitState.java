@@ -1,8 +1,8 @@
 package com.oop.aquafarm.states;
 
 import com.oop.aquafarm.GamePanel;
-import com.oop.aquafarm.audio.Music;
 import com.oop.aquafarm.entity.Hand;
+import com.oop.aquafarm.graphics.CFont;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.ui.Button;
 import com.oop.aquafarm.util.KeyHandler;
@@ -32,9 +32,6 @@ public class QuitState extends GameState {
         super(gsm);
         hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2), "cursor");
 
-        Music.stopMusic();
-        Music.playMusic(Music.quitfpath);
-
         imgButtonExit = GameStateManager.button.getSubimage(btnWidth*2, 0, btnWidth, btnHeight);
         imgHoverExit = GameStateManager.button.getSubimage(btnWidth*2, btnHeight, btnWidth, btnHeight);
 
@@ -44,9 +41,9 @@ public class QuitState extends GameState {
         imgButtonBack = GameStateManager.button.getSubimage(btnWidth*4, 0, btnWidth, btnHeight);
         imgHoverBack = GameStateManager.button.getSubimage(btnWidth*4, btnHeight, btnWidth, btnHeight);
 
-        btnBack = new Button(imgButtonBack, new Vector2f(200, (float) GamePanel.height /2 - newbtnHeight), newbtnWidth, newbtnHeight);
-        btnLogout = new Button(imgButtonLogout, new Vector2f(200, (float) GamePanel.height /2), newbtnWidth, newbtnHeight);
-        btnExit = new Button(imgButtonExit, new Vector2f(200, (float) GamePanel.height /2 + newbtnHeight), newbtnWidth, newbtnHeight);
+        btnBack = new Button(imgButtonBack, new Vector2f(200, (float) GamePanel.height /2 - newbtnHeight + 25), newbtnWidth, newbtnHeight);
+        btnLogout = new Button(imgButtonLogout, new Vector2f(200, (float) GamePanel.height /2 + 50), newbtnWidth, newbtnHeight);
+        btnExit = new Button(imgButtonExit, new Vector2f(200, (float) GamePanel.height /2 + newbtnHeight + 75), newbtnWidth, newbtnHeight);
 
         btnBack.addHoverImage(btnBack.createButton(imgHoverBack, newbtnWidth, newbtnHeight));
         btnLogout.addHoverImage(btnLogout.createButton(imgHoverLogout, newbtnWidth, newbtnHeight));
@@ -60,7 +57,7 @@ public class QuitState extends GameState {
                 gsm.add(GameStateManager.TITLE);
                 GameStateManager.pop(GameStateManager.QUIT);
             }
-            Music.stopMusic();
+
         });
 
         btnLogout.addEvent(e -> {
@@ -72,12 +69,12 @@ public class QuitState extends GameState {
                 gsm.add(GameStateManager.TITLE);
                 GameStateManager.pop(GameStateManager.QUIT);
             }
-            Music.stopMusic();
         });
 
         btnExit.addEvent(e -> {
             System.exit(0);
         });
+
 
     }
 
@@ -112,6 +109,11 @@ public class QuitState extends GameState {
             e.printStackTrace();
             System.out.println("ERROR: could not load file: " + octo);
         }
+
+        CFont dialogue = new CFont(new Color(49,20, 50), "res/font/pixelated.ttf", "pixelated", 60, 200, 125);
+        CFont dialogue2 = new CFont(new Color(49,20, 50), "res/font/pixelated.ttf", "pixelated", 60, 200, 175);
+        dialogue.drawString(g, "You     wanna     leave     these");
+        dialogue2.drawString(g, "poor,     unfortunate     souls?");
 
 
         btnBack.render(g);

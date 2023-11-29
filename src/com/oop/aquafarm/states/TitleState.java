@@ -17,6 +17,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import static com.oop.aquafarm.audio.Music.playMusic;
+
 
 public class TitleState extends GameState {
 
@@ -90,8 +92,13 @@ public class TitleState extends GameState {
             }
         });
 
-
+        if(Music.isPlaying){
+            //do nothing
+        }else {
             Music.playMusic(Music.fpath);
+        }
+
+
 
     }
 
