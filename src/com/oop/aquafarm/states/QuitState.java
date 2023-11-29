@@ -1,6 +1,7 @@
 package com.oop.aquafarm.states;
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.audio.Music;
 import com.oop.aquafarm.entity.Hand;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.ui.Button;
@@ -29,6 +30,8 @@ public class QuitState extends GameState {
     public QuitState(GameStateManager gsm) {
         super(gsm);
         hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2), "cursor");
+
+        Music.stopMusic(Music.getClip());
 
         imgButtonExit = GameStateManager.button.getSubimage(btnWidth*2, 0, btnWidth, btnHeight);
         imgHoverExit = GameStateManager.button.getSubimage(btnWidth*2, btnHeight, btnWidth, btnHeight);
@@ -61,17 +64,17 @@ public class QuitState extends GameState {
 
 
 
-//        File octo = new File("res/background/octo.png");
-//        try {
-//            BufferedImage octopus = ImageIO.read(octo);
-//            int octwidth = (GamePanel.width / 3) * 2;
-//            int octheight = (GamePanel.width/2) * (octopus.getHeight()/octopus.getWidth());
-//            octopus = ScaledImage.scaledImage(octopus, octwidth, octheight);
-//            g.drawImage(octopus, GamePanel.width - octopus.getWidth(), GamePanel.height - octopus.getHeight(), null);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            System.out.println("ERROR: could not load file: " + octo);
-//        }
+        File octo = new File("res/background/octo.png");
+        try {
+            BufferedImage octopus = ImageIO.read(octo);
+            int octwidth = (GamePanel.width / 3) * 2;
+            int octheight = (GamePanel.width / 2);
+            octopus = ScaledImage.scaledImage(octopus, octwidth, octheight);
+            g.drawImage(octopus, GamePanel.width - octopus.getWidth(), GamePanel.height - octopus.getHeight(), null);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("ERROR: could not load file: " + octo);
+        }
 
 
 

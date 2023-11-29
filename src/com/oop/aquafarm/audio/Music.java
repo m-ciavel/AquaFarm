@@ -7,6 +7,8 @@ import java.io.File;
 
 public class Music {
 
+    private static Clip clip;
+
     public static String fpath = "res/audio/Les Petits Poissons Dans l'Eau Instrumental.wav";
 
     public Music() {
@@ -32,14 +34,27 @@ public class Music {
                 AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioInput);
-                clip.start();
-                clip.loop(Clip.LOOP_CONTINUOUSLY);
+                startMusic(clip);
+                Music.clip = clip;
             } else {
                 System.out.println("ERROR: could not load file: " + musicPath);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void startMusic(Clip clip){
+        clip.start();
+        clip.loop(Clip.LOOP_CONTINUOUSLY);
+    }
+
+    public static void stopMusic(Clip clip){
+        clip.close();
+    }
+
+    public static Clip getClip(){
+        return clip;
     }
 
     public static void playsound(String location) {
