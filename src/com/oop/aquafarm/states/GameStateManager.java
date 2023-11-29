@@ -19,6 +19,7 @@ public class GameStateManager {
     public static final int QUIT = 1;
     public static final int PLAY = 2;
     public static final int SETTINGS = 3;
+    public static final int PAUSE = 4;
 
     public GameStateManager(Graphics2D g) {
         GameStateManager.g = g;
@@ -26,7 +27,7 @@ public class GameStateManager {
         map = new Vector2f(GamePanel.width, GamePanel.height);
         Vector2f.setWorldVar(map.x, map.y);
 
-        states = new GameState[4];
+        states = new GameState[5];
 
         button = new SpriteSheet("menubutton/buttons.png", 144, 42);
         mainmenubtn = new SpriteSheet("menubutton/settings.png", 50, 50);
@@ -59,6 +60,8 @@ public class GameStateManager {
             states[SETTINGS] = new SettingsState(this);
         } else if (state == QUIT) {
             states[QUIT] = new QuitState(this);
+        } else if (state == PAUSE) {
+            states[PAUSE] = new PauseState(this);
         }
     }
 

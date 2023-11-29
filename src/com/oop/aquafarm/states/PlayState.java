@@ -2,7 +2,6 @@ package com.oop.aquafarm.states;
 
 
 import com.oop.aquafarm.GamePanel;
-import com.oop.aquafarm.audio.Music;
 import com.oop.aquafarm.entity.Finance;
 import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.entity.Food;
@@ -116,12 +115,11 @@ public class PlayState extends GameState{
 
 
         btnmainmenu.addEvent(e -> {
-//            if (gsm.isStateActive(GameStateManager.SETTINGS)){
-//                GameStateManager.pop(GameStateManager.SETTINGS);
-//            }else{
-//                gsm.add(GameStateManager.SETTINGS);
-//                GameStateManager.pop(GameStateManager.PLAY);
-//            }
+            if(gsm.isStateActive(GameStateManager.PAUSE)) {
+                GameStateManager.pop(GameStateManager.PAUSE);
+            } else {
+                gsm.add(GameStateManager.PAUSE);
+            }
         });
 
 
@@ -191,16 +189,6 @@ public class PlayState extends GameState{
 
     @Override
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
-        keyh.escape.tick();
-        if(keyh.escape.clicked){
-            if (gsm.isStateActive(GameStateManager.TITLE)){
-                GameStateManager.pop(GameStateManager.TITLE);
-            }else{
-                gsm.add(GameStateManager.TITLE);
-                GameStateManager.pop(GameStateManager.PLAY);
-            }
-            System.out.println(Login.loggedIn);
-        }
 
         if (isBuyingFood) {
             food.input(mouseIn);
