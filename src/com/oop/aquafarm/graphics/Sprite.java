@@ -23,15 +23,5 @@ public class Sprite {
         return new Sprite(image.getSubimage(x, y, w, h));
     }
 
-    public Sprite getNewSubimage(int x, int y, int w, int h) {
-        BufferedImage temp = image.getSubimage(x, y, w, h);
-        BufferedImage newImage = new BufferedImage(image.getColorModel(), image.getRaster().createCompatibleWritableRaster(w,h), image.isAlphaPremultiplied(), null);
-        temp.copyData(newImage.getRaster());
-        return new Sprite(newImage);
-    }
-
-    public Sprite getNewSubimage() {
-        return getNewSubimage(0, 0, this.w, this.h);
-    }
 
 }

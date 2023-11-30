@@ -34,7 +34,7 @@ public class SettingsState extends GameState {
         hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2), "cursor");
 
         // Optimize font creation
-        font = new CFont(Color.BLACK, "res/font/pixelated.ttf", "pixelated", 70, 10, 150);
+        font = new CFont(Color.BLACK, "res/font/pixelated.ttf", "pixelated", 70, 200, 150);
         notif = new CFont(Color.red, "res/font/pixelated.ttf", "pixelated", 50, 400 + newbtnWidth, GamePanel.height - newbtnHeight - 175);
 
         imgButtonSecurity = GameStateManager.button.getSubimage(btnWidth*7, 0, btnWidth, btnHeight);
@@ -95,11 +95,14 @@ public class SettingsState extends GameState {
         BufferedImage background = SpriteSheet.paintbg(null);
         g.drawImage(background, 0, 0, null);
 
-        drawRectWithBorder(g, 200, 100, 900, 50, 5, new Color(0x3E363f));
+        int rectx = 200;
+        int recty = 200;
+
+        drawRectWithBorder(g, rectx, recty, 900, 50, 5, new Color(0x3E363f));
 
         int soundIndicatorWidth = (int) (soundLevel / 100.0 * 900);
         g.setColor(new Color(0x3E363f));
-        g.fillRect(200, 100, soundIndicatorWidth, 50);
+        g.fillRect(rectx, recty, soundIndicatorWidth, 50);
 
         // Optimize font rendering
         font.drawString(g, "Music:");
@@ -119,7 +122,7 @@ public class SettingsState extends GameState {
         int clickableAreaX = 200;
         int clickableAreaWidth = 900;
 
-        if (mouseX >= clickableAreaX && mouseX <= clickableAreaX + clickableAreaWidth && mouseY >= 100 && mouseY <= 150) {
+        if (mouseX >= clickableAreaX && mouseX <= clickableAreaX + clickableAreaWidth && mouseY >= 100 && mouseY <= 250) {
             int relativeX = mouseX - clickableAreaX;
 
             soundLevel = (int) ((float) relativeX / clickableAreaWidth * 100);

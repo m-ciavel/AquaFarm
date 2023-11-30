@@ -25,7 +25,6 @@ public class Window extends JFrame implements WindowListener {
         setTitle("AquaFarm");
         setLayout(new FlowLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        setContentPane(new GamePanel(1280, 720));
         setIgnoreRepaint(true);
         pack();
         setLocationRelativeTo(null);
@@ -44,7 +43,6 @@ public class Window extends JFrame implements WindowListener {
         bs = getBufferStrategy();
 
         gp = new GamePanel(bs, 1280, 720);
-        //add(gp);
         setContentPane(gp);
 
     }

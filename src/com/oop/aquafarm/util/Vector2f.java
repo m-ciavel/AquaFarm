@@ -22,38 +22,15 @@ public class Vector2f {
         this.y = y;
     }
 
-    public void addX(float f) { x += f; }
-    public void addY(float f) { y += f; }
-
     public void setX(float f) { x = f; }
     public void setY(float f) { y = f; }
 
-    public void setVector(Vector2f vec) {
-        this.x = vec.x;
-        this.y = vec.y;
-    }
-
-    public void setVector(float x, float y) {
-        this.x = x;
-        this.y = y;
-    }
 
     public static void setWorldVar(float x, float y) {
         worldX = x;
         worldY = y;
     }
 
-    public static float getWorldVarX(float x) {
-        return x - worldX;
-    }
-
-    public static float getWorldVarY(float y) {
-        return y - worldY;
-    }
-
-    public Vector2f getWorldVar() {
-        return new Vector2f(x - worldX, y - worldY);
-    }
 
     @Override
     public String toString() {

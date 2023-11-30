@@ -135,11 +135,6 @@ public class Button {
             float iHeight = value + bounds.getHeight();
             this.bounds = new AABB(iPos, (int) iWidth, (int) iHeight);
 
-//            lbPos.x -= value / 2;
-//            lbPos.y -= value / 2;
-//            lbWidth += value / 3;
-//            lbHeight += value / 3;
-
         }
 
         hovering = true;
