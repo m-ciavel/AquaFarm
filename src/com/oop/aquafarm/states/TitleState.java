@@ -32,6 +32,7 @@ public class TitleState extends GameState {
     private int newbtnWidth = (int) (GamePanel.width/3.5);
     private int newbtnHeight = newbtnWidth * btnHeight/btnWidth;
     private final Button btnPlay, btnSettings, btnExit;
+    private boolean clicked = false;
 
 
 
@@ -112,6 +113,11 @@ public class TitleState extends GameState {
 
     @Override
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
+        if(mouseIn.getButton() == 1 && !clicked) {
+            clicked = true;
+        } else if(mouseIn.getButton() == -1) {
+            clicked = false;
+        }
         hands.input(mouseIn);
         btnPlay.input(mouseIn, keyh);
         btnSettings.input(mouseIn, keyh);

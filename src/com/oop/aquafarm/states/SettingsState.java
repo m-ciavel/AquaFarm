@@ -25,7 +25,7 @@ public class SettingsState extends GameState {
     private final int btnHeight = 42;
     private int newbtnWidth = GamePanel.width/4;
     private int newbtnHeight = newbtnWidth * btnHeight/btnWidth;
-
+    private boolean clicked = false;
     Hand hands;
 
 
@@ -80,6 +80,11 @@ public class SettingsState extends GameState {
         if (MouseHandler.mouseClicked) {
             handleMouseClick(mouseIn.getX(), mouseIn.getY());
             MouseHandler.mouseClicked = false;
+        }
+        if(mouseIn.getButton() == 1 && !clicked) {
+            clicked = true;
+        } else if(mouseIn.getButton() == -1) {
+            clicked = false;
         }
 
         btnSecurity.input(mouseIn,keyh);

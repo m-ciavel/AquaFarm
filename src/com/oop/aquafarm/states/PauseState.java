@@ -57,6 +57,7 @@ public class PauseState extends GameState {
 
     @Override
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
+
         btnMenu.input(mouseIn, keyh);
         btnResume.input(mouseIn, keyh);
     }

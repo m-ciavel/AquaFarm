@@ -45,7 +45,7 @@ public class PlayState extends GameState{
     private int middleX = (GamePanel.width - (4 * fishBtnSize)) / 2;
     private int bottomY = GamePanel.height - btnSpacing;
 
-
+    private boolean clicked = false;
 
     private boolean isBuyingFood = false;
     private boolean isSellingFish = false;
@@ -189,6 +189,11 @@ public class PlayState extends GameState{
 
     @Override
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
+        if(mouseIn.getButton() == 1 && !clicked) {
+            clicked = true;
+        } else if(mouseIn.getButton() == -1) {
+            clicked = false;
+        }
 
         if (isBuyingFood) {
             food.input(mouseIn);
