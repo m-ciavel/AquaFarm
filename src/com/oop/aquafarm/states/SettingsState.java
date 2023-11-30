@@ -23,7 +23,6 @@ public class SettingsState extends GameState {
     public SettingsState(GameStateManager gsm) {
         super(gsm);
         hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2), "cursor");
-        System.out.println("Settings state");
 
         // Optimize font creation
         font = new CFont(Color.BLACK, "res/font/pixelated.ttf", "pixelated", 70, 10, 150);
