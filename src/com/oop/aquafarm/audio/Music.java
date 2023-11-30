@@ -84,13 +84,13 @@ public class Music {
     }
 
 
-        public static void setVolume(int percent) {
-            if (musicVolumeControl != null) {
+    public static void setVolume(Integer percent, int soundLevel) {
+        if (musicVolumeControl != null) {
+            float volumeValue = (float) (Math.log10(soundLevel / 100.0) * 20);
+            volumeValue = Math.max(volumeValue, -100);
 
-                float volumeValue = (float) (Math.log10(percent / 100.0) * 20);
-                volumeValue = Math.max(volumeValue, -100);
-
-                musicVolumeControl.setValue(volumeValue);
-            }
+            musicVolumeControl.setValue(volumeValue);
         }
+    }
+
 }
