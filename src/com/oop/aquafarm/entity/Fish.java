@@ -14,27 +14,23 @@ import java.util.TimerTask;
 public class Fish extends Entity {
     private final Fish_movement fishMovement;
 
-    private int offsetX;
-    private int offsetY;
+    private int offsetX, offsetY;
 
-    public int eatCounter;
-    private int sizeIncreaseCounter;
+    public int eatCounter, sizeIncreaseCounter;
 
-
-    public boolean isDragging;
-    private boolean isMoving;
+    public boolean isDragging, isMoving, isHovering;
     private boolean isSpeedIncreased;
 
     public boolean isHungry;
 
     public boolean isBreedable;
 
-    private final int originalSpeed;
-    private final int increasedSpeed;
+    private final int originalSpeed, increasedSpeed;
     private final Timer speedIncreaseTimer;
 
     private Timer hungerTime;
-
+    BufferedImage genderImg;
+    private int scaledWidth, scaledHeight, genderX, genderY;
     private String fish_type, fish_name, gender;
     private int fish_size;
 
@@ -154,29 +150,36 @@ public class Fish extends Entity {
 
         if (isHungry) {
             int dotX = fishX + fishImage.getWidth() / 2 - 5;
-            int dotY = fishY - 10;
+            int dotY = fishY - 5;
 
             g2.setColor(Color.RED);
             g2.fillOval(dotX, dotY, 10, 10);
         }
+        if(isHovering){
+            g2.setColor(Color.BLACK);
+            g2.drawString("Size: " + fish_size, fishX, fishY - 35);
 
-        g2.setColor(Color.BLACK);
-        g2.drawString("Size: " + fish_size, fishX, fishY - 20);
+            g2.drawString(getFishName(), fishX, fishY - 15);
 
-        String gender = getFishGender();
-        if (gender != null) {
-            BufferedImage genderImg = SpriteSheet.setup("genders", gender);
+            String gender = getFishGender();
+            if (gender != null) {
+                genderImg = SpriteSheet.setup("genders", gender);
 
-            double scale = 0.4;
+                double scale = 0.4;
 
-            int scaledWidth = (int) (genderImg.getWidth() * scale);
-            int scaledHeight = (int) (genderImg.getHeight() * scale);
+                scaledWidth = (int) (genderImg.getWidth() * scale);
+                scaledHeight = (int) (genderImg.getHeight() * scale);
 
-            int genderX = getFishX() + (getFishWidth() - scaledWidth) / 2;
-            int genderY = getFishY() - 10;
-
-            g2.drawImage(genderImg, genderX + 30, genderY, scaledWidth, scaledHeight, null);
+                genderX = getFishX() + (getFishWidth() - scaledWidth) / 2;
+                genderY = getFishY() - 5;
+                g2.drawImage(genderImg, genderX + 30, genderY, scaledWidth, scaledHeight, null);
+            }
         }
+
+
+
+
+
     }
 
 
@@ -194,7 +197,7 @@ public class Fish extends Entity {
                 offsetY = mouseY - fishMovement.getFishY();
                 isDragging = true;
                 isMoving = false;
-
+                isHovering = false;
             }
         } else if (mouseB == -1) {
             if (isDragging) {
@@ -214,6 +217,12 @@ public class Fish extends Entity {
                         }
                     }, 3000);
                 }
+            }
+            if (mouseX >= fishMovement.getFishX() && mouseX <= fishMovement.getFishX() + fish_left.getWidth() &&
+                    mouseY >= fishMovement.getFishY() && mouseY <= fishMovement.getFishY() + fish_left.getHeight()) {
+                isHovering = true;
+            }else{
+                isHovering = false;
             }
         }
 
