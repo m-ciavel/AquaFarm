@@ -37,10 +37,15 @@ public class Fish extends Entity {
     public Fish(Vector2f origin, String fish_type, String fish_name, String gender, int fish_size) {
         super(origin);
 
+
         this.fish_type = fish_type;
         this.fish_name = fish_name;
         this.gender = gender;
         this.fish_size = fish_size;
+
+        if (fish_name == null){
+            setFishName();
+        }
 
         fishMovement = new Fish_movement(1280, 700);
         fishMovement.setInitialPosition(origin);
@@ -159,7 +164,7 @@ public class Fish extends Entity {
             g2.setColor(Color.BLACK);
             g2.drawString("Size: " + fish_size, fishX, fishY - 35);
 
-            g2.drawString(getFishName(), fishX, fishY - 15);
+            g2.drawString(fish_name, fishX, fishY - 15);
 
             String gender = getFishGender();
             if (gender != null) {
@@ -291,10 +296,9 @@ public class Fish extends Entity {
         return fish_size;
     }
 
-//    public void getFish(){
-//
-//        System.out.println(getFishtype() + ", " + getFishName() + ", " + getFishGender() + ", " + getFish_size());
-//    }
+    public void setFishName(){
+        fish_name = fish_type;
+    }
 
 
     public int getFishWidth() {

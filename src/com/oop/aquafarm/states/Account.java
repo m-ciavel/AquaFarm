@@ -19,23 +19,19 @@ import java.security.spec.InvalidKeySpecException;
 import java.sql.ResultSet;
 import java.util.Arrays;
 
-public class Login extends JFrame  implements ActionListener {
-    private JLabel loginLbl;
-    private JLabel unameLbl, passLbl, notifLbl;
-    private JTextField unameTF;
-    private JPasswordField passPF;
-    private JButton signupBtn, loginBtn, backBtn;
+public class Account extends JFrame implements ActionListener {
 
-    private static String uname;
+    GameStateManager gsm;
     private int iterations = CRUD.getIterations();
     dbConnection con1 = new dbConnection();
-    public static boolean loggedIn;
-
+    private JLabel securityLbl;
+    private JLabel passLbl, newpassLbl, confnewpassLbl, notifLbl;
+    private JPasswordField passPF, newpassPF, confnewpassPF;
+    private JButton confirmBtn, backBtn;
 
     ImageIcon backBtnIcon = new ImageIcon("res/menubutton/arrow back.png");
-    GameStateManager gsm;
 
-    public Login(GameStateManager gsm){
+    public Account(GameStateManager gsm){
         this.gsm = gsm;
         setTitle("AquaFarm");
         setLayout(new FlowLayout());
@@ -50,37 +46,28 @@ public class Login extends JFrame  implements ActionListener {
         background = SpriteSheet.paintbg(background);
         setContentPane(new SpriteSheet.ImagePanel(background));
 
-        loggedIn = false;
+        securityLbl = new JLabel("SECURITY");
+        securityLbl.setBounds((GamePanel.width - securityLbl.getWidth())/3,60, GamePanel.width,100);
 
+        passLbl = new JLabel("Old password");
+        passLbl.setBounds((GamePanel.width - passLbl.getWidth())/6,210, 1000,60);
 
-        loginLbl = new JLabel("LOGIN");
-        loginLbl.setBounds((GamePanel.width - loginLbl.getWidth())/3,60, GamePanel.width,100);
+        newpassLbl = new JLabel("New password");
+        newpassLbl.setBounds((GamePanel.width - newpassLbl.getWidth())/6,350, 1000,60);
 
-        unameLbl = new JLabel("Username");
-        unameLbl.setBounds((GamePanel.width - unameLbl.getWidth())/6,270, 1000,60);
-
-        passLbl = new JLabel("Password");
-        passLbl.setBounds((GamePanel.width - passLbl.getWidth())/6,360, 1000,60);
+        confnewpassLbl = new JLabel("New password");
+        confnewpassLbl.setBounds((GamePanel.width - newpassLbl.getWidth())/6,420, 1000,60);
 
         notifLbl = new JLabel("",  SwingConstants.CENTER);
         notifLbl.setBounds(0,480, GamePanel.width,30);
         notifLbl.setForeground(Button.borderdarkred);
 
-
-        loginBtn = new JButton("Login");
-        loginBtn.setBounds((GamePanel.width / 2) - 100, 525, 200, 50);
-        loginBtn.setBackground(new Color(67, 124, 23));
-        loginBtn.setFont(new Font("Courier New", Font.BOLD, 30));
-        loginBtn.setForeground(Color.WHITE);
-        loginBtn.addActionListener(this);
-
-        signupBtn = new JButton("Create Account");
-        signupBtn.setBounds((GamePanel.width / 2) - 175, 585, 350, 30);
-        signupBtn.setFont(new Font("Courier New", Font.BOLD, 15));
-        signupBtn.setForeground(Color.WHITE);
-        signupBtn.setContentAreaFilled(false);
-        signupBtn.setBorderPainted(false);
-        signupBtn.addActionListener(this);
+        confirmBtn = new JButton("Confirm");
+        confirmBtn.setBounds((GamePanel.width / 2) - 100, 525, 200, 50);
+        confirmBtn.setBackground(new Color(67, 124, 23));
+        confirmBtn.setFont(new Font("Courier New", Font.BOLD, 30));
+        confirmBtn.setForeground(Color.WHITE);
+        confirmBtn.addActionListener(this);
 
         backBtn = new JButton();
         backBtn.setIcon(backBtnIcon);
@@ -92,56 +79,60 @@ public class Login extends JFrame  implements ActionListener {
         try{
             Font font = Font.createFont(Font.TRUETYPE_FONT, new File("res/font/pixelated.ttf"));
 
-            loginLbl.setFont(font.deriveFont(Font.BOLD, 150));
-            unameLbl.setFont(font.deriveFont(Font.BOLD, 50));
+            securityLbl.setFont(font.deriveFont(Font.BOLD, 150));
             passLbl.setFont(font.deriveFont(Font.BOLD, 50));
+            newpassLbl.setFont(font.deriveFont(Font.BOLD, 50));
+            confnewpassLbl.setFont(font.deriveFont(Font.BOLD, 50));
             notifLbl.setFont(font.deriveFont(Font.PLAIN, 30));
-
 
         } catch (Exception e) {}
 
-        add(loginLbl);
-        add(unameLbl);
+        add(securityLbl);
         add(passLbl);
+        add(newpassLbl);
+        add(confnewpassLbl);
         add(notifLbl);
 
-        add(loginBtn);
-        add(signupBtn);
+        add(confirmBtn);
         add(backBtn);
 
         input();
+
     }
 
     public void input(){
-        unameTF = new JTextField();
-        unameTF.setBounds(GamePanel.width/2,270, GamePanel.width/2 - GamePanel.width/6,50);
-        unameTF.setOpaque(false);
-        unameTF.setMargin(new Insets(0, 10,0,0));
-        unameTF.setBorder(new LineBorder(Color.white,3));
-        unameTF.setFont(new Font("Courier New", Font.PLAIN, 20));
-
         passPF = new JPasswordField();
-        passPF.setBounds(GamePanel.width/2,360, GamePanel.width/2 - GamePanel.width/6,50);
+        passPF.setBounds(GamePanel.width/2,210, GamePanel.width/2 - GamePanel.width/6,50);
         passPF.setOpaque(false);
         passPF.setMargin(new Insets(0, 10,0,0));
         passPF.setBorder(new LineBorder(Color.white,3));
         passPF.setFont(new Font("Courier New", Font.PLAIN, 20));
 
-        this.add(unameTF);
+        newpassPF = new JPasswordField();
+        newpassPF.setBounds(GamePanel.width/2,350, GamePanel.width/2 - GamePanel.width/6,50);
+        newpassPF.setOpaque(false);
+        newpassPF.setMargin(new Insets(0, 10,0,0));
+        newpassPF.setBorder(new LineBorder(Color.white,3));
+        newpassPF.setFont(new Font("Courier New", Font.PLAIN, 20));
+
+        confnewpassPF = new JPasswordField();
+        confnewpassPF.setBounds(GamePanel.width/2,420, GamePanel.width/2 - GamePanel.width/6,50);
+        confnewpassPF.setOpaque(false);
+        confnewpassPF.setMargin(new Insets(0, 10,0,0));
+        confnewpassPF.setBorder(new LineBorder(Color.white,3));
+        confnewpassPF.setFont(new Font("Courier New", Font.PLAIN, 20));
+
         this.add(passPF);
+        this.add(newpassPF);
+        this.add(confnewpassPF);
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==loginBtn) {
-            if(unameTF.getText().isEmpty() || passPF.getPassword().length == 0 ){
+        if(e.getSource() == confirmBtn){
+            if( passPF.getPassword().length == 0 || newpassPF.getPassword().length == 0 || confnewpassPF.getPassword().length == 0){
                 notifLbl.setText("Please   fill   all   the   required   fields");
-                if(unameTF.getText().isEmpty()){
-                    unameTF.setBorder(new LineBorder(Button.borderdarkred,3));
-                }else {
-                    unameTF.setBorder(new LineBorder(Color.white,3));
-                }
 
                 if(passPF.getPassword().length == 0){
                     passPF.setBorder(new LineBorder(Button.borderdarkred,3));
@@ -149,12 +140,23 @@ public class Login extends JFrame  implements ActionListener {
                     passPF.setBorder(new LineBorder(Color.white,3));
                 }
 
+                if(newpassPF.getPassword().length == 0){
+                    newpassPF.setBorder(new LineBorder(Button.borderdarkred,3));
+                }else {
+                    newpassPF.setBorder(new LineBorder(Color.white,3));
+                }
+
+                if(confnewpassPF.getPassword().length == 0){
+                    confnewpassPF.setBorder(new LineBorder(Button.borderdarkred,3));
+                }else {
+                    confnewpassPF.setBorder(new LineBorder(Color.white,3));
+                }
+
             }else {
                 // create connection
                 try {
 
-                    uname = unameTF.getText();
-                    String qUser = "SELECT * FROM userTable WHERE user_Name = '" + uname + "';";
+                    String qUser = "SELECT * FROM userTable WHERE user_Name = '" + Login.getUname() + "';";
                     ResultSet rs = con1.s.executeQuery(qUser);
                     if (rs.next()) {
                         String pSalt = rs.getString("pass_salt");
@@ -165,20 +167,10 @@ public class Login extends JFrame  implements ActionListener {
                             System.out.println(matched);
 
                             if (matched){
-                                if (gsm.isStateActive(GameStateManager.PLAY)){
-                                    gsm.pop(GameStateManager.PLAY);
-                                }else{
-                                    gsm.add(GameStateManager.PLAY);
-                                    gsm.pop(GameStateManager.TITLE);
-                                }
-                                loggedIn = true;
-                                CRUD.logIn(con1, uname, true);
-                                this.dispose();
-                                Window.window.setVisible(true);
+                                //continue to submit
                             }else if (!matched){
                                 System.out.println("Password does not match");
                                 notifLbl.setText("Username   and   password   does   not   seem   to   match");
-                                unameTF.setBorder(new LineBorder(Button.borderdarkred,3));
                                 passPF.setBorder(new LineBorder(Button.borderdarkred,3));
                             }
                         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
@@ -186,8 +178,8 @@ public class Login extends JFrame  implements ActionListener {
                         }
 
                     } else{
-                        notifLbl.setText("No   such   user   in   database");
-                        unameTF.setBorder(new LineBorder(Button.borderdarkred,3));
+                        notifLbl.setText("Password does not seem to be right");
+                        passPF.setBorder(new LineBorder(Button.borderdarkred,3));
                     }
 
                 } catch (Exception ex) {
@@ -197,29 +189,15 @@ public class Login extends JFrame  implements ActionListener {
             }
 
         }
-        if(e.getSource() == signupBtn){
-            this.dispose();
-            new Signup(gsm).setVisible(true);
-        }
         if(e.getSource() == backBtn){
-            if (gsm.isStateActive(GameStateManager.TITLE)){
-                GameStateManager.pop(GameStateManager.TITLE);
+            if (gsm.isStateActive(GameStateManager.SETTINGS)){
+                GameStateManager.pop(GameStateManager.SETTINGS);
 
             }else{
-                gsm.add(GameStateManager.TITLE);
+                gsm.add(GameStateManager.SETTINGS);
                 Window.window.setVisible(true);
                 this.dispose();
             }
         }
-
     }
-
-    public static void setUname(String uname){
-        Login.uname = uname;
-    }
-    public static String getUname(){
-        return uname;
-    }
-
-
 }

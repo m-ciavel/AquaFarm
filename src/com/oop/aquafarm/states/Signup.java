@@ -114,14 +114,6 @@ public class Signup extends JFrame implements ActionListener {
             ageLbl.setFont(font.deriveFont(Font.BOLD, 50));
             notifLbl.setFont(font.deriveFont(Font.PLAIN, 30));
 
-//            unameTF.setFont(font.deriveFont(Font.BOLD, 40));
-//            passPF.setFont(font.deriveFont(Font.BOLD, 40));
-//            confpassPF.setFont(font.deriveFont(Font.BOLD, 40));
-//            ageTF.setFont(font.deriveFont(Font.BOLD, 40));
-
-//            signupBtn.setFont(font.deriveFont(Font.BOLD, 40));
-//            loginBtn.setFont(font.deriveFont(Font.BOLD, 40));
-
 
         } catch (Exception e) {}
 
