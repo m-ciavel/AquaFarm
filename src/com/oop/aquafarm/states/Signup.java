@@ -42,7 +42,6 @@ public class Signup extends JFrame implements ActionListener {
     private String uname;
     static String generatedSecuredPasswordHash = null;
     static String passSalt, passHash;
-    private Date created_date;
     private int uid, age, dbID;
 
     ImageIcon backBtnIcon = new ImageIcon("res/menubutton/arrow back.png");
@@ -228,6 +227,8 @@ public class Signup extends JFrame implements ActionListener {
                             } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
                                 throw new RuntimeException(ex);
                             }
+
+                            //check username
                             uname = unameTF.getText();
                             String qUser = "SELECT * FROM userTable WHERE user_Name = '" + uname + "';";
                             ResultSet rsUser = con1.s.executeQuery(qUser);
@@ -235,6 +236,7 @@ public class Signup extends JFrame implements ActionListener {
                                 notifLbl.setText("Username   already   taken");
                                 unameTF.setBorder(new LineBorder(Button.borderdarkred,3));
                             }else{
+                                //generate UID
                                 uid = (int) CRUD.generateUID();
                                 boolean uidExists = false;
                                 String quid = "SELECT * FROM users WHERE user_ID = '" + uid + "';";
@@ -248,14 +250,13 @@ public class Signup extends JFrame implements ActionListener {
                                     if(!uidExists){
                                         unameTF.setBorder(new LineBorder(Color.white,3));
                                         age = Integer.parseInt(ageTF.getText());
-                                        created_date = new java.sql.Date(System.currentTimeMillis());
-                                        CRUD.createUser(con1, dbID, uid, uname, age, passSalt, passHash, created_date);
+                                        CRUD.createUser(con1, dbID, uid, uname, age, passSalt, passHash);
                                     }
                                 }else{
+                                    //signup
                                     unameTF.setBorder(new LineBorder(Color.white,3));
                                     age = Integer.parseInt(ageTF.getText());
-                                    created_date = new java.sql.Date(System.currentTimeMillis());
-                                    CRUD.createUser(con1, dbID, uid, uname, age, passSalt, passHash, created_date);
+                                    CRUD.createUser(con1, dbID, uid, uname, age, passSalt, passHash);
                                     this.dispose();
                                     new Login(gsm).setVisible(true);
                                 }
@@ -279,6 +280,8 @@ public class Signup extends JFrame implements ActionListener {
                 } else if (!Arrays.equals(passPF.getPassword(), confpassPF.getPassword())){
                     System.out.println("Passwords do not match");
                     notifLbl.setText("Passwords   do   not   match");
+                    passPF.setBorder(new LineBorder(Button.borderdarkred,3));
+                    confpassPF.setBorder(new LineBorder(Button.borderdarkred,3));
                 }
             } // blank text fields
 

@@ -19,7 +19,8 @@ public class CRUD {
 
     private static final int iterations = 1000; //  number of times that the password is hashed
 
-    public static void createUser(dbConnection con1, int dbID, int uid, String uname, int age, String passSalt, String passHash, Date created_date) throws SQLException {
+    public static void createUser(dbConnection con1, int dbID, int uid, String uname, int age, String passSalt, String passHash) throws SQLException {
+        Date created_date = new java.sql.Date(System.currentTimeMillis());
         String q0 = "INSERT INTO users VALUES ( " + dbID + ", '" + uid + "', TRUE );";
         String q1 = "INSERT INTO userTable VALUES (" + uid + ", '" + uname + "', " + age + ", '" + passSalt + "', '" + passHash + "', '" + created_date + "', NULL, FALSE" + ");" ;
         String qInvID = "SELECT * FROM userInvTbl WHERE itemID=(SELECT max(itemID) FROM userInvTbl);";
@@ -35,6 +36,13 @@ public class CRUD {
         con1.s.executeUpdate(q1);
         con1.s.executeUpdate(q2);
         System.out.println("Successfully created account");
+    }
+
+    public static void updatePassword(dbConnection con1, String uname, String passSalt, String passHash) throws SQLException {
+        Date updated_date = new java.sql.Date(System.currentTimeMillis());
+        String qpass = "UPDATE userTable SET pass_salt = '" + passSalt + "', pass_hash = '" + passHash + "', updated_date = '" + updated_date + "' WHERE user_Name = '" + uname + "';";
+        con1.s.executeUpdate(qpass);
+        System.out.println("Successfully changed password");
     }
 
     public static void logIn(dbConnection con1, String uname, boolean loggedIn) throws SQLException {

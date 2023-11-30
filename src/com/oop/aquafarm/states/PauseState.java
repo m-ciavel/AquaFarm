@@ -16,7 +16,7 @@ public class PauseState extends GameState {
     private final Button btnResume, btnMenu;
     private final int btnWidth = 144;
     private final int btnHeight = 42;
-    private int newbtnWidth = (int) (GamePanel.width/5);
+    private int newbtnWidth = GamePanel.width/5;
     private int newbtnHeight = newbtnWidth * btnHeight/btnWidth;
 
     public PauseState(GameStateManager gsm) {

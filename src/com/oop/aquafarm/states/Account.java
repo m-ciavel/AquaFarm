@@ -17,12 +17,15 @@ import java.io.File;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 public class Account extends JFrame implements ActionListener {
 
     GameStateManager gsm;
     private int iterations = CRUD.getIterations();
+    static String generatedSecuredPasswordHash = null;
+    static String passSalt, passHash;
     dbConnection con1 = new dbConnection();
     private JLabel securityLbl;
     private JLabel passLbl, newpassLbl, confnewpassLbl, notifLbl;
@@ -55,8 +58,8 @@ public class Account extends JFrame implements ActionListener {
         newpassLbl = new JLabel("New password");
         newpassLbl.setBounds((GamePanel.width - newpassLbl.getWidth())/6,350, 1000,60);
 
-        confnewpassLbl = new JLabel("New password");
-        confnewpassLbl.setBounds((GamePanel.width - newpassLbl.getWidth())/6,420, 1000,60);
+        confnewpassLbl = new JLabel("Confirm password");
+        confnewpassLbl.setBounds((GamePanel.width - confnewpassLbl.getWidth())/6,420, 1000,60);
 
         notifLbl = new JLabel("",  SwingConstants.CENTER);
         notifLbl.setBounds(0,480, GamePanel.width,30);
@@ -153,9 +156,7 @@ public class Account extends JFrame implements ActionListener {
                 }
 
             }else {
-                // create connection
                 try {
-
                     String qUser = "SELECT * FROM userTable WHERE user_Name = '" + Login.getUname() + "';";
                     ResultSet rs = con1.s.executeQuery(qUser);
                     if (rs.next()) {
@@ -167,10 +168,43 @@ public class Account extends JFrame implements ActionListener {
                             System.out.println(matched);
 
                             if (matched){
-                                //continue to submit
+                                if(Arrays.equals(newpassPF.getPassword(), confnewpassPF.getPassword())){
+                                    // new password
+                                    newpassPF.setBorder(new LineBorder(Color.white,3));
+                                    confnewpassPF.setBorder(new LineBorder(Color.white,3));
+                                    try {
+                                        generatedSecuredPasswordHash = CRUD.doHashing(Arrays.toString(newpassPF.getPassword()));
+                                        String[] parts = generatedSecuredPasswordHash.split(":");
+                                        passSalt = parts[1];
+                                        passHash = parts[2];
+                                    } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+                                        throw new RuntimeException(ex);
+                                    }
+                                    CRUD.updatePassword(con1, Login.getUname(), passSalt, passHash);
+                                    JOptionPane.showConfirmDialog(null, "Please login again", "Login", JOptionPane.DEFAULT_OPTION);
+                                    Login.loggedIn = false;
+                                    Login.setUname("");
+                                    try {
+                                        CRUD.logIn(con1, Login.getUname(), false);
+                                    } catch (SQLException ex) {
+                                        throw new RuntimeException(ex);
+                                    }
+                                    if (gsm.isStateActive(GameStateManager.TITLE)){
+                                        GameStateManager.pop(GameStateManager.TITLE);
+                                    }else{
+                                        gsm.add(GameStateManager.TITLE);
+                                    }
+                                    Window.window.setVisible(true);
+                                    this.dispose();
+                                }else if (!Arrays.equals(newpassPF.getPassword(), confnewpassPF.getPassword())){
+                                    System.out.println("Passwords do not match");
+                                    notifLbl.setText("Passwords   do   not   match");
+                                    newpassPF.setBorder(new LineBorder(Button.borderdarkred,3));
+                                    confnewpassPF.setBorder(new LineBorder(Button.borderdarkred,3));
+                                }
                             }else if (!matched){
                                 System.out.println("Password does not match");
-                                notifLbl.setText("Username   and   password   does   not   seem   to   match");
+                                notifLbl.setText("Password   does   not   seem   to   match   password   in   database");
                                 passPF.setBorder(new LineBorder(Button.borderdarkred,3));
                             }
                         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
@@ -178,8 +212,7 @@ public class Account extends JFrame implements ActionListener {
                         }
 
                     } else{
-                        notifLbl.setText("Password does not seem to be right");
-                        passPF.setBorder(new LineBorder(Button.borderdarkred,3));
+                        notifLbl.setText("Can't find user in database");
                     }
 
                 } catch (Exception ex) {
