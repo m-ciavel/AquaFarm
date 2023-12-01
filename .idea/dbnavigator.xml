@@ -20,10 +20,7 @@
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="30b2f2bb-9dcb-40c6-b82a-f94eb96c5fca" object-ref="schemas/aquafarm/tables/usertable" />
-      <object connection-id="30b2f2bb-9dcb-40c6-b82a-f94eb96c5fca" object-ref="schemas/aquafarm/tables/userfishinvtbl" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="30b2f2bb-9dcb-40c6-b82a-f94eb96c5fca" dataset="aquafarm.fishtbl" active-filter-id="" />

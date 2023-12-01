@@ -105,8 +105,6 @@ public class PlayState extends GameState{
         food = new Food(origin);
         fishes = new Fish[50];
 
-
-
         initbtnImage();
 
         btnmainmenu = new Button(Img_mainmenu, new Vector2f(GamePanel.width - 32, 28), 30, 30);
@@ -238,7 +236,6 @@ public class PlayState extends GameState{
         sells.update(time);
 
         for (Fish fish : fishes) {
-
             if (fish != null) {
                 fish.callEatingLogic(food);
                 fish.seek_food(food.foodLocations);
@@ -285,10 +282,8 @@ public class PlayState extends GameState{
         sells.input(mouseIn);
 
         if (isSellingFish && mouseIn.getButton() == 1) {
-
             for (Fish fish : fishes) {
                 if (fish != null) {
-
                     if (mouseIn.getX() >= fish.getFishX() &&
                             mouseIn.getX() <= fish.getFishX() + fish.getFishWidth() &&
                             mouseIn.getY() >= fish.getFishY() &&
@@ -310,7 +305,6 @@ public class PlayState extends GameState{
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
-                        break;
                     }
                 }
             }

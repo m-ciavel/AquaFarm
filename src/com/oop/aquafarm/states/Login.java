@@ -169,10 +169,10 @@ public class Login extends JFrame  implements ActionListener {
                                 loggedIn = true;
                                 CRUD.logIn(con1, uname, true);
                                 if (gsm.isStateActive(GameStateManager.PLAY)){
-                                    gsm.pop(GameStateManager.PLAY);
+                                    GameStateManager.pop(GameStateManager.PLAY);
                                 }else{
                                     gsm.add(GameStateManager.PLAY);
-                                    gsm.pop(GameStateManager.TITLE);
+                                    GameStateManager.pop(GameStateManager.TITLE);
                                 }
                                 CRUD.getFish(con1, uname);
                                 Window.window.setVisible(true);
