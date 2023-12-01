@@ -62,7 +62,6 @@ public class CRUD {
 
 
     public static void addFish(dbConnection con1, Fish fish) throws SQLException {
-
         if (PlayState.fishCount <20) {
             Music.playSummonSound();
             int fishID = 0;
@@ -127,6 +126,14 @@ public class CRUD {
 
     }
 
+    public static void getfPrice(dbConnection con1, Fish fish) throws SQLException {
+        String qfprice = "SELECT fish_Price from fishTbl WHERE fish_Type = '" + fish.getFishtype() + "';";
+        ResultSet rsfPrice = con1.s.executeQuery(qfprice);
+        if(rsfPrice.next()){
+            PlayState.price = rsfPrice.getInt("fish_Price");
+        }
+    }
+
     public static void spendMoney(dbConnection con1) throws SQLException {
         String qInvMoney = "UPDATE userInvTbl SET money =" + Finance.money + " WHERE user_Name = '" + Login.getUname() + "';";
         con1.s.executeUpdate(qInvMoney);
@@ -142,40 +149,12 @@ public class CRUD {
         return Finance.money;
     }
 
-
-//    public static void logIn(String uname, boolean loggedIn) throws SQLException {
-//        dbConnection con1 = new dbConnection();
-//        Date loggedInDate = new java.sql.Date(System.currentTimeMillis());
-//        Date expireDate =  new java.sql.Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000);
-//        long sessionID = generatesessionID();
-//        boolean sidExists = false;
-//        String qsid = "SELECT * FROM sessionTbl WHERE session_ID = '" + sessionID + "';";
-//        ResultSet rssid = con1.s.executeQuery(qsid);
-//        if (rssid.next()){
-//            do{
-//                sessionID = (int) generatesessionID();
-//                rssid = con1.s.executeQuery(qsid);
-//                sidExists = rssid.next();
-//            }while(sidExists);
-//            if(!sidExists){
-//                String qLog = "UPDATE userTable SET logged_in = " + loggedIn + " WHERE user_Name = '" + uname + "';";
-////                String qSession = "INSERT INTO sessionTbl(" + sessionID + "', '" + loggedInDate + "', '" + expireDate + "');";
-////                System.out.println(qLog); System.out.println(qSession);
-//        con1.s.executeUpdate(qLog);
-//                System.out.println("logged in @ " + loggedInDate);
-//                System.out.println("session expires at @ " + expireDate);
-//            }
-//        }else{
-//            String qLog = "UPDATE userTable SET logged_in = " + loggedIn + " WHERE user_Name = '" + uname + "';";
-//            String qSession = "INSERT INTO sessionTbl(" + sessionID + "', '" + loggedInDate + "', '" + expireDate + "');";
-//            System.out.println(qLog); System.out.println(qSession);
-//        con1.s.executeUpdate(qLog);
-//            System.out.println("logged in @ " + loggedInDate);
-//            System.out.println("session expires at @ " + expireDate);
-//        }
-//
-//
-//    }
+    public static void deleteUser(dbConnection con1, String uname) throws SQLException {
+        String qdelUser = "UPDATE users tallu INNER JOIN userTable tuser ON tallu.user_ID = tuser.user_ID SET is_active = FALSE WHERE tuser.user_Name = '" + uname + "';";
+        String qdel = "DELETE FROM userTable WHERE user_Name = '" + uname + "';";
+        con1.s.executeUpdate(qdelUser);
+        con1.s.executeUpdate(qdel);
+    }
 
 
 

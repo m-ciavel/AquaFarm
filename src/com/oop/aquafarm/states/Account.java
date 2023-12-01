@@ -30,7 +30,7 @@ public class Account extends JFrame implements ActionListener {
     private JLabel securityLbl;
     private JLabel passLbl, newpassLbl, confnewpassLbl, notifLbl;
     private JPasswordField passPF, newpassPF, confnewpassPF;
-    private JButton confirmBtn, backBtn;
+    private JButton confirmBtn, backBtn, deleteBtn;
 
     ImageIcon backBtnIcon = new ImageIcon("res/menubutton/arrow back.png");
 
@@ -72,6 +72,14 @@ public class Account extends JFrame implements ActionListener {
         confirmBtn.setForeground(Color.WHITE);
         confirmBtn.addActionListener(this);
 
+        deleteBtn = new JButton("Delete Account");
+        deleteBtn.setBounds((GamePanel.width / 2) - 175, 585, 350, 30);
+        deleteBtn.setFont(new Font("Courier New", Font.BOLD, 15));
+        deleteBtn.setForeground(Color.WHITE);
+        deleteBtn.setContentAreaFilled(false);
+        deleteBtn.setBorderPainted(false);
+        deleteBtn.addActionListener(this);
+
         backBtn = new JButton();
         backBtn.setIcon(backBtnIcon);
         backBtn.setBounds(GamePanel.width - 100, GamePanel.height - 100, 100, 50);
@@ -97,6 +105,7 @@ public class Account extends JFrame implements ActionListener {
         add(notifLbl);
 
         add(confirmBtn);
+        add(deleteBtn);
         add(backBtn);
 
         input();
@@ -212,7 +221,7 @@ public class Account extends JFrame implements ActionListener {
                         }
 
                     } else{
-                        notifLbl.setText("Can't find user in database");
+                        notifLbl.setText("Can't   find   user   in   database");
                     }
 
                 } catch (Exception ex) {
@@ -220,6 +229,53 @@ public class Account extends JFrame implements ActionListener {
                 }
 
             }
+
+        }
+        if(e.getSource() == deleteBtn){
+            if(passPF.getPassword().length == 0){
+                notifLbl.setText("Please   input   your   password");
+                passPF.setBorder(new LineBorder(Button.borderdarkred,3));
+            }else{
+                try{
+                    String qUser = "SELECT * FROM userTable WHERE user_Name = '" + Login.getUname() + "';";
+                    ResultSet rs = con1.s.executeQuery(qUser);
+                    if (rs.next()) {
+                        String pSalt = rs.getString("pass_salt");
+                        String pHash = rs.getString("pass_hash");
+
+                        try {
+                            boolean matched = CRUD.validatePassword(Arrays.toString(passPF.getPassword()), iterations + ":" + pSalt + ":" + pHash);
+                            System.out.println(matched);
+
+                            if (matched){
+                                JOptionPane.showConfirmDialog(null, "Sea you soon T^T", "Delete Account", JOptionPane.DEFAULT_OPTION);
+                                CRUD.deleteUser(con1, Login.getUname());
+                                Login.setUname(null);
+                                Login.loggedIn = false;
+                                if (gsm.isStateActive(GameStateManager.TITLE)){
+                                    GameStateManager.pop(GameStateManager.TITLE);
+                                }else{
+                                    gsm.add(GameStateManager.TITLE);
+                                    Window.window.setVisible(true);
+                                }
+                                this.dispose();
+                            }else if (!matched){
+                                System.out.println("Password does not match");
+                                notifLbl.setText("Password   does   not   seem   to   match   password   in   database");
+                                passPF.setBorder(new LineBorder(Button.borderdarkred,3));
+                            }
+                        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                    } else{
+                        notifLbl.setText("Can't   find   user   in   database");
+                    }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
 
         }
         if(e.getSource() == backBtn){

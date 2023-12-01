@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Finance extends Entity {
-    public static int money = 100000;
+    public static int money = 150;
 
     private int imageX, imageY;
 

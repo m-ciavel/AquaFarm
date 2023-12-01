@@ -133,7 +133,7 @@ public class PlayState extends GameState{
         btnFish1.addEvent(e -> {
             Fish fish = new Fish(origin, "AtlanticBass", null, null, 0);
             CRUD.addFish(con1, fish);
-            price = 10;
+            CRUD.getfPrice(con1, fish);
             if (fishAdded) {
                 unlock_fish2++;
                 fishAdded = false;
@@ -147,7 +147,7 @@ public class PlayState extends GameState{
         btnFish2.addEvent(e -> {
             Fish fish = new Fish(origin, "BlueGill", null, null, 0);
             CRUD.addFish(con1, fish);
-            price = 20;
+            CRUD.getfPrice(con1, fish);
 
             if (fishAdded) {
                 unlock_fish3++;
@@ -161,7 +161,7 @@ public class PlayState extends GameState{
         btnFish3.addEvent(e -> {
             Fish fish = new Fish(origin, "Clownfish", null, null, 0);
             CRUD.addFish(con1, fish);
-            price = 30;
+            CRUD.getfPrice(con1, fish);
             if (fishAdded) {
                 unlock_fish4++;
                 fishAdded = false;
@@ -174,7 +174,7 @@ public class PlayState extends GameState{
         btnFish4.addEvent(e -> {
             Fish fish = new Fish(origin, "GoldenTench", null, null, 0);
             CRUD.addFish(con1, fish);
-            price = 40;
+            CRUD.getfPrice(con1, fish);
             if (fishAdded) {
                 unlock_fish5++;
                 fishAdded = false;
@@ -187,7 +187,7 @@ public class PlayState extends GameState{
         btnFish5.addEvent(e -> {
             Fish fish = new Fish(origin, "Guppy", null, null, 0);
             CRUD.addFish(con1, fish);
-            price = 50;
+            CRUD.getfPrice(con1, fish);
             if (fishAdded) {
                 unlock_fish6++;
                 fishAdded = false;
@@ -201,7 +201,7 @@ public class PlayState extends GameState{
         btnFish6.addEvent(e -> {
             Fish fish = new Fish(origin, "HIghFinBandedShark", null, null, 0);
             CRUD.addFish(con1, fish);
-            price = 60;
+            CRUD.getfPrice(con1, fish);
         });
 
         btnBuyFood.addEvent(e -> {
