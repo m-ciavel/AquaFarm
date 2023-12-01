@@ -5,6 +5,7 @@ import com.oop.aquafarm.entity.Finance;
 import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.states.Login;
 import com.oop.aquafarm.states.PlayState;
+import com.oop.aquafarm.ui.Button;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -54,35 +55,41 @@ public class CRUD {
 
 
     public static void addFish(dbConnection con1, Fish fish) throws SQLException {
-        Music.playSummonSound();
-        int fishID = 0;
-        int fishType = 0;
-        Date fishDay = new java.sql.Date(System.currentTimeMillis());
-        String qfID = "SELECT * FROM userFishInvTbl WHERE userFishID=(SELECT max(userFishID) FROM userFishInvTbl);";
-        String qfishtype = "SELECT fish_ID AS fishType FROM fishtbl WHERE fish_type = '" + fish.getFishtype() + "';";
-        ResultSet rsfID = con1.s.executeQuery(qfID);
-        String fishname = fish.getFishName();
-        if(rsfID.next()){
-            fishID = rsfID.getInt("userFishID");
-            fishID++;
-            fishname = fish.getFishName() + fishID;
+
+        if (PlayState.fishCount <20) {
+            Music.playSummonSound();
+            int fishID = 0;
+            int fishType = 0;
+            Date fishDay = new java.sql.Date(System.currentTimeMillis());
+            String qfID = "SELECT * FROM userFishInvTbl WHERE userFishID=(SELECT max(userFishID) FROM userFishInvTbl);";
+            String qfishtype = "SELECT fish_ID AS fishType FROM fishtbl WHERE fish_type = '" + fish.getFishtype() + "';";
+            ResultSet rsfID = con1.s.executeQuery(qfID);
+            String fishname = fish.getFishName();
+            if (rsfID.next()) {
+                fishID = rsfID.getInt("userFishID");
+                fishID++;
+                fishname = fish.getFishName() + fishID;
+            }
+
+            ResultSet rsFtype = con1.s.executeQuery(qfishtype);
+            if (rsFtype.next()) {
+                fishType = rsFtype.getInt("fishType");
+            }
+
+            String qFishInv = "INSERT INTO userFishInvTbl VALUES (" + fishID + ", '" + Login.getUname() + "', " + fishType + ", '" + fishDay + "');";
+            String qFishStat = "INSERT INTO userFishStatusTbl VALUES (" + fishID + ", '" + fishname + "', '" + fish.getFishGender() + "', " + fish.getFishsize() + ");";
+            PlayState.addFishToArray(fish);
+            String qInvMoney = "UPDATE userInvTbl SET money =" + Finance.money + " WHERE user_Name = '" + Login.getUname() + "';";
+            //        System.out.println(qFishInv);  System.out.println(qFishStat);
+            con1.s.executeUpdate(qFishInv);
+            con1.s.executeUpdate(qFishStat);
+            con1.s.executeUpdate(qInvMoney);
+
+            System.out.println("Added new fish in inv");
+
+
+
         }
-
-        ResultSet rsFtype = con1.s.executeQuery(qfishtype);
-        if(rsFtype.next()){
-            fishType = rsFtype.getInt("fishType");
-        }
-
-        String qFishInv = "INSERT INTO userFishInvTbl VALUES (" + fishID + ", '" + Login.getUname() + "', " + fishType + ", '" + fishDay + "');";
-        String qFishStat = "INSERT INTO userFishStatusTbl VALUES (" + fishID + ", '" + fishname + "', '" + fish.getFishGender() + "', " + fish.getFishsize() + ");";
-        PlayState.addFishToArray(fish);
-        String qInvMoney = "UPDATE userInvTbl SET money =" + Finance.money + " WHERE user_Name = '" + Login.getUname() + "';";
-        //        System.out.println(qFishInv);  System.out.println(qFishStat);
-        con1.s.executeUpdate(qFishInv);
-        con1.s.executeUpdate(qFishStat);
-        con1.s.executeUpdate(qInvMoney);
-
-        System.out.println("Added new fish in inv");
     }
     public static void removeFish(dbConnection con1, Fish fish) throws SQLException {
         String qdFish = "DELETE tinv FROM userfishinvtbl tinv INNER JOIN userFishstatusTbl tstat ON tinv.userFishid = tstat.userFishid WHERE fish_name = '" + fish.getFishName() + "';";
@@ -91,6 +98,11 @@ public class CRUD {
         con1.s.executeUpdate(qInvMoney);
         PlayState.removeFishFromArray(fish);
         System.out.println("Sold the fish for grandeur");
+    }
+
+    public static void updateFish(dbConnection con1, Fish fish) throws SQLException {
+        String qudFish = "UPDATE userFishstatusTbl tstat INNER JOIN userfishinvtbl tinv ON tstat.userFishid = tinv.userFishid SET fish_size = " + fish.getFishsize() + " WHERE tinv.user_Name = '" + Login.getUname() + "' AND tstat.fish_name = '" + fish.getFishName() + "';";
+        con1.s.executeUpdate(qudFish);
     }
 
     public static void getFish() throws SQLException {

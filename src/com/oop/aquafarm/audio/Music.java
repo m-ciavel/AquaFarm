@@ -5,7 +5,13 @@ import java.io.File;
 import java.io.IOException;
 
 public class Music {
+
+//    private static Clip clip;
+//    private static String location;
+    public static boolean isPlaying = false;
     public static String fpath = "res/audio/Les Petits Poissons Dans l'Eau Instrumental.wav";
+
+//    public static String quitfpath = "res/audio/Poor Unfortunate Souls  Film Versions Instrumental 1.wav";
 
     private static FloatControl musicVolumeControl;
 
@@ -17,6 +23,7 @@ public class Music {
         File audioFile = new File(location);
         try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile)) {
             Clip clip = AudioSystem.getClip();
+//            Music.clip = clip;
             clip.open(audioInputStream);
             return clip;
         }
@@ -38,12 +45,34 @@ public class Music {
         try {
             Clip clip = createClip(location);
             musicVolumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            clip.start();
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
+//            Music.location = location;
+//            Music.clip = clip;
+            startMusic(clip);
+            isPlaying = true;
+            System.out.println("Playing: " + location);
         } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
         }
     }
+
+    public static void startMusic(Clip clip){
+        clip.start();
+        clip.loop(Clip.LOOP_CONTINUOUSLY);
+    }
+
+//    public static void stopMusic(Clip clip){
+//        clip.stop();
+//        clip.close();
+//        System.out.println("Stopped playing: " + location);
+//    }
+//
+//    public static String getLocation(){
+//        return Music.location;
+//    }
+//
+//    public static Clip getClip(){
+//        return Music.clip;
+//    }
 
     public static void playsound(String location) {
         try {
@@ -65,8 +94,3 @@ public class Music {
     }
 
 }
-
-
-
-
-

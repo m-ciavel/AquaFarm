@@ -7,14 +7,9 @@ import com.oop.aquafarm.ui.Button;
 import com.oop.aquafarm.util.CRUD;
 import com.oop.aquafarm.util.dbConnection;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import java.awt.FlowLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -23,8 +18,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.ResultSet;
 import java.util.Arrays;
-
-import static javax.swing.SwingConstants.CENTER;
 
 public class Login extends JFrame  implements ActionListener {
     private JLabel loginLbl;
@@ -48,6 +41,9 @@ public class Login extends JFrame  implements ActionListener {
         setLayout(new FlowLayout());
         setSize(GamePanel.width, GamePanel.height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("res/hand/cursor.open.png").getImage(), new Point(0,0),"custom"));
+
         setResizable(false);
         setLocationRelativeTo(null);
         BufferedImage background  = null;
@@ -100,12 +96,6 @@ public class Login extends JFrame  implements ActionListener {
             unameLbl.setFont(font.deriveFont(Font.BOLD, 50));
             passLbl.setFont(font.deriveFont(Font.BOLD, 50));
             notifLbl.setFont(font.deriveFont(Font.PLAIN, 30));
-
-//            unameTF.setFont(font.deriveFont(Font.BOLD, 40));
-//            passPF.setFont(font.deriveFont(Font.BOLD, 40));
-
-//            signupBtn.setFont(font.deriveFont(Font.BOLD, 40));
-//            loginBtn.setFont(font.deriveFont(Font.BOLD, 40));
 
 
         } catch (Exception e) {}
@@ -224,6 +214,9 @@ public class Login extends JFrame  implements ActionListener {
 
     }
 
+    public static void setUname(String uname){
+        Login.uname = uname;
+    }
     public static String getUname(){
         return uname;
     }

@@ -6,10 +6,11 @@ import com.oop.aquafarm.util.CRUD;
 import com.oop.aquafarm.util.dbConnection;
 
 import javax.swing.JFrame;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
-import java.awt.FlowLayout;
+import java.awt.image.BufferedImage;
 import java.sql.SQLException;
 
 public class Window extends JFrame implements WindowListener {
@@ -29,9 +30,9 @@ public class Window extends JFrame implements WindowListener {
         pack();
         setLocationRelativeTo(null);
         addWindowListener(this);
-//        BufferedImage cursorImage = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-//        Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new java.awt.Point(0, 0), "blank cursor");
-//        setCursor(blankCursor);
+        BufferedImage cursorImage = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+        Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new java.awt.Point(0, 0), "blank cursor");
+        setCursor(blankCursor);
         setResizable(false);
         setVisible(true);
     }

@@ -3,6 +3,7 @@ package com.oop.aquafarm.states;
 import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.Window;
 import com.oop.aquafarm.audio.Music;
+import com.oop.aquafarm.entity.Hand;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.ui.Button;
 import com.oop.aquafarm.util.KeyHandler;
@@ -16,8 +17,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import static com.oop.aquafarm.audio.Music.playMusic;
+
 
 public class TitleState extends GameState {
+
+    Hand hands;
 
     private final BufferedImage imgButtonPlay, imgButtonSettings, imgButtonExit;
     private final BufferedImage imgHoverPlay, imgHoverSettings, imgHoverExit;
@@ -34,6 +39,8 @@ public class TitleState extends GameState {
     public TitleState(GameStateManager gsm) {
 
         super(gsm);
+        hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2), "cursor");
+
 
         imgButtonPlay = GameStateManager.button.getSubimage(0, 0, btnWidth, btnHeight);
         imgButtonSettings = GameStateManager.button.getSubimage(btnWidth,0, btnWidth, btnHeight);
@@ -85,11 +92,19 @@ public class TitleState extends GameState {
             }
         });
 
-        Music.playMusic(Music.fpath);
+        if(Music.isPlaying){
+            //do nothing
+        }else {
+            Music.playMusic(Music.fpath);
+        }
+
+
+
     }
 
     @Override
     public void update(double time) {
+        hands.update(time);
 //        System.out.println("clicked:" + Button.clicked);
 //        System.out.println("pressed:" + Button.pressed);
 
@@ -97,7 +112,7 @@ public class TitleState extends GameState {
 
     @Override
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
-
+        hands.input(mouseIn);
         btnPlay.input(mouseIn, keyh);
         btnSettings.input(mouseIn, keyh);
         btnExit.input(mouseIn, keyh);
@@ -117,6 +132,7 @@ public class TitleState extends GameState {
         btnPlay.render(g);
         btnSettings.render(g);
         btnExit.render(g);
+        hands.render(g);
 
     }
 

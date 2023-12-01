@@ -1,10 +1,13 @@
 package com.oop.aquafarm.states;
 
+import com.oop.aquafarm.GamePanel;
 import com.oop.aquafarm.audio.Music;
 import com.oop.aquafarm.graphics.CFont;
+import com.oop.aquafarm.entity.Hand;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.util.KeyHandler;
 import com.oop.aquafarm.util.MouseHandler;
+import com.oop.aquafarm.util.Vector2f;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -14,9 +17,12 @@ public class SettingsState extends GameState {
     private int soundLevel = 50;
     private CFont font;
 
+
+    Hand hands;
+
     public SettingsState(GameStateManager gsm) {
         super(gsm);
-        System.out.println("Settings state");
+        hands = new Hand(new Vector2f(((float) GamePanel.width /2), (float) GamePanel.height / 2), "cursor");
 
         // Optimize font creation
         font = new CFont(Color.BLACK, "res/font/pixelated.ttf", "pixelated", 70, 10, 150);
@@ -24,7 +30,7 @@ public class SettingsState extends GameState {
 
     @Override
     public void update(double time) {
-        // Update logic, if any
+        hands.update(time);
     }
 
     @Override
@@ -33,6 +39,7 @@ public class SettingsState extends GameState {
             handleMouseClick(mouseIn.getX(), mouseIn.getY());
             MouseHandler.mouseClicked = false;
         }
+        hands.input(mouseIn);
     }
 
     private void handleMouseClick(int mouseX, int mouseY) {
@@ -67,6 +74,8 @@ public class SettingsState extends GameState {
 
         // Optimize font rendering
         font.drawString(g, "Music:");
+
+        hands.render(g);
     }
 
     private void drawRectWithBorder(Graphics2D g, int x, int y, int width, int height, int borderWidth, Color borderColor) {
