@@ -38,7 +38,6 @@ public class Button {
     private boolean hoverSoundPlayed = false;
 
     private float pressedtime;
-
     public boolean enabled = true;
 
 
@@ -97,7 +96,6 @@ public class Button {
         return enabled;
     }
 
-
     public void addPressedImage(BufferedImage image) {
         this.pressedImage = image;
     }
@@ -144,9 +142,7 @@ public class Button {
             float iWidth = value + bounds.getWidth();
             float iHeight = value + bounds.getHeight();
             this.bounds = new AABB(iPos, (int) iWidth, (int) iHeight);
-
         }
-
         hovering = true;
     }
 
@@ -172,9 +168,7 @@ public class Button {
 
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
 
-        if (enabled) {
-
-
+        if(enabled){
             if (bounds.inside(mouseIn.getX(), mouseIn.getY())) {
 
                 if (canHover && !hovering) {
@@ -187,18 +181,10 @@ public class Button {
 
                     pressedtime = (float) System.nanoTime() / 1000000;
 
-                for (int i = 0; i < events.size(); i++) {
-                    try {
-                        events.get(i).action(1);
-                    } catch (SQLException | UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
                     for (int i = 0; i < events.size(); i++) {
                         try {
                             events.get(i).action(1);
-                        } catch (SQLException | UnsupportedAudioFileException | LineUnavailableException |
-                                 IOException e) {
+                        } catch (SQLException | UnsupportedAudioFileException | LineUnavailableException | IOException e) {
                             throw new RuntimeException(e);
                         }
                     }
@@ -211,10 +197,12 @@ public class Button {
                 hover(-hoverSize);
                 hovering = false;
             }
-
-
         }
 
-
     }
+
+
+
+
+
 }

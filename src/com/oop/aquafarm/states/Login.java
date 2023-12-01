@@ -17,6 +17,7 @@ import java.io.File;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 public class Login extends JFrame  implements ActionListener {
@@ -165,16 +166,17 @@ public class Login extends JFrame  implements ActionListener {
                             System.out.println(matched);
 
                             if (matched){
-                                if (gsm.isStateActive(GameStateManager.PLAY)){
-                                    gsm.pop(GameStateManager.PLAY);
-                                }else{
-                                    gsm.add(GameStateManager.PLAY);
-                                    gsm.pop(GameStateManager.TITLE);
-                                }
                                 loggedIn = true;
                                 CRUD.logIn(con1, uname, true);
-                                this.dispose();
+                                if (gsm.isStateActive(GameStateManager.PLAY)){
+                                    GameStateManager.pop(GameStateManager.PLAY);
+                                }else{
+                                    gsm.add(GameStateManager.PLAY);
+                                    GameStateManager.pop(GameStateManager.TITLE);
+                                }
+                                CRUD.getFish(con1, uname);
                                 Window.window.setVisible(true);
+                                this.dispose();
                             }else if (!matched){
                                 System.out.println("Password does not match");
                                 notifLbl.setText("Username   and   password   does   not   seem   to   match");

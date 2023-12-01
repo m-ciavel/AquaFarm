@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 
 public class Finance extends Entity {
     public static int money = 150;
+
     private int imageX, imageY;
 
     public Finance(Vector2f origin) {
@@ -47,12 +48,13 @@ public class Finance extends Entity {
 
     @Override
     public void input(MouseHandler mouseIn) {
-        this.imageX = mouseIn.getX() - GamePanel.tilesize / 2;
-        this.imageY = mouseIn.getY() - GamePanel.tilesize / 2;
-        if (mouseIn.getButton() == 1) {
-            clicked = true;
-        } else if (mouseIn.getButton() == -1) {
-            clicked = false;
-        }
+            this.imageX = mouseIn.getX() - GamePanel.tilesize / 2;
+            this.imageY = mouseIn.getY() - GamePanel.tilesize / 2;
+            if (mouseIn.getButton() == 1) {
+                clicked = true;
+            } else if (mouseIn.getButton() == -1) {
+                clicked = false;
+            }
     }
+
 }
