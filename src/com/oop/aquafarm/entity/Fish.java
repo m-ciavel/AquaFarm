@@ -34,9 +34,10 @@ public class Fish extends Entity {
     private String fish_type, fish_name, gender;
     private int fish_size;
 
+    private int price;
+
     public Fish(Vector2f origin, String fish_type, String fish_name, String gender, int fish_size) {
         super(origin);
-
 
         this.fish_type = fish_type;
         this.fish_name = fish_name;
@@ -180,9 +181,6 @@ public class Fish extends Entity {
                 g2.drawImage(genderImg, genderX + 30, genderY, scaledWidth, scaledHeight, null);
             }
         }
-
-
-
 
 
     }

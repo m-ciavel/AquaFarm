@@ -99,8 +99,6 @@ public class TitleState extends GameState {
             Music.playMusic(Music.fpath);
         }
 
-
-
     }
 
     @Override

@@ -46,9 +46,23 @@ public class PlayState extends GameState{
     private int bottomY = GamePanel.height - btnSpacing;
 
     private boolean clicked = false;
+    public static int fishCount = 0;
+    private static final int MAX_FISH = 20;
+
+    public static int unlock_fish2;
+    public static int unlock_fish3;
+    public static int unlock_fish4;
+    public static int unlock_fish5;
+    public static int unlock_fish6;
+
+
 
     private boolean isBuyingFood = false;
     private boolean isSellingFish = false;
+    private static boolean fishAdded = false;
+
+    public static int price;
+
 
     private void initbtnImage(){
         Img_mainmenu = GameStateManager.mainmenubtn.getSubimage(0, 0, 50, 50);
@@ -84,7 +98,7 @@ public class PlayState extends GameState{
 
         sells = new Finance(new Vector2f((float) GamePanel.width / 2, (float) GamePanel.height / 2));
         food = new Food(origin);
-        fishes = new Fish[50];
+        fishes = new Fish[20];
 
         try {
             CRUD.getFish();
@@ -115,6 +129,14 @@ public class PlayState extends GameState{
 
 
         btnmainmenu.addEvent(e -> {
+            if (gsm.isStateActive(GameStateManager.PAUSE)) {
+                GameStateManager.pop(GameStateManager.PAUSE);
+            } else {
+                gsm.add(GameStateManager.PAUSE);
+            }
+        });
+
+        btnmainmenu.addEvent(e -> {
             if(gsm.isStateActive(GameStateManager.PAUSE)) {
                 GameStateManager.pop(GameStateManager.PAUSE);
             } else {
@@ -123,42 +145,96 @@ public class PlayState extends GameState{
         });
 
 
+        btnFish1.addEvent(e -> {
+            Fish fish = new Fish(origin, "AtlanticBass", null, null, 0);
+            CRUD.addFish(con1, fish);
+            price = 10;
+            if (fishAdded) {
+                unlock_fish2++;
+                fishAdded = false;
+                if (unlock_fish2 == 15) {
+                    btnFish2.enabled = true;
+                }
+            }
+
+        });
+
+
         btnFish2.addEvent(e -> {
             Fish fish = new Fish(origin, "BlueGill", null, null, 0);
             CRUD.addFish(con1, fish);
+            price = 20;
+
+            if (fishAdded) {
+                unlock_fish3++;
+                fishAdded = false;
+                if (unlock_fish3 == 15) {
+                    btnFish3.enabled = true;
+                }
+            }
         });
 
         btnFish3.addEvent(e -> {
             Fish fish = new Fish(origin, "Clownfish", null, null, 0);
             CRUD.addFish(con1, fish);
+            price = 30;
+            if (fishAdded) {
+                unlock_fish4++;
+                fishAdded = false;
+                if (unlock_fish4 == 15) {
+                    btnFish3.enabled = true;
+                }
+            }
         });
 
         btnFish4.addEvent(e -> {
             Fish fish = new Fish(origin, "GoldenTench", null, null, 0);
             CRUD.addFish(con1, fish);
+            price = 40;
+            if (fishAdded) {
+                unlock_fish5++;
+                fishAdded = false;
+                if (unlock_fish5 == 15) {
+                    btnFish3.enabled = true;
+                }
+            }
         });
 
         btnFish5.addEvent(e -> {
             Fish fish = new Fish(origin, "Guppy", null, null, 0);
             CRUD.addFish(con1, fish);
+            price = 50;
+            if (fishAdded) {
+                unlock_fish6++;
+                fishAdded = false;
+                if (unlock_fish6 == 15) {
+                    btnFish3.enabled = true;
+                }
+            }
         });
-
 
         btnFish6.addEvent(e -> {
             Fish fish = new Fish(origin, "HIghFinBandedShark", null, null, 0);
             CRUD.addFish(con1, fish);
+            price = 60;
+
         });
 
         btnBuyFood.addEvent(e -> {
             isBuyingFood = !isBuyingFood;
+            btnSellFish.enabled = !btnSellFish.enabled;
         });
-
 
         btnSellFish.addEvent(e -> {
             isSellingFish = !isSellingFish;
+            btnBuyFood.enabled = !btnBuyFood.enabled;
         });
 
-
+        btnFish2.enabled = false;
+        btnFish3.enabled = false;
+        btnFish4.enabled = false;
+        btnFish5.enabled = false;
+        btnFish6.enabled = false;
 
     }
 
@@ -197,6 +273,7 @@ public class PlayState extends GameState{
 
         if (isBuyingFood) {
             food.input(mouseIn);
+            btnSellFish.enabled = false;
         }
 
         for (Fish fish : fishes) {
@@ -209,8 +286,6 @@ public class PlayState extends GameState{
                 }
             }
         }
-
-
 
         btnmainmenu.input(mouseIn, keyh);
         btnFish1.input(mouseIn, keyh);
@@ -236,13 +311,13 @@ public class PlayState extends GameState{
                             mouseIn.getY() <= fish.getFishY() + fish.getFishHeight()) {
                         switch (fish.getFishsize()){
                             case 0:
-                                Finance.money +=5;
+                                Finance.money =  Finance.money + price/2 ;
                                 break;
                             case 1:
-                                Finance.money +=10;
+                                Finance.money = Finance.money + price + 20;
                                 break;
                             case 2:
-                                Finance.money += 15;
+                                Finance.money =  Finance.money + price + 40;
                                 break;
                         }
                         try {
@@ -260,19 +335,25 @@ public class PlayState extends GameState{
 
 
     public static void addFishToArray(Fish fish) {
-        for (int i = 0; i < fishes.length; i++) {
-            if (fishes[i] == null) {
-                fishes[i] = fish;
-                System.out.println(fishes[i]);
-                Finance.money = Finance.money - 10;
-                break;
+        if (Finance.money > price) {
+            for (int i = 0; i < fishes.length; i++) {
+                if (fishes[i] == null) {
+                    fishes[i] = fish;
+                    System.out.println(fishes[i]);
+                    fishCount++;
+                    Finance.money = Finance.money - price;
+                    fishAdded = true;
+                    break;
+                }
             }
         }
     }
+
     public static void removeFishFromArray(Fish fishToRemove) {
         for (int i = 0; i < fishes.length; i++) {
             if (fishes[i] == fishToRemove) {
                 fishes[i] = null;
+                fishCount--;
                 break;
             }
         }
@@ -292,6 +373,35 @@ public class PlayState extends GameState{
 
         CFont fps = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, GamePanel.width - 100, GamePanel.height - 32);
         fps.drawString(g, GamePanel.oldFrameCount +" FPS");
+
+        CFont fishCountFont = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 600, 35);
+        fishCountFont.drawString(g, fishCount + "/" + MAX_FISH);
+
+        if (!btnFish2.isEnabled()) {
+            CFont unlockFish2 = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, middleX + btnSpacing - 25, bottomY - 50);
+            unlockFish2.drawString(g, unlock_fish2 + "/15");
+        }
+        if (!btnFish3.isEnabled()) {
+            CFont unlockFish3 = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, middleX + (btnSpacing * 2) - 25, bottomY - 50);
+            unlockFish3.drawString(g, unlock_fish3 + "/15");
+        }
+        if (!btnFish4.isEnabled()) {
+            CFont unlockFish4 = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, middleX + (btnSpacing * 3) - 25, bottomY - 50);
+            unlockFish4.drawString(g, unlock_fish4 + "/15");
+
+        }
+
+        if (!btnFish5.isEnabled()) {
+            CFont unlockFish5 = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, middleX + (btnSpacing * 4) - 25, bottomY - 50);
+            unlockFish5.drawString(g, unlock_fish5 + "/15");
+        }
+
+        if (!btnFish6.isEnabled()) {
+            CFont unlockFish6 = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, middleX + (btnSpacing * 5) - 25, bottomY - 50);
+            unlockFish6.drawString(g,  unlock_fish6 + "/15");
+        }
+
+
 
 //        CFont tps = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 32, GamePanel.height - 32);
 //        tps.drawString(g,GamePanel.oldTickCount + " TPS");

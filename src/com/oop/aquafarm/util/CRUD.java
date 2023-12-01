@@ -1,9 +1,11 @@
 package com.oop.aquafarm.util;
 
+import com.oop.aquafarm.audio.Music;
 import com.oop.aquafarm.entity.Finance;
 import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.states.Login;
 import com.oop.aquafarm.states.PlayState;
+import com.oop.aquafarm.ui.Button;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -61,18 +63,20 @@ public class CRUD {
 
 
     public static void addFish(dbConnection con1, Fish fish) throws SQLException {
-        int fishID = 0;
-        int fishType = 0;
-        Date fishDay = new java.sql.Date(System.currentTimeMillis());
-        String qfID = "SELECT * FROM userFishInvTbl WHERE userFishID=(SELECT max(userFishID) FROM userFishInvTbl);";
-        String qfishtype = "SELECT fish_ID AS fishType FROM fishtbl WHERE fish_type = '" + fish.getFishtype() + "';";
-        ResultSet rsfID = con1.s.executeQuery(qfID);
-        String fishname = fish.getFishName();
-        if(rsfID.next()){
-            fishID = rsfID.getInt("userFishID");
-            fishID++;
-            fishname = fish.getFishName() + fishID;
-        }
+        if (PlayState.fishCount <20) {
+            Music.playSummonSound();
+            int fishID = 0;
+            int fishType = 0;
+            Date fishDay = new java.sql.Date(System.currentTimeMillis());
+            String qfID = "SELECT * FROM userFishInvTbl WHERE userFishID=(SELECT max(userFishID) FROM userFishInvTbl);";
+            String qfishtype = "SELECT fish_ID AS fishType FROM fishtbl WHERE fish_type = '" + fish.getFishtype() + "';";
+            ResultSet rsfID = con1.s.executeQuery(qfID);
+            String fishname = fish.getFishName();
+            if(rsfID.next()){
+                fishID = rsfID.getInt("userFishID");
+                fishID++;
+                fishname = fish.getFishName() + fishID;
+            }
 
         ResultSet rsFtype = con1.s.executeQuery(qfishtype);
         if(rsFtype.next()){
