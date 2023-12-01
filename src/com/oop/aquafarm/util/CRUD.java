@@ -32,11 +32,12 @@ public class CRUD {
             invID = rsInvID.getInt("itemID");
             invID++;
         }
-        String q2 = "INSERT INTO userInvTbl VALUES (" + invID + ", '" + uname + "', " + Finance.money + ");";
-//        System.out.println(q0); System.out.println(q1);
+        String q2 = "INSERT INTO userInvTbl VALUES (" + invID + ", '" + uname + "', " + Finance.money + ", null);";
+        String qBtn = "INSERT INTO userBtntbl VALUES(" + dbID + ", '" + uname + "', TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);" ;
         con1.s.executeUpdate(q0);
         con1.s.executeUpdate(q1);
         con1.s.executeUpdate(q2);
+        con1.s.executeUpdate(qBtn);
         System.out.println("Successfully created account");
     }
 
@@ -87,10 +88,12 @@ public class CRUD {
             String qFishStat = "INSERT INTO userFishStatusTbl VALUES (" + fishID + ", '" + fishname + "', '" + fish.getFishGender() + "', " + fish.getFishsize() + ");";
             PlayState.addFishToArray(fish);
             String qInvMoney = "UPDATE userInvTbl SET money =" + Finance.money + " WHERE user_Name = '" + Login.getUname() + "';";
-            //        System.out.println(qFishInv);  System.out.println(qFishStat);
+            String qTotalfish ="UPDATE userInvTbl SET fishnum = (SELECT COUNT(user_Name) FROM userFishInvTbl WHERE user_Name = '" + Login.getUname() + "') WHERE user_Name = '" + Login.getUname() + "';";
+
             con1.s.executeUpdate(qFishInv);
             con1.s.executeUpdate(qFishStat);
             con1.s.executeUpdate(qInvMoney);
+            con1.s.executeUpdate(qTotalfish);
 
             System.out.println("Added new fish in inv");
         }
@@ -99,8 +102,11 @@ public class CRUD {
     public static void removeFish(dbConnection con1, Fish fish) throws SQLException {
         String qdFish = "DELETE tinv FROM userfishinvtbl tinv INNER JOIN userFishstatusTbl tstat ON tinv.userFishid = tstat.userFishid WHERE fish_name = '" + fish.getFishName() + "';";
         String qInvMoney = "UPDATE userInvTbl SET money =" + Finance.money + " WHERE user_Name = '" + Login.getUname() + "';";
+        String qTotalfish ="UPDATE userInvTbl SET fishnum = (SELECT COUNT(user_Name) FROM userFishInvTbl WHERE user_Name = '" + Login.getUname() + "') WHERE user_Name = '" + Login.getUname() + "';";
+
         con1.s.executeUpdate(qdFish);
         con1.s.executeUpdate(qInvMoney);
+        con1.s.executeUpdate(qTotalfish);
 //        System.out.println(qdFish);
 //        System.out.println(qInvMoney);
         PlayState.removeFishFromArray(fish);
@@ -160,6 +166,65 @@ public class CRUD {
     }
 
 
+    public static boolean getBtnEnabled(dbConnection con1, Button btn) throws SQLException {
+        boolean enabled = false;
+        String sBtn = "btnFish1";
+        if (btn == PlayState.btnFish1){
+            sBtn = "btnFish1";
+        }else if(btn == PlayState.btnFish2){
+            sBtn = "btnFish2";
+        }else if(btn == PlayState.btnFish3){
+            sBtn = "btnFish3";
+        }else if(btn == PlayState.btnFish4){
+            sBtn = "btnFish4";
+        }else if(btn == PlayState.btnFish5){
+            sBtn = "btnFish5";
+        }else if(btn == PlayState.btnFish6){
+            sBtn = "btnFish6";
+        }
+        String qbtn = "SELECT " + sBtn + " FROM userBtntbl WHERE user_Name = '" + Login.getUname() + "';";
+        ResultSet rsbtn = con1.s.executeQuery(qbtn);
+        while(rsbtn.next()){
+            enabled = rsbtn.getBoolean(sBtn);
+        }
+        System.out.println(qbtn);
+        System.out.println(sBtn + " = " + enabled);
+
+        btn.enabled = true;
+
+        return enabled;
+    }
+
+
+    public static int getFishCount(dbConnection con1, String fish_type) throws SQLException {
+
+        String qfishCount = "SELECT COUNT(userFishInvTbl.fish_ID) FROM userfishinvtbl JOIN fishtbl ON userfishinvtbl.fish_ID = fishtbl.fish_ID WHERE user_Name = '" + Login.getUname() + "' AND fishtbl.fish_type = '" + fish_type + "';";
+        int fishCount = 0;
+        ResultSet rsbtn = con1.s.executeQuery(qfishCount);
+        if(rsbtn.next()){
+            fishCount = rsbtn.getInt("COUNT(userFishInvTbl.fish_ID)");
+        }
+        return fishCount;
+    }
+
+    public static void setEnabled(dbConnection con1, Button btn) throws SQLException {
+        String sBtn = "btnFish1";
+        if (btn == PlayState.btnFish1){
+            sBtn = "btnFish1";
+        }else if(btn == PlayState.btnFish2){
+            sBtn = "btnFish2";
+        }else if(btn == PlayState.btnFish3){
+            sBtn = "btnFish3";
+        }else if(btn == PlayState.btnFish4){
+            sBtn = "btnFish4";
+        }else if(btn == PlayState.btnFish5){
+            sBtn = "btnFish5";
+        }else if(btn == PlayState.btnFish6){
+            sBtn = "btnFish6";
+        }
+        String qbtn = "UPDATE userBtntbl SET " + sBtn + " = true WHERE user_Name = '" + Login.getUname() + "';";
+        con1.s.executeUpdate(qbtn);
+    }
 
     public static long generateUID() {
         try {
@@ -170,15 +235,15 @@ public class CRUD {
             throw new RuntimeException(e);
         }
     }
-    public static long generatesessionID() {
-        try {
-            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
-            long l = secureRandom.nextLong();
-            return Math.abs(100000000000000L + l * 900000000000000L);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public static long generatesessionID() {
+//        try {
+//            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+//            long l = secureRandom.nextLong();
+//            return Math.abs(100000000000000L + l * 900000000000000L);
+//        } catch (NoSuchAlgorithmException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 
     public static int getIterations(){
