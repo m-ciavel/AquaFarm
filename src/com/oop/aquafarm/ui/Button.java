@@ -38,6 +38,7 @@ public class Button {
     private boolean hoverSoundPlayed = false;
 
     private float pressedtime;
+    public boolean enabled = true;
 
 
     public Button(BufferedImage image, Vector2f pos, int buttonSize) {
@@ -87,6 +88,13 @@ public class Button {
         this.canHover = true;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
 
     public void addPressedImage(BufferedImage image) {
         this.pressedImage = image;
@@ -134,9 +142,7 @@ public class Button {
             float iWidth = value + bounds.getWidth();
             float iHeight = value + bounds.getHeight();
             this.bounds = new AABB(iPos, (int) iWidth, (int) iHeight);
-
         }
-
         hovering = true;
     }
 
@@ -162,37 +168,36 @@ public class Button {
 
     public void input(MouseHandler mouseIn, KeyHandler keyh) {
 
+        if(enabled){
+            if (bounds.inside(mouseIn.getX(), mouseIn.getY())) {
 
-        if (bounds.inside(mouseIn.getX(), mouseIn.getY())) {
-
-            if (canHover && !hovering) {
-                hover(hoverSize);
-                Music.playHoverSound();
-            }
-            if (mouseIn.getButton() == 1 && !clicked) {
-                clicked = true;
-                pressed = true;
-
-                pressedtime = (float) System.nanoTime() / 1000000;
-
-                for (int i = 0; i < events.size(); i++) {
-                    try {
-                        events.get(i).action(1);
-                    } catch (SQLException | UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                if (canHover && !hovering) {
+                    hover(hoverSize);
+                    Music.playHoverSound();
                 }
+                if (mouseIn.getButton() == 1 && !clicked) {
+                    clicked = true;
+                    pressed = true;
 
-            } else if (mouseIn.getButton() == -1) {
-                clicked = false;
-                pressed = false;
+                    pressedtime = (float) System.nanoTime() / 1000000;
+
+                    for (int i = 0; i < events.size(); i++) {
+                        try {
+                            events.get(i).action(1);
+                        } catch (SQLException | UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                } else if (mouseIn.getButton() == -1) {
+                    clicked = false;
+                    pressed = false;
+                }
+            } else if (canHover && hovering) {
+                hover(-hoverSize);
+                hovering = false;
             }
-        } else if (canHover && hovering) {
-            hover(-hoverSize);
-            hovering = false;
         }
-
-
 
     }
 
