@@ -1,25 +1,25 @@
 package com.oop.aquafarm.states;
 
 import com.oop.aquafarm.GamePanel;
+import com.oop.aquafarm.entity.Fish;
 import com.oop.aquafarm.entity.Hand;
 import com.oop.aquafarm.graphics.CFont;
 import com.oop.aquafarm.graphics.SpriteSheet;
 import com.oop.aquafarm.ui.Button;
-import com.oop.aquafarm.util.KeyHandler;
-import com.oop.aquafarm.util.MouseHandler;
-import com.oop.aquafarm.util.ScaledImage;
-import com.oop.aquafarm.util.Vector2f;
+import com.oop.aquafarm.util.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class QuitState extends GameState {
 
     Hand hands;
+    dbConnection con1 = new dbConnection();
     private final BufferedImage imgButtonBack, imgButtonExit, imgButtonLogout;
     private final BufferedImage imgHoverBack, imgHoverExit, imgHoverLogout;
     private final int btnWidth = 144;
@@ -61,6 +61,16 @@ public class QuitState extends GameState {
         });
 
         btnLogout.addEvent(e -> {
+            for (Fish fish : PlayState.fishes) {
+                if (fish != null) {
+                    PlayState.removeFishFromArray(fish);
+                }
+            }
+            try {
+                CRUD.logIn(con1, Login.getUname(), false);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             Login.setUname(null);
             Login.loggedIn = false;
             if (gsm.isStateActive(GameStateManager.TITLE)){

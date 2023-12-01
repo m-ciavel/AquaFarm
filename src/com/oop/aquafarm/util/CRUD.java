@@ -99,6 +99,8 @@ public class CRUD {
         String qInvMoney = "UPDATE userInvTbl SET money =" + Finance.money + " WHERE user_Name = '" + Login.getUname() + "';";
         con1.s.executeUpdate(qdFish);
         con1.s.executeUpdate(qInvMoney);
+//        System.out.println(qdFish);
+//        System.out.println(qInvMoney);
         PlayState.removeFishFromArray(fish);
         System.out.println("Sold the fish for grandeur");
     }
@@ -108,9 +110,8 @@ public class CRUD {
         con1.s.executeUpdate(qudFish);
     }
 
-    public static void getFish() throws SQLException {
-        dbConnection con1 = new dbConnection();
-        String qUFishes = "SELECT userFishInvTbl.userFishID, fishTbl.fish_type, userFishStatusTbl.fish_name, userFishStatusTbl.fish_gender, userFishStatusTbl.fish_size FROM userfishinvtbl JOIN fishtbl ON userfishinvtbl.fish_ID = fishtbl.fish_ID LEFT JOIN userFishStatusTbl ON userFishInvTbl.userFishID = userFishStatusTbl.userFishID WHERE user_Name = '" + Login.getUname() + "' ORDER BY userFishID;";
+    public static void getFish(dbConnection con1, String uname) throws SQLException {
+        String qUFishes = "SELECT userFishInvTbl.userFishID, fishTbl.fish_type, userFishStatusTbl.fish_name, userFishStatusTbl.fish_gender, userFishStatusTbl.fish_size FROM userfishinvtbl JOIN fishtbl ON userfishinvtbl.fish_ID = fishtbl.fish_ID LEFT JOIN userFishStatusTbl ON userFishInvTbl.userFishID = userFishStatusTbl.userFishID WHERE user_Name = '" + uname + "' ORDER BY userFishID;";
         ResultSet rsUFishes = con1.s.executeQuery(qUFishes);
 
         while (rsUFishes.next()) {

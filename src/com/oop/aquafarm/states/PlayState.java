@@ -51,7 +51,7 @@ public class PlayState extends GameState{
     private static final int MAX_FISH = 20;
 
     public static int unlock_fish2, unlock_fish3, unlock_fish4, unlock_fish5, unlock_fish6;
-    public static int price;
+    public static int price, userMoney;
 
 
     private boolean isBuyingFood = false;
@@ -79,6 +79,17 @@ public class PlayState extends GameState{
         Hover_Imgbuy_food = GameStateManager.buybutton.getSubimage(fishBtnSize * 6, fishBtnSize, fishBtnSize, fishBtnSize);
         Hover_Imgsell_fish = GameStateManager.buybutton.getSubimage(fishBtnSize * 7, fishBtnSize, fishBtnSize, fishBtnSize);
     }
+    private void hoverimg(){
+        btnmainmenu.addHoverImage(btnFish1.createButton(Hover_Img_mainmenu, 45 , 45));
+        btnFish1.addHoverImage(btnFish1.createButton(Hover_Imgbuy_fish1, smallFishBtnNewSize , smallFishBtnNewSize));
+        btnFish2.addHoverImage(btnFish2.createButton(Hover_Imgbuy_fish2, smallFishBtnNewSize, smallFishBtnNewSize));
+        btnFish3.addHoverImage(btnFish3.createButton(Hover_Imgbuy_fish3, smallFishBtnNewSize, smallFishBtnNewSize));
+        btnFish4.addHoverImage(btnFish4.createButton(Hover_Imgbuy_fish4, smallFishBtnNewSize, smallFishBtnNewSize));
+        btnFish5.addHoverImage(btnFish5.createButton(Hover_Imgbuy_fish5, smallFishBtnNewSize, smallFishBtnNewSize));
+        btnFish6.addHoverImage(btnFish6.createButton(Hover_Imgbuy_fish6, smallFishBtnNewSize, smallFishBtnNewSize));
+        btnBuyFood.addHoverImage(btnBuyFood.createButton(Hover_Imgbuy_food, smallFishBtnNewSize, smallFishBtnNewSize));
+        btnSellFish.addHoverImage(btnSellFish.createButton(Hover_Imgsell_fish, smallFishBtnNewSize, smallFishBtnNewSize));
+    }
 
     public PlayState(GameStateManager gsm){
         super(gsm);
@@ -94,11 +105,8 @@ public class PlayState extends GameState{
         food = new Food(origin);
         fishes = new Fish[50];
 
-        try {
-            CRUD.getFish();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
+
         initbtnImage();
 
         btnmainmenu = new Button(Img_mainmenu, new Vector2f(GamePanel.width - 32, 28), 30, 30);
@@ -111,15 +119,7 @@ public class PlayState extends GameState{
         btnBuyFood = new Button(Imgbuy_food, new Vector2f(middleX + (btnSpacing*6), bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
         btnSellFish = new Button(Imgsell_fish, new Vector2f(middleX + (btnSpacing*7), bottomY), smallFishBtnNewSize, smallFishBtnNewSize);
 
-        btnmainmenu.addHoverImage(btnFish1.createButton(Hover_Img_mainmenu, 45 , 45));
-        btnFish1.addHoverImage(btnFish1.createButton(Hover_Imgbuy_fish1, smallFishBtnNewSize , smallFishBtnNewSize));
-        btnFish2.addHoverImage(btnFish2.createButton(Hover_Imgbuy_fish2, smallFishBtnNewSize, smallFishBtnNewSize));
-        btnFish3.addHoverImage(btnFish3.createButton(Hover_Imgbuy_fish3, smallFishBtnNewSize, smallFishBtnNewSize));
-        btnFish4.addHoverImage(btnFish4.createButton(Hover_Imgbuy_fish4, smallFishBtnNewSize, smallFishBtnNewSize));
-        btnFish5.addHoverImage(btnFish5.createButton(Hover_Imgbuy_fish5, smallFishBtnNewSize, smallFishBtnNewSize));
-        btnFish6.addHoverImage(btnFish6.createButton(Hover_Imgbuy_fish6, smallFishBtnNewSize, smallFishBtnNewSize));
-        btnBuyFood.addHoverImage(btnBuyFood.createButton(Hover_Imgbuy_food, smallFishBtnNewSize, smallFishBtnNewSize));
-        btnSellFish.addHoverImage(btnSellFish.createButton(Hover_Imgsell_fish, smallFishBtnNewSize, smallFishBtnNewSize));
+        hoverimg();
 
 
         btnmainmenu.addEvent(e -> {
@@ -264,7 +264,7 @@ public class PlayState extends GameState{
             if (fish != null) {
                 fish.input(mouseIn);
                 try {
-                    CRUD.updateFish(PlayState.con1, fish);
+                    CRUD.updateFish(con1, fish);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
@@ -306,6 +306,7 @@ public class PlayState extends GameState{
                         }
                         try {
                             CRUD.removeFish(con1, fish);
+                            userMoney = CRUD.getMoney(con1);
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
@@ -385,7 +386,6 @@ public class PlayState extends GameState{
         }
 
         CFont money = new CFont(Color.WHITE, "res/font/pixelated.ttf", "pixelated", 24, 1100, 35);
-        int userMoney;
         try {
             userMoney = CRUD.getMoney(con1);
         } catch (SQLException e) {
