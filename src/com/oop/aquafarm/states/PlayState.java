@@ -128,13 +128,6 @@ public class PlayState extends GameState{
         btnSellFish.addHoverImage(btnSellFish.createButton(Hover_Imgsell_fish, smallFishBtnNewSize, smallFishBtnNewSize));
 
 
-        btnmainmenu.addEvent(e -> {
-            if (gsm.isStateActive(GameStateManager.PAUSE)) {
-                GameStateManager.pop(GameStateManager.PAUSE);
-            } else {
-                gsm.add(GameStateManager.PAUSE);
-            }
-        });
 
         btnmainmenu.addEvent(e -> {
             if(gsm.isStateActive(GameStateManager.PAUSE)) {

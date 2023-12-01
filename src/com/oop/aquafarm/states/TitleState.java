@@ -71,6 +71,7 @@ public class TitleState extends GameState {
             }else{
                 Window.window.setVisible(false);
                 new Login(gsm).setVisible(true);
+                System.out.println("loginvisible");
             }
 
         });
