@@ -55,8 +55,22 @@ CREATE TABLE userInvTbl(
 itemID int NOT NULL, 
 user_Name varchar(255) NOT NULL,
 money int NOT NULL,
-CONSTRAINT con_itemIDe_PK PRIMARY KEY (itemID),
+fishnum int,
+CONSTRAINT con_itemID_PK PRIMARY KEY (itemID),
 CONSTRAINT fk_userTable_userInvTbl FOREIGN KEY (user_Name) REFERENCES userTable(user_Name) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE userBtntbl(
+btnID int NOT NULL,
+user_Name varchar(255) NOT NULL,
+btnFish1 boolean NOT NULL,
+btnFish2 boolean NOT NULL,
+btnFish3 boolean NOT NULL,
+btnFish4 boolean NOT NULL,
+btnFish5 boolean NOT NULL,
+btnFish6 boolean NOT NULL,
+CONSTRAINT con_btnID_PK PRIMARY KEY (btnID),
+CONSTRAINT fk_userTable_userBtntbl FOREIGN KEY (user_Name) REFERENCES userTable(user_Name) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 SHOW FULL COLUMNS FROM users;
