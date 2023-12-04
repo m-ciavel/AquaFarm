@@ -14,6 +14,7 @@ AquaFarm is an engaging aquaculture management game developed using Java and cre
 
 ## Prerequisites
 - Java Development Kit (JDK)
+- IDE
 
 ## Installation
 To run the game, download the GitHub zip file or clone this repository.
