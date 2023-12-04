@@ -92,6 +92,24 @@ SELECT * FROM userFishInvTbl;
 SELECT * FROM userFishStatusTbl;
 
 
+UPDATE userInvTbl
+SET money = 150
+WHERE user_Name = 'user0';
+
+SELECT  money FROM userInvTbl WHERE user_Name = 'user0';
+
+SELECT * FROM userInvTbl WHERE itemID=(SELECT max(itemID) FROM userInvTbl);
+
+SELECT * FROM userFishInvTbl WHERE userFishID=(SELECT max(userFishID) FROM userFishInvTbl);
+SELECT fish_ID AS fishType FROM fishtbl WHERE fish_type = 'Guppy';
+
+SELECT COUNT(userFishInvTbl.fish_ID)
+FROM userfishinvtbl
+JOIN fishtbl
+ON userfishinvtbl.fish_ID = fishtbl.fish_ID
+WHERE user_Name = 'user0'
+AND fishtbl.fish_type = 'AtlanticBass';
+
 SELECT userFishInvTbl.userFishID, fishTbl.fish_type, userFishStatusTbl.fish_name, userFishStatusTbl.fish_gender, userFishStatusTbl.fish_size
 FROM userfishinvtbl 
 JOIN fishtbl
@@ -100,6 +118,39 @@ LEFT JOIN userFishStatusTbl
 ON userFishInvTbl.userFishID = userFishStatusTbl.userFishID
 WHERE user_Name = 'user0'
 ORDER BY userFishID;
+
+SELECT COUNT(user_Name)
+FROM userFishInvTbl
+WHERE user_Name = 'user0';
+
+UPDATE users tallu 
+INNER JOIN userTable tuser
+ON tallu.user_ID = tuser.user_ID
+SET is_active = FALSE
+WHERE tuser.user_Name = 'user0';
+
+UPDATE userInvTbl 
+SET fishnum = (SELECT COUNT(user_Name) FROM userFishInvTbl WHERE user_Name = 'user0') 
+WHERE user_Name = 'user0';
+
+UPDATE userFishstatusTbl tstat 
+INNER JOIN userfishinvtbl tinv 
+ON tstat.userFishid = tinv.userFishid 
+SET fish_size = 1 
+WHERE tinv.user_Name = 'user0' 
+AND tstat.fish_name = 'Guppy Russel';
+
+UPDATE userTable 
+SET pass_salt = 'passSalt', 
+pass_hash = 'passHash', 
+updated_date = '2023-11-30'
+WHERE user_Name = 'user0';
+
+DELETE tinv 
+FROM userfishinvtbl tinv 
+INNER JOIN userFishstatusTbl tstat 
+ON tinv.userFishid = tstat.userFishid 
+WHERE fish_name = 'Guppy Russel';
 
 
 INSERT INTO users VALUES (
